@@ -1,6 +1,6 @@
 // Somali English Academy service worker — cache-first for the app shell.
 // Bump CACHE on every publish so users never get stuck on an old build.
-const CACHE = "sea-f9";
+const CACHE = "sea-f10";
 const CORE = ["./", "./index.html", "./manifest.json", "./icon-192.png", "./icon-512.png", "./icon-maskable-512.png", "./apple-touch-icon.png"];
 self.addEventListener("install", (e) => {
   e.waitUntil(caches.open(CACHE).then((c) => c.addAll(CORE)).then(() => self.skipWaiting()));
