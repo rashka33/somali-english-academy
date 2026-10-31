@@ -72,7 +72,12 @@
   }
   function wireResults() {
     bindSpeak(app);
-    app.querySelectorAll('[data-define]').forEach(function (b) { b.addEventListener('click', function () { searchLive(b.dataset.define); document.getElementById('dictionaryLive').scrollIntoView({ block: 'start' }); }); });
+    app.querySelectorAll('[data-define]').forEach(function (b) { b.addEventListener('click', function () {
+      query = b.dataset.define;
+      var input = document.getElementById('dictionaryQuery'); if (input) input.value = query;
+      searchLive(query);
+      var target = document.getElementById('dictionaryLive'); if (target) target.scrollIntoView({ block: 'start' });
+    }); });
     app.querySelectorAll('[data-save-word]').forEach(function (b) { b.addEventListener('click', function () {
       if (!S) return;
       var word = b.dataset.saveWord;

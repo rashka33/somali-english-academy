@@ -41,6 +41,7 @@ const server=createServer(async(req,res)=>{
  await page.locator('.live-entry [data-save-word]').click();assert.equal(await page.locator('.live-entry [data-save-word]').getAttribute('aria-pressed'),'true');
  await page.screenshot({path:'/tmp/academy-dictionary-mobile.png',fullPage:false});
  await page.locator('[data-dictionary-tab="saved"]').click();assert.match(await page.locator('#dictionaryResults').innerText(),/hello/);
+ await page.locator('#dictionaryQuery').fill('');await page.locator('[data-define="hello"]').click();await page.locator('.live-entry').waitFor();assert.equal(await page.locator('#dictionaryQuery').inputValue(),'hello');
  await page.reload();await page.waitForFunction(()=>window.S&&S.profile.onboarded);await page.locator('#mainNav [data-view="dict"]').click();await page.locator('[data-dictionary-tab="saved"]').click();assert.match(await page.locator('#dictionaryResults').innerText(),/hello/);
  await page.locator('[data-dictionary-tab="results"]').click();mode='offline';await page.locator('#dictionaryQuery').fill('hello');await page.locator('#dictionaryForm button').click();await page.getByText('Kaydsan / Showing a previously downloaded definition.').waitFor();
  await page.locator('#dictionaryQuery').fill('uncachedword');await page.locator('#dictionaryForm button').click();await page.getByText('Qaamuuska lama xiriiri karo / Dictionary unavailable').waitFor();
