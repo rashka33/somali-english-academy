@@ -1750,8 +1750,10 @@ window.ACADEMY_TUTOR_URL = 'https://somali-academy-tutor.rashkaa33.workers.dev';
     function button(id,label,fn){var b=document.createElement('button');b.id=id;b.className='simple-primary';b.textContent=label;b.onclick=fn;app.appendChild(b)}
     function study(){
       frame('Conversation');
-      app.insertAdjacentHTML('beforeend','<p>'+esc(l[1])+'</p><div id="commDialogue">'+conversations[i].map(function(line){return '<p>'+esc(line)+'</p>'}).join('')+'</div>');
-      button('commListen','Listen to conversation',function(){speak(conversations[i].join(' '))});
+      app.insertAdjacentHTML('beforeend','<p>'+esc(l[1])+'</p><div id="commDialogue">'+conversations[i].map(function(line){return '<p>'+esc(line)+'</p><div class="conversation-audio"><button type="button" class="simple-text-button" data-speak="'+esc(line.slice(3))+'" aria-label="Listen to line '+(conversations[i].indexOf(line)+1)+'">🔊 Listen</button><button type="button" class="simple-text-button" data-speak="'+esc(line.slice(3))+'" data-slow="1" aria-label="Listen slowly to line '+(conversations[i].indexOf(line)+1)+'">Slow listen</button></div>'}).join('')+'</div>');
+      bindSpeak(document.getElementById('commDialogue'));
+      button('commListen','Listen to conversation',function(){speak(conversations[i].map(function(line){return line.slice(3)}).join(' '))});
+      button('commListenSlow','Listen to conversation slowly',function(){speak(conversations[i].map(function(line){return line.slice(3)}).join(' '),true)});
       button('commStartTest','Start test →',function(){if(window.speechSynthesis)window.speechSynthesis.cancel();answers=[];question=0;quiz()});
       if(i>0)button('commPrevious','← Previous lesson',function(){showLesson(i-1)});
     }

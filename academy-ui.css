@@ -41,3 +41,5 @@ body.inLesson .lesnav{left:0;bottom:calc(10px + env(safe-area-inset-bottom))}.le
 #app .f-val,#app .f-chev{color:var(--muted)!important}
 #academyTutor textarea{width:100%;min-height:100px;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:12px}
 #academyTutor button{background:#136f63;color:white;border:0;border-radius:10px;padding:12px 18px;min-height:48px}
+
+.conversation-audio{display:flex;gap:24px;flex-wrap:wrap;margin:-8px 0 18px}.conversation-audio button{min-height:44px}
