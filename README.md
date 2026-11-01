@@ -1,6 +1,6 @@
 # Somali English Academy
 
-Static, installable English-learning app with Somali guidance. Serve this folder over HTTP; no build step, API key or backend is required.
+Static, installable English-learning app with Somali guidance. Serve this folder over HTTP; no build step is required. Core lessons and dictionary need no API key. The optional AI tutor uses a private Gemini backend; see tutor-worker/README.md.
 
 ## Dictionary and interface upgrade
 
@@ -42,3 +42,7 @@ Set `CHROMIUM_PATH` if using a system Chromium. The browser test serves the app 
 ## Publish
 
 Publish all application files together, including `academy-ui.css`, `academy-ui.js`, `dictionary-client.js`, and the updated `sw.js`. The service-worker cache version must change when publishing a new build. Existing progress remains in the original `zamzam-academy` IndexedDB database.
+
+## Minimal interface
+
+Three destinations: Home, Dictionary, Profile. Home offers Continue learning and a separate lesson browser. Settings, saved words and detailed progress live in Profile. First-run setup asks only an optional name. UI language can be Somali or English; learning content remains bilingual. The optional lesson tutor sends only lesson context and an explicit question to the configured backend. AI responses may be inaccurate.
