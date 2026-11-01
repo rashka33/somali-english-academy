@@ -35,3 +35,9 @@ body.inLesson .lesnav{left:0;bottom:calc(10px + env(safe-area-inset-bottom))}.le
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
 .simple-welcome h1{font-size:2rem;line-height:1.2;margin:0 0 16px}.simple-welcome form{margin-top:36px}.simple-welcome input{background:var(--bg);color:var(--ink);border-color:var(--line);margin-bottom:20px}.simple-welcome .simple-primary:disabled{opacity:.6;cursor:wait}
 @media print{.simple-language,.simple-primary,.simple-back{display:none}.simple-next{background:#fff;color:#000}}
+/* Legacy inline styles load after this stylesheet; explicit overrides are needed. */
+#app .f-group,#app .f-pass,#app .f-acadcard{background:var(--card)!important;color:var(--ink)!important;border-color:var(--line)!important}
+#app .f-row,#app .f-lab,#app .f-lab .en,#app .f-lab .so{color:var(--ink)!important}
+#app .f-val,#app .f-chev{color:var(--muted)!important}
+#academyTutor textarea{width:100%;min-height:100px;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:12px}
+#academyTutor button{background:#136f63;color:white;border:0;border-radius:10px;padding:12px 18px;min-height:48px}

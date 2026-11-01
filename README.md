@@ -46,3 +46,7 @@ Publish all application files together, including `academy-ui.css`, `academy-ui.
 ## Minimal interface
 
 Three destinations: Home, Dictionary, Profile. Home offers Continue learning and a separate lesson browser. Settings, saved words and detailed progress live in Profile. First-run setup asks only an optional name. UI language can be Somali or English; learning content remains bilingual. The optional lesson tutor sends only lesson context and an explicit question to the configured backend. AI responses may be inaccurate.
+
+## Daily and conversation practice
+
+Home and Profile offer a compact learning-tools section: placement test, AI tutor shortcut, due-word review, a rotating daily vocabulary word, and seven practical study tips. Twelve authored real-life conversation lessons supplement the 1,000 core lessons (1,012 total lesson activities). Each adds a model phrase, audio, gap-fill feedback and an ungraded speaking challenge. Correct answers persist in the learner's `communication` state; they do not inflate core course mastery or certify speaking fluency. Storage is local to the device, not a cloud account.

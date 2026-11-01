@@ -264,3 +264,65 @@ window.ACADEMY_TUTOR_URL = 'https://somali-academy-tutor.rashkaa33.workers.dev';
     panel.appendChild(form); panel.appendChild(output); app.appendChild(panel);
   };
 })();
+/* Discoverable learning tools without adding more navigation destinations. */
+(function () {
+  var home = renderHome, profile = renderProfile;
+  function en() { return S.profile.ui === 'en'; }
+  function tools() {
+    var box = document.createElement('details'); box.className = 'simple-details';
+    box.innerHTML = '<summary>' + (en() ? 'Daily practice & learning tools' : 'Tababar maalinle ah') + '</summary>';
+    function action(label, fn) { var b = document.createElement('button'); b.className = 'simple-text-button'; b.textContent = label; b.onclick = fn; box.appendChild(b); }
+    action(en() ? 'Find my level · Placement test' : 'Ogow heerkayga · Imtixaan', function () { plBegin('profile'); });
+    action(en() ? 'Ask the AI tutor' : 'Weydii macallinka AI', function () {
+      var n = 1; while (n < LESSONS.length && S.completed['L' + n]) n++;
+      openLesson(n);
+      var panel = document.getElementById('academyTutor');
+      if (panel) { panel.open = true; panel.scrollIntoView({ behavior: 'smooth', block: 'center' }); panel.querySelector('textarea').focus(); }
+    });
+    action(en() ? 'Review words due today' : 'Ku celceli erayada maanta', function () { setNav('review'); render(); });
+    var day = Math.floor(Date.now() / 86400000), words = LESSONS[Math.min(LESSONS.length - 1, Math.floor(day / 7) % LESSONS.length)].vocab;
+    var word = words[day % words.length];
+    var p = document.createElement('p'); p.textContent = (en() ? 'Word of the day: ' : 'Erayga maanta: ') + word.en + ' — ' + word.so; box.appendChild(p);
+    action(en() ? 'Listen to this word' : 'Dhageyso erayga', function () { speak(word.en); });
+    var tips = ['Say three sentences about your day aloud. Repeat them tomorrow.', 'Listen to a short sentence, pause, then repeat with the same rhythm.', 'Practise asking someone to repeat: Could you say that again, please?', 'Use a new word in your own sentence before saving it.', 'Describe something near you in English for one minute.', 'Practise a conversation twice: once as each speaker.', 'Review yesterday’s mistakes before starting a new lesson.'];
+    var tip = document.createElement('p'); tip.textContent = 'English practice: ' + tips[day % tips.length]; box.appendChild(tip);
+    return box;
+  }
+  renderHome = function () { home(); var target = app.querySelector('.simple-home-content'); if(target) target.appendChild(tools()); };
+  renderProfile = function () { profile(); if(app.querySelector('.simple-profile-rows')) app.appendChild(tools()); };
+  if (S && S.profile && S.profile.onboarded) render();
+})();
+(function () {
+  // Authored practical conversation lessons supplement the 1,000-lesson course.
+  var lessons = [
+    ['Ask for clarification','Someone speaks too quickly. Ask them politely to repeat.','Could you say that again, please?','Could you ___ that again, please?','say'],
+    ['Book a medical appointment','Call a clinic and ask for an appointment.','I would like to book an appointment.','I would like to ___ an appointment.','book'],
+    ['Explain a symptom','Tell a nurse when your headache began.','I have had a headache since yesterday.','I have had a headache ___ yesterday.','since'],
+    ['Ask about a bus route','Check whether a bus stops at the hospital.','Does this bus stop at the hospital?','___ this bus stop at the hospital?','Does'],
+    ['Return a damaged item','Explain that a new purchase does not work.','I bought this yesterday, but it does not work.','I bought this yesterday, ___ it does not work.','but'],
+    ['Request a repair','Tell your landlord about a leaking tap.','Could you arrange a repair for the leaking tap?','Could you ___ a repair for the leaking tap?','arrange'],
+    ['Reschedule an interview','Ask to change an interview time politely.','Would it be possible to reschedule my interview?','Would it be ___ to reschedule my interview?','possible'],
+    ['Introduce your experience','Describe how long you have worked in a shop.','I have worked in retail for two years.','I have worked in retail ___ two years.','for'],
+    ['Ask about a school meeting','Ask a teacher when you can discuss progress.','When would be a good time to discuss my child’s progress?','When would be a good time to ___ my child’s progress?','discuss'],
+    ['Check understanding at work','Confirm a deadline before starting a task.','Just to confirm, you need this by Friday, correct?','Just to ___, you need this by Friday, correct?','confirm'],
+    ['Disagree respectfully','Explain a different opinion in a meeting.','I see your point, but I have a different view.','I see your ___, but I have a different view.','point'],
+    ['Make a social invitation','Invite a neighbour for tea on Saturday.','Would you like to come over for tea on Saturday?','Would you ___ to come over for tea on Saturday?','like']
+  ];
+  function showList() {
+    app.innerHTML = '<button class="simple-back" id="commBack">← Home</button><h1>Real-life English</h1><p>12 practical conversation lessons. Listen, answer, then practise both sides aloud. Your results stay on this device.</p>';
+    document.getElementById('commBack').onclick = function () { setNav('home'); render(); };
+    lessons.forEach(function (l,i) {
+      var b=document.createElement('button');b.className='simple-row';b.textContent=(i+1)+'. '+l[0]+(S.communication&&S.communication[i]?' ✓':'');b.onclick=function(){showLesson(i)};app.appendChild(b);
+    });
+  }
+  function showLesson(i) {
+    var l=lessons[i];
+    app.innerHTML='<button class="simple-back" id="commBack">← Real-life English</button><h1>'+esc(l[0])+'</h1><p>'+esc(l[1])+'</p><blockquote>'+esc(l[2])+'</blockquote><button class="simple-text-button" id="commListen">Listen & repeat</button><form id="commForm"><label for="commAnswer">Complete: '+esc(l[3])+'</label><input id="commAnswer" required autocomplete="off" maxlength="80"><button class="simple-primary">Check answer</button></form><p id="commFeedback" role="status"></p><details class="simple-details"><summary>Speaking challenge</summary><p>Say the phrase without looking. Then act as the other person and give a suitable reply. Practise with a partner if possible. This activity does not automatically grade pronunciation.</p></details>';
+    document.getElementById('commBack').onclick=showList;document.getElementById('commListen').onclick=function(){speak(l[2])};
+    document.getElementById('commForm').onsubmit=async function(e){e.preventDefault();var ok=norm(document.getElementById('commAnswer').value)===norm(l[4]);if(ok){S.communication=S.communication||{};S.communication[i]={date:todayStr(),correct:true};await save()}document.getElementById('commFeedback').textContent=ok?'Correct. Saved! Now practise the speaking challenge.':'Try again. Listen to the example and look for the missing word.';};
+  }
+  var home=renderHome,profile=renderProfile;
+  function add(){var rows=app.querySelector('.simple-home-content')||app.querySelector('.simple-profile-rows');if(!rows)return;var b=document.createElement('button');b.className='simple-row';b.id='communicationLessons';b.textContent='Real-life English · 12 conversation lessons';b.onclick=showList;rows.appendChild(b)}
+  renderHome=function(){home();add()};renderProfile=function(){profile();add()};
+  if(S&&S.profile&&S.profile.onboarded)render();
+})();
