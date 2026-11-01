@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>Open Somali Academy</title><style>body{font:18px system-ui;max-width:34rem;margin:15vh auto;padding:24px;color:#192c32}a{color:#136f63}</style></head><body><h1>Opening Somali Academy…</h1><p id="status">Checking for the current version. Your learning progress stays on this device.</p><a id="continue" href="./?refresh=latest">Continue to academy</a><script>
+(async function(){
+  const destination=new URL('./',location.href);destination.searchParams.set('refresh',Date.now());
+  document.getElementById('continue').href=destination.href;
+  try {
+    if('serviceWorker' in navigator){
+      const registrations=await navigator.serviceWorker.getRegistrations();
+      await Promise.all(registrations.filter(r=>r.scope===new URL('./',location.href).href).map(r=>r.unregister()));
+    }
+    if('caches' in window){
+      const names=await caches.keys();
+      await Promise.all(names.filter(n=>n.startsWith('sea-')).map(n=>caches.delete(n)));
+    }
+    location.replace(destination.href);
+  } catch(e){document.getElementById('status').textContent='Tap Continue to open the academy. If it still looks old, open this link in Safari or Chrome.';}
+})();
+</script></body></html>
