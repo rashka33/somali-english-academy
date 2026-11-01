@@ -315,14 +315,58 @@ window.ACADEMY_TUTOR_URL = 'https://somali-academy-tutor.rashkaa33.workers.dev';
       var b=document.createElement('button');b.className='simple-row';b.textContent=(i+1)+'. '+l[0]+(S.communication&&S.communication[i]?' ✓':'');b.onclick=function(){showLesson(i)};app.appendChild(b);
     });
   }
+  var conversations = [
+    ['A: The meeting is in room fourteen at half past nine.','B: Could you say that again, please?','A: Of course. Room fourteen, at nine thirty.','B: Did you say fourteen or forty?','A: Fourteen. It is on the first floor.','B: Thank you. Should I bring anything?','A: Please bring your notebook.','B: Great. I will be there at nine thirty.'],
+    ['A: Good morning. How can I help?','B: I would like to book an appointment.','A: Is tomorrow morning suitable?','B: Yes. What times are available?','A: We have ten o’clock or eleven thirty.','B: Ten o’clock would be better, please.','A: Please arrive ten minutes early.','B: Thank you. I will arrive at nine fifty.'],
+    ['A: What seems to be the problem?','B: I have had a headache since yesterday.','A: Is it constant, or does it come and go?','B: It comes and goes, but it is worse today.','A: Have you noticed anything else?','B: I also feel tired.','A: Thank you. I will let the clinician know.','B: Could you tell me where I should wait?'],
+    ['A: Excuse me. Does this bus stop at the hospital?','B: Yes, but you need the stop after the library.','A: How long does the journey take?','B: About twenty minutes in normal traffic.','A: Can I pay by card?','B: Yes. Tap your card here.','A: Could you let me know when we arrive?','B: Certainly. Take a seat, please.'],
+    ['A: Hello. How can I help you today?','B: I bought this yesterday, but it does not work.','A: I am sorry about that. Do you have the receipt?','B: Yes. Here it is.','A: Would you prefer a replacement or a refund?','B: A replacement, please, if you have one.','A: We do. Let me check that it works first.','B: Thank you. I appreciate your help.'],
+    ['A: Hello. I am calling about a problem in my flat.','B: What has happened?','A: Could you arrange a repair for the leaking tap?','B: Which room is it in?','A: The kitchen. It has been leaking since Monday.','B: A plumber can come tomorrow afternoon.','A: Could they call before arriving?','B: Yes. I will add that to the request.'],
+    ['A: Thank you for inviting me to an interview.','B: You are welcome. We look forward to meeting you.','A: Would it be possible to reschedule my interview?','B: What time would suit you?','A: I am available on Thursday afternoon.','B: We have a space at two o’clock.','A: That would be excellent. Thank you.','B: I will email the updated details today.'],
+    ['A: Could you tell me about your experience?','B: I have worked in retail for two years.','A: What were your main responsibilities?','B: I helped customers and organised stock.','A: Can you give an example of helping a customer?','B: I found an alternative when an item was unavailable.','A: How did the customer respond?','B: They thanked me and bought the alternative.'],
+    ['A: Hello. I would like to speak with the teacher.','B: Certainly. What would you like to discuss?','A: When would be a good time to discuss my child’s progress?','B: Would Tuesday after school work for you?','A: Yes. Should I bring anything?','B: Please bring any questions you want to ask.','A: I would like to talk about reading at home.','B: That is helpful. We can make a plan together.'],
+    ['A: Could you prepare the customer report?','B: Just to confirm, you need this by Friday, correct?','A: Yes, before our afternoon meeting.','B: Should I include last month’s figures?','A: Yes, and a short comparison with this month.','B: I will send you a draft on Thursday.','A: Good. That gives us time to review it.','B: Please let me know if the requirements change.'],
+    ['A: I think we should finish the whole project this week.','B: I see your point, but I have a different view.','A: What concerns you?','B: We need more time to test the results.','A: What would you suggest?','B: Finish the first part now and test it next week.','A: That sounds reasonable. Let us adjust the plan.','B: Thank you for considering my suggestion.'],
+    ['A: Hello! How has your week been?','B: Busy, but good. How about yours?','A: Good, thank you. Would you like to come over for tea on Saturday?','B: That sounds lovely. What time?','A: Would three o’clock suit you?','B: Yes. Should I bring anything?','A: Just yourself. I will make some snacks.','B: Thank you. I look forward to it.']
+  ];
   function showLesson(i) {
-    var l=lessons[i];
-    app.innerHTML='<button class="simple-back" id="commBack">← Real-life English</button><h1>'+esc(l[0])+'</h1><p>'+esc(l[1])+'</p><blockquote>'+esc(l[2])+'</blockquote><button class="simple-text-button" id="commListen">Listen & repeat</button><form id="commForm"><label for="commAnswer">Complete: '+esc(l[3])+'</label><input id="commAnswer" required autocomplete="off" maxlength="80"><button class="simple-primary">Check answer</button></form><p id="commFeedback" role="status"></p><details class="simple-details"><summary>Speaking challenge</summary><p>Say the phrase without looking. Then act as the other person and give a suitable reply. Practise with a partner if possible. This activity does not automatically grade pronunciation.</p></details>';
-    document.getElementById('commBack').onclick=showList;document.getElementById('commListen').onclick=function(){speak(l[2])};
-    document.getElementById('commForm').onsubmit=async function(e){e.preventDefault();var ok=norm(document.getElementById('commAnswer').value)===norm(l[4]);if(ok){S.communication=S.communication||{};S.communication[i]={date:todayStr(),correct:true};await save()}document.getElementById('commFeedback').textContent=ok?'Correct. Saved! Now practise the speaking challenge.':'Try again. Listen to the example and look for the missing word.';};
+    var l=lessons[i], answers=[], question=0;
+    function frame(label) {
+      app.innerHTML='<button class="simple-back" id="commBack">← Real-life English</button><p>Lesson '+(i+1)+' of '+lessons.length+' · '+label+'</p><h1>'+esc(l[0])+'</h1>';
+      document.getElementById('commBack').onclick=showList;
+      window.scrollTo(0,0);
+    }
+    function button(id,label,fn){var b=document.createElement('button');b.id=id;b.className='simple-primary';b.textContent=label;b.onclick=fn;app.appendChild(b)}
+    function study(){
+      frame('Conversation');
+      app.insertAdjacentHTML('beforeend','<p>'+esc(l[1])+'</p><div id="commDialogue">'+conversations[i].map(function(line){return '<p>'+esc(line)+'</p>'}).join('')+'</div>');
+      button('commListen','Listen to conversation',function(){speak(conversations[i].join(' '))});
+      button('commStartTest','Start test →',function(){if(window.speechSynthesis)window.speechSynthesis.cancel();answers=[];question=0;quiz()});
+      if(i>0)button('commPrevious','← Previous lesson',function(){showLesson(i-1)});
+    }
+    function quiz(){
+      frame('Test · '+(question+1)+' of 2');
+      var prompt=question===0?'Complete: '+l[3]:'What would you say in this situation? '+l[1];
+      app.insertAdjacentHTML('beforeend','<p>'+esc(prompt)+'</p><form id="commForm"><label for="commAnswer">Your answer</label><input id="commAnswer" required autocomplete="off" maxlength="250"><button class="simple-primary">'+(question===0?'Next question →':'See results →')+'</button></form>');
+      document.getElementById('commForm').onsubmit=function(e){e.preventDefault();answers[question]=document.getElementById('commAnswer').value.trim();if(question===0){question++;quiz()}else results()};
+      button('commTestBack','← '+(question?'Previous question':'Review conversation (restarts test)'),function(){if(question){question--;quiz()}else study()});
+      document.getElementById('commAnswer').value=answers[question]||'';
+    }
+    async function results(){
+      var correct=norm(answers[0])===norm(l[4]);
+      S.communication=S.communication||{};
+      var previous=S.communication[i]||{};
+      S.communication[i]={date:todayStr(),correct:correct||!!previous.correct,lastCorrect:correct,response:answers[1],attempts:(previous.attempts||0)+1};
+      try{await save()}catch(e){frame('Results');app.insertAdjacentHTML('beforeend','<p role="status">Could not save your result. Please retry.</p>');button('commRetrySave','Retry saving',results);return}
+      frame('Results');
+      app.insertAdjacentHTML('beforeend','<p id="commFeedback" role="status">'+(correct?'Correct. Saved!':'Saved. Review the missing word below and try again.')+'</p><p>Your missing word: '+esc(answers[0])+'</p><p>Correct word: <strong>'+esc(l[4])+'</strong></p><p>Your reply: '+esc(answers[1])+'</p><p>Example reply: '+esc(l[2])+'</p><p>Your free reply is practice, not automatically graded. Other polite replies may also be correct.</p><h2>Speaking challenge</h2><p>Practise the conversation with a partner, taking both roles. Then say your own reply without reading. Pronunciation is not automatically graded.</p>');
+      button('commNext',i<lessons.length-1?'Next lesson →':'Finish · Back to lessons',function(){if(i<lessons.length-1)showLesson(i+1);else showList()});
+      button('commRetry','← Review conversation & retry',study);
+    }
+    study();
   }
   var home=renderHome,profile=renderProfile;
-  function add(){var rows=app.querySelector('.simple-home-content')||app.querySelector('.simple-profile-rows');if(!rows)return;var b=document.createElement('button');b.className='simple-row';b.id='communicationLessons';b.textContent='Real-life English · 12 conversation lessons';b.onclick=showList;rows.appendChild(b)}
+  function add(){var rows=app.querySelector('.simple-home-content')||app.querySelector('.simple-profile-rows');if(!rows)return;var tutor=document.createElement('button');tutor.id='homeAiTutor';tutor.className='simple-row';tutor.textContent=S.profile.ui==='en'?'AI Tutor · Ask a question':'Macallinka AI · AI Tutor';tutor.onclick=function(){var n=1;while(n<LESSONS.length&&S.completed['L'+n])n++;openLesson(n);var panel=document.getElementById('academyTutor');if(panel){panel.open=true;panel.scrollIntoView({block:'center'});panel.querySelector('textarea').focus()}};rows.insertBefore(tutor,rows.querySelector('.simple-next')||rows.firstChild);var b=document.createElement('button');b.className='simple-row';b.id='communicationLessons';b.textContent='Real-life English · 12 conversation lessons';b.onclick=showList;rows.appendChild(b)}
   renderHome=function(){home();add()};renderProfile=function(){profile();add()};
   if(S&&S.profile&&S.profile.onboarded)render();
 })();
