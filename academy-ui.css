@@ -43,3 +43,5 @@ body.inLesson .lesnav{left:0;bottom:calc(10px + env(safe-area-inset-bottom))}.le
 #academyTutor button{background:#136f63;color:white;border:0;border-radius:10px;padding:12px 18px;min-height:48px}
 
 .conversation-audio{display:flex;gap:24px;flex-wrap:wrap;margin:-8px 0 18px}.conversation-audio button{min-height:44px}
+
+.conversation-translation{color:var(--muted);font-size:.95rem;margin-top:-6px;padding-left:12px;border-left:3px solid var(--teal);line-height:1.6}
