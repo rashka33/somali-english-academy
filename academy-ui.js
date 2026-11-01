@@ -71,7 +71,7 @@
   };
   function renderLessons() {
     var lesson = nextLesson(), first = (unit === null ? Math.floor((lesson.n - 1) / 10) : unit) * 10;
-    app.innerHTML = backButton(t('Hoyga', 'Home')) + '<h1>' + t('Casharrada', 'Lessons') + '</h1><label for="academyUnit" class="simple-label">' + t('Dooro qayb', 'Choose a unit') + '</label><select id="academyUnit">' + LESSONS.filter(function (_, i) { return i % 10 === 0; }).map(function (l, i) {
+    app.innerHTML = backButton(t('Hoyga', 'Home')) + '<h1>' + t('Casharrada', 'Lessons') + '</h1><p>' + t('Eeg dhammaan qaybaha. Casharrada qufulan waxay furmaan markaad casharka ka horreeya gudubto.', 'Explore every unit. Locked lessons open when you pass the previous lesson.') + '</p><label for="academyUnit" class="simple-label">' + t('Dooro qayb', 'Choose a unit') + '</label><select id="academyUnit">' + LESSONS.filter(function (_, i) { return i % 10 === 0; }).map(function (l, i) {
       return '<option value="' + i + '"' + (i * 10 === first ? ' selected' : '') + '>' + (i + 1) + '. ' + esc(title(l)) + ' (' + l.n + '–' + Math.min(l.n + 9, LESSONS.length) + ')</option>';
     }).join('') + '</select><div class="simple-lesson-list">' + LESSONS.slice(first, first + 10).map(function (l) {
       var done = !!S.completed[l.id], unlocked = isUnlocked(l.n);
@@ -160,12 +160,12 @@
   };
   function setPreference(key, value) { S.profile[key] = value; save(); applyPrefs(); render(); }
   renderOnboarding = function () {
-    app.innerHTML = '<div class="simple-welcome"><h1>' + t('Baro Ingiriisi, tallaabo tallaabo.', 'Learn English, one step at a time.') + '</h1><p class="simple-intro">' + t('Casharro fudud oo leh sharaxaad Soomaali ah.', 'Simple lessons with Somali guidance.') + '</p><form id="simpleStartForm"><label class="simple-label" for="simpleName">' + t('Magacaaga (ikhtiyaari)', 'Your name (optional)') + '</label><input type="text" id="simpleName" maxlength="50" autocomplete="given-name" value="' + esc(S.profile.name || '') + '"><button type="submit" class="simple-primary" id="simpleStart">' + t('Bilow barashada', 'Start learning') + icon('arrow') + '</button></form><p class="simple-device-note">' + t('Akoon looma baahna. Horumarku wuxuu ku kaydsan yahay aaladdan.', 'No account needed. Progress stays on this device.') + '</p></div>';
+    app.innerHTML = '<div class="simple-welcome"><h1>' + t('Baro Ingiriisi, tallaabo tallaabo.', 'Learn English, one step at a time.') + '</h1><p class="simple-intro">' + t('Casharro fudud oo leh sharaxaad Soomaali ah.', 'Simple lessons with Somali guidance.') + '</p><form id="simpleStartForm"><label class="simple-label" for="simpleName">' + t('Magacaaga (ikhtiyaari)', 'Your name (optional)') + '</label><input type="text" id="simpleName" maxlength="50" autocomplete="given-name" value="' + esc(S.profile.name || '') + '"><button type="submit" class="simple-primary" id="simpleStart">' + t('Bilow imtixaanka meelaynta · 50 su’aalood', 'Start placement · 50 questions') + icon('arrow') + '</button></form><p class="simple-device-note">' + t('Akoon looma baahna. Horumarku wuxuu ku kaydsan yahay aaladdan.', 'No account needed. Progress stays on this device.') + '</p></div>';
     document.getElementById('simpleStartForm').onsubmit = function (event) {
       event.preventDefault(); S.profile.name = document.getElementById('simpleName').value.trim(); S.profile.onboarded = true;
       var destination = pendingView || 'home'; pendingView = null;
       document.getElementById('simpleStart').disabled = true;
-      save().then(function () { go(destination); });
+      save().then(function () { plBegin('profile'); });
     };
   };
   renderProfile = function () {
@@ -1863,5 +1863,59 @@ window.ACADEMY_TUTOR_URL = 'https://somali-academy-tutor.rashkaa33.workers.dev';
   }
   renderHome=function(){oldHome();enhance()};
   renderProfile=function(){oldProfile();var rows=app.querySelector('.simple-profile-rows');if(rows){action(rows,'profileCoachPlan',tr('Qorshahayga waxbarashada','My learning plan'),editPlan);action(rows,'profileCoachProgress',tr('Waxaan bartay','What I have practised'),progress);action(rows,'profileCoachSpeaking',tr('Tababarka hadalka','Speaking studio'),speaking)}};
+  if(S&&S.profile&&S.profile.onboarded)render();
+})();
+/* Fifty-question placement: score bands choose a starting point, never a certificate. */
+(function(){
+  function t(so,en){return S.profile.ui==='en'?en:so}
+  var starts=[1,51,101,201,301,401,501,601,701,801];
+  plBuildQuestions=function(){
+    var qs=[],seen=new Set();
+    // Cover the whole course with five questions per difficulty tenth.
+    for(var band=0;band<10;band++){
+      for(var offset=0;offset<100&&qs.filter(function(q){return q.band===band}).length<5;offset++){
+        var n=band*100+1+(offset*19)%100, q=plPickQ(n,Math.min(11,Math.floor(n/84)));
+        if(q&&!seen.has(q.q+'|'+q.ans)){q.band=band;seen.add(q.q+'|'+q.ans);qs.push(q)}
+      }
+    }
+    if(qs.length!==50)throw new Error('Placement requires 50 distinct questions');
+    return qs;
+  };
+  plComputeResult=function(answers){var correct=answers.filter(function(a){return a.ok}).length;var pct=Math.round(correct/50*100);var band=Math.min(9,Math.floor(pct/10));return{correct:correct,asked:50,pct:pct,band:band,startLesson:starts[band]}};
+  plBegin=function(){
+    plCtx='profile';var draft=S.placementDraft;
+    plState=draft&&draft.version===50?JSON.parse(JSON.stringify(draft.state)):{qs:plBuildQuestions(),idx:0,answers:[],result:null,done:false};
+    window.__plTest=plState;plScreenRender();
+  };
+  function persist(){S.placementDraft={version:50,state:JSON.parse(JSON.stringify(plState))};return save()}
+  plAnswer=async function(opt){
+    if(!plState||plState.done)return;
+    var q=plState.qs[plState.idx];
+    plState.answers[plState.idx]={stage:q.stage,ok:opt!==null&&norm(opt)===norm(q.ans),choice:opt};
+    plState.idx++;
+    if(plState.idx===50){plState.result=plComputeResult(plState.answers);plState.done=true}
+    try{await persist();plScreenRender()}catch(e){plScreenRender();var warning=document.createElement('p');warning.textContent=t('Kaydintu way fashilantay. Ha xirin bogga.','Could not save. Keep this page open.');app.prepend(warning)}
+  };
+  plScreenRender=function(){
+    setNav('placement');app.innerHTML='<button class="simple-back" id="plBack">← '+t('Hoyga · Kaydi oo sii wad mar dambe','Home · Resume later')+'</button><h1>'+t('Imtixaanka meelaynta','Placement test')+'</h1>';
+    document.getElementById('plBack').onclick=function(){setNav('home');render()};
+    if(plState.done){
+      var r=plState.result;
+      app.insertAdjacentHTML('beforeend','<h2>'+r.correct+' / 50 · '+r.pct+'%</h2><p>'+t('Waxaad ka bilaabaysaa casharka ','Your recommended start is Lesson ')+r.startLesson+'</p><p>'+t('Dhibcaha ka hooseeya 10% waxay ka bilaabaan aasaaska. 10% kasta oo kordha wuxuu kuu wareejiyaa qayb sare. Tani waa talo waxbarasho, ma aha shahaado heer luqadeed.','Below 10% starts at the basics. Each ten-percentage-point band moves the recommended start higher. This is learning guidance, not a certified language level.')+'</p><button class="simple-primary" id="plStartThere">'+t('Halkaas ka bilow','Start at my level')+' →</button>');
+      document.getElementById('plStartThere').onclick=async function(){this.disabled=true;plApplyPlacement(r);S.profile.placementVersion=50;delete S.placementDraft;await save();setNav('home');render()};return;
+    }
+    var q=plState.qs[plState.idx];
+    app.insertAdjacentHTML('beforeend','<p>'+t('Su’aasha ','Question ')+(plState.idx+1)+' / 50</p><progress max="50" value="'+plState.idx+'" style="width:100%"></progress><p>'+t('Dooro jawaabta saxda ah. Haddii aadan garanayn, dooro “Ma garanayo”. Jawaabaha lama muujinayo inta imtixaanku socdo.','Choose an answer, or select “I don’t know”. Answers are not revealed during the test.')+'</p><h2>'+esc(q.q)+'</h2>'+(q.qSo?'<p lang="so">'+esc(q.qSo)+'</p>':'')+'<div class="opts">'+q.opts.map(function(o){return '<button class="opt" data-plopt="'+esc(o)+'">'+esc(o)+'</button>'}).join('')+'</div><button class="simple-row" id="plUnknown">'+t('Ma garanayo →','I don’t know →')+'</button>');
+    function answer(opt){app.querySelectorAll('[data-plopt],#plUnknown').forEach(function(b){b.disabled=true});plAnswer(opt)}
+    app.querySelectorAll('[data-plopt]').forEach(function(b){b.onclick=function(){answer(b.dataset.plopt)}});document.getElementById('plUnknown').onclick=function(){answer(null)};
+    if(plState.idx>0){var back=document.createElement('button');back.className='simple-back';back.id='plPrevious';back.textContent=t('← Su’aashii hore','← Previous question');back.onclick=function(){plState.idx--;plState.done=false;plScreenRender()};app.appendChild(back)}
+  };
+  var home=renderHome,open=openLesson;
+  function needsPlacement(){return !S.profile.placementVersion&&!S.profile.placedLesson&&!Object.values(S.completed||{}).some(function(v){return !v.placed})}
+  renderHome=function(){home();if(needsPlacement()){
+    var b=document.getElementById('academyContinue');if(b){b.textContent=t('Ogow heerkayga · 50 su’aalood →','Find my level · 50 questions →');b.onclick=function(){plBegin('profile')}}
+    var heading=app.querySelector('.simple-next h2');if(heading)heading.textContent=t('Marka hore ogow heerkaaga','Start with your placement test');
+  }};
+  openLesson=function(n){if(!guestMode&&needsPlacement()){plBegin('profile');return}if(!guestMode&&!isUnlocked(n))return;open(n)};
   if(S&&S.profile&&S.profile.onboarded)render();
 })();

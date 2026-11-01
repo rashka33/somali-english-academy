@@ -60,3 +60,9 @@ All 100 conversation lessons include Somali titles and translations of all eight
 Learners can save a goal (daily life, work, study or travel) and daily study time. Home recommends an unlocked, incomplete core lesson matching that goal when one is available. Daily practice suggests a lesson, due-word review and a minute of speaking. The progress screen separates completed lessons from placement skips and labels gap-fill results without claiming spoken fluency.
 
 The speaking studio offers three bilingual model phrases with slow English playback and optional microphone recording/replay (60-second limit). Microphone access is requested only after pressing Record. Recordings are temporary browser object URLs, never uploaded or saved into the learner profile, and released on exit. Browser support and permission vary; an aloud-practice fallback is provided. No automatic pronunciation score is claimed. Cross-device accounts and new transcript-based video lessons remain future work.
+
+## Placement-first start
+
+New learners enter a 50-question placement test after the optional-name form. Five distinct questions are drawn from each curriculum tenth; no early stopping. Unknown counts as incorrect. The draft saves on each answer and can be resumed. Results use these provisional bands: 0–9% → lesson 1; 10–19% → 51; 20–29% → 101; 30–39% → 201; 40–49% → 301; 50–59% → 401; 60–69% → 501; 70–79% → 601; 80–89% → 701; 90–100% → 801. These thresholds follow the requested progression, not a validated CEFR assessment.
+
+Accepting results unlocks the recommended start and marks earlier lessons as placed for review. Later lessons require passing their predecessor. All units remain browseable. Existing earned progress is retained, and retaking cannot move a learner backward. Tests: `node --test --test-isolation=none tests/placement.test.cjs` and the browser suite.

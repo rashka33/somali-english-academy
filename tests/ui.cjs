@@ -25,7 +25,10 @@ const server=createServer(async(req,res)=>{
   await page.waitForFunction(()=>window.S&&window.LESSONS&&window.AcademyDictionary);
   assert.equal(await page.locator('#simpleStart').count(),1,'First visit should offer one short start form');
   assert.equal(await page.locator('#app input').count(),1,'First visit asks only for an optional name');
-  await page.locator('#simpleName').fill('Ayaan');await page.locator('#simpleStart').click();await page.locator('#academyContinue').waitFor();assert.equal(await page.evaluate(()=>S.profile.name),'Ayaan');
+  await page.locator('#simpleName').fill('Ayaan');await page.locator('#simpleStart').click();await page.locator('#plUnknown').waitFor();assert.equal(await page.evaluate(()=>plState.qs.length),50);
+  const bands=await page.evaluate(()=>[0,4,5,9,10,14,15,19,20,24,25,29,30,34,35,39,40,44,45,49,50].map(n=>plComputeResult(Array.from({length:50},(_,i)=>({ok:i<n}))).startLesson));assert.deepEqual(bands,[1,1,51,51,101,101,201,201,301,301,401,401,501,501,601,601,701,701,801,801,801]);
+  await page.locator('#plUnknown').click();await page.waitForFunction(()=>plState.idx===1);await page.reload();await page.waitForFunction(()=>S&&S.placementDraft);await page.evaluate(()=>plBegin('profile'));assert.equal(await page.evaluate(()=>plState.idx),1);
+  for(let i=1;i<50;i++){await page.locator('#plUnknown').click();await page.waitForFunction(n=>plState.idx===n,i+1)}await page.locator('#plStartThere').click();await page.locator('#academyContinue').waitFor();assert.equal(await page.evaluate(()=>S.profile.placedLesson),1);assert.equal(await page.evaluate(()=>S.profile.name),'Ayaan');
   await page.evaluate(()=>{S.profile.onboarded=true;S.profile.name='Ayaan';S.profile.theme='light';S.profile.ui='en';save();setNav('home');render()});
   assert.equal(await page.title(),'Somali English Academy — Baro Ingiriisi');
   assert.deepEqual(await page.locator('#mainNav button').allTextContents(),['Home','Dictionary','Profile']);
