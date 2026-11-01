@@ -1,6 +1,6 @@
-// Somali English Academy service worker — cache-first for the app shell.
+// Somali English Academy service worker — network-first with offline fallback.
 // Bump CACHE on every publish so users never get stuck on an old build.
-const CACHE = "sea-f19-minimal-tutor";
+const CACHE = "sea-f20-fresh";
 const CORE = ["./", "./index.html", "./academy-ui.css", "./dictionary-client.js", "./academy-ui.js", "./tutor.js", "./tutor-config.js", "./manifest.json", "./icon-192.png", "./icon-512.png", "./icon-maskable-512.png", "./apple-touch-icon.png"];
 self.addEventListener("install", (e) => {
   e.waitUntil(caches.open(CACHE).then((c) => c.addAll(CORE)).then(() => self.skipWaiting()));
@@ -11,14 +11,17 @@ self.addEventListener("activate", (e) => {
 self.addEventListener("fetch", (e) => {
   const req = e.request;
   if (req.method !== "GET" || new URL(req.url).origin !== self.location.origin) return;
-  e.respondWith(
-    caches.match(req, { ignoreSearch: true }).then((hit) => {
-      const net = fetch(req).then((res) => {
-        if (res && res.ok) { const copy = res.clone(); caches.open(CACHE).then((c) => c.put(req, copy)); }
-        return res;
-      }).catch(() => hit);
-      return hit || net;
-    })
-  );
+  e.respondWith((async () => {
+    const cache = await caches.open(CACHE);
+    try {
+      const response = await fetch(req, { cache: 'no-cache' });
+      if (response.ok) {
+        await cache.put(req, response.clone());
+        return response;
+      }
+      return (await cache.match(req)) || response;
+    } catch {
+      return (await cache.match(req)) || Response.error();
+    }
+  })());
 });
-
