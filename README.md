@@ -54,3 +54,9 @@ Home and Profile offer a compact learning-tools section: placement test, AI tuto
 Conversation lessons now separate an eight-turn study dialogue, a two-question test and a results screen. Study text and listening controls are removed from the test DOM. Results reveal the example only after submission, save attempts, and offer Next lesson and Review controls. Free replies are not automatically graded. AI Tutor has an always-visible shortcut on Home and Profile.
 
 All 100 conversation lessons include Somali titles and translations of all eight dialogue turns, displayed beside English during study. Somali instructions, navigation and results guide the learner; the separate test hides dialogue translations. English audio reads only the English line. Somali wording is authored but has not had independent fluent-speaker review.
+
+## Personal coach
+
+Learners can save a goal (daily life, work, study or travel) and daily study time. Home recommends an unlocked, incomplete core lesson matching that goal when one is available. Daily practice suggests a lesson, due-word review and a minute of speaking. The progress screen separates completed lessons from placement skips and labels gap-fill results without claiming spoken fluency.
+
+The speaking studio offers three bilingual model phrases with slow English playback and optional microphone recording/replay (60-second limit). Microphone access is requested only after pressing Record. Recordings are temporary browser object URLs, never uploaded or saved into the learner profile, and released on exit. Browser support and permission vary; an aloud-practice fallback is provided. No automatic pronunciation score is claimed. Cross-device accounts and new transcript-based video lessons remain future work.

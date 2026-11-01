@@ -1785,3 +1785,83 @@ window.ACADEMY_TUTOR_URL = 'https://somali-academy-tutor.rashkaa33.workers.dev';
   renderHome=function(){home();add()};renderProfile=function(){profile();add()};
   if(S&&S.profile&&S.profile.onboarded)render();
 })();
+/* Personal plan and deliberate speaking practice. Progress remains profile-local. */
+(function () {
+  var oldHome=renderHome,oldProfile=renderProfile,oldLesson=renderLesson;
+  var recorder=null,stream=null,recordingUrl=null,recordTimer=null;
+  function tr(so,en){return S.profile.ui==='en'?en:so}
+  function make(tag,cls,text){var el=document.createElement(tag);if(cls)el.className=cls;if(text!==undefined)el.textContent=text;return el}
+  function action(parent,id,text,fn,primary){var b=make('button',primary?'simple-primary':'simple-row',text);b.type='button';b.id=id;b.onclick=fn;parent.appendChild(b);return b}
+  function completed(){return Object.values(S.completed||{}).filter(function(v){return !v.placed}).length}
+  function placed(){return Object.values(S.completed||{}).filter(function(v){return v.placed}).length}
+  function plan(){return S.learningPlan||{goal:'daily',minutes:10}}
+  var goals=[['daily','Nolosha maalinlaha ah','Daily life','greeting|shopping|home|food'],['work','Shaqo iyo waraysiyo','Work & interviews','work|interview|job|meeting'],['study','Waxbarasho','Study & school','school|study|academic|reading'],['travel','Safar','Travel','travel|bus|hotel|airport']];
+  function goal(){return goals.find(function(g){return g[0]===plan().goal})||goals[0]}
+  function recommendation(){var pattern=new RegExp(goal()[3],'i');return LESSONS.find(function(l){return !S.completed[l.id]&&isUnlocked(l.n)&&pattern.test(l.titleEn)})}
+  function goHome(){setNav('home');render();window.scrollTo(0,0)}
+  function panel(title){app.innerHTML='';action(app,'coachBack',tr('← Hoyga','← Home'),goHome);app.appendChild(make('h1','',title));window.scrollTo(0,0)}
+  function editPlan(){
+    panel(tr('Qorshahaaga waxbarashada','Your learning plan'));
+    app.appendChild(make('p','simple-intro',tr('Dooro sababta aad Ingiriisiga u baranayso iyo waqtiga aad maalin kasta heli karto.','Choose why you are learning English and a daily time that suits you.')));
+    var form=make('form','coach-plan');
+    var label=make('label','simple-label',tr('Hadafkaaga','Your goal'));label.htmlFor='coachGoal';form.appendChild(label);
+    var select=make('select');select.id='coachGoal';goals.forEach(function(g){var o=make('option','',tr(g[1],g[2]));o.value=g[0];select.appendChild(o)});select.value=plan().goal;form.appendChild(select);
+    label=make('label','simple-label',tr('Daqiiqado maalintii','Minutes per day'));label.htmlFor='coachMinutes';form.appendChild(label);
+    var minutes=make('select');minutes.id='coachMinutes';[5,10,15,20].forEach(function(n){var o=make('option','',n+' '+tr('daqiiqo','minutes'));o.value=n;minutes.appendChild(o)});minutes.value=plan().minutes;form.appendChild(minutes);
+    var saveButton=make('button','simple-primary',tr('Kaydi qorshaha','Save my plan'));saveButton.type='submit';form.appendChild(saveButton);
+    var status=make('p');status.setAttribute('role','status');form.appendChild(status);
+    form.onsubmit=async function(e){e.preventDefault();S.learningPlan={goal:select.value,minutes:Number(minutes.value)};saveButton.disabled=true;try{await save();goHome()}catch(err){status.textContent=tr('Kaydintu way fashilantay. Mar kale isku day.','Could not save. Please try again.');saveButton.disabled=false}};
+    app.appendChild(form);action(app,'coachPlacement',tr('Heerkayga ogow · Imtixaanka meelaynta','Find my level · Placement test'),function(){plBegin('profile')});
+  }
+  function progress(){
+    panel(tr('Horumarkaaga dhabta ah','Your learning progress'));
+    var rows=[[completed(),tr('cashar oo aad dhammaysay','lessons completed by you')],[placed(),tr('cashar oo meelayntu kaa dhaaftay','lessons skipped through placement')],[Object.values(S.communication||{}).filter(function(v){return v.correct}).length,tr('layli wada hadal oo eraygiisa saxday','conversation gap-fill activities answered correctly')],[(S.dictionarySaved||[]).length,tr('eray oo aad kaydsatay','saved dictionary words')]];
+    rows.forEach(function(r){var item=make('div','coach-stat');item.appendChild(make('strong','',String(r[0])));item.appendChild(make('span','',r[1]));app.appendChild(item)});
+    app.appendChild(make('p','simple-intro',tr('Tirooyinkani ma caddeeyaan heerka hadalkaaga. Ku tababar dhegeysi, hadal, akhris iyo qoraal.','These counts do not certify speaking ability. Practise listening, speaking, reading and writing.')));
+    app.appendChild(make('p','simple-device-note',tr('Horumarkaagu wuxuu ku kaydsan yahay biraawsarkan iyo aaladdan. Boggaaga → Dejimo kale → Kaydi ama soo celi horumarka si aad nuqul u hesho. Weli ma jiro akoon isku xira aaladaha.','Progress is saved in this browser on this device. Use Profile → More settings → Save or Restore Progress for a backup. Cross-device accounts are not available yet.')));
+    action(app,'coachReview',tr('Ku celceli erayada u baahan dib u eegis','Review words that are due'),function(){setNav('review');render()});
+  }
+  function stopTracks(){if(stream){stream.getTracks().forEach(function(t){t.stop()});stream=null}clearTimeout(recordTimer)}
+  function cleanup(){if(recorder&&recorder.state!=='inactive')recorder.stop();stopTracks();if(recordingUrl){URL.revokeObjectURL(recordingUrl);recordingUrl=null}}
+  function speaking(){
+    panel(tr('Tababarka hadalka','Speaking studio'));
+    app.appendChild(make('p','simple-intro',tr('Dhegeyso, ku celi, dabadeed codkaaga dib u dhegeyso. Duubistu kuma baxdo aaladdan, mana aha qiimayn ku dhawaaqis.','Listen, repeat, then replay your voice. Recordings stay on this device and are not pronunciation scores.')));
+    var phrases=['Could you say that again, please?','I would like to book an appointment.','Could you help me understand this?'];
+    var translations=['Mar kale ma dhihi kartaa, fadlan?','Waxaan rabaa inaan ballan qabsado.','Ma iga caawin kartaa inaan tan fahmo?'];
+    phrases.forEach(function(text,i){var p=make('section','coach-phrase');p.appendChild(make('p','',text));p.appendChild(make('p','conversation-translation',translations[i]));action(p,'coachListen'+i,tr('Dhegeyso si tartiib ah','Listen slowly'),function(){speak(text,true)});app.appendChild(p)});
+    var controls=make('section','coach-recorder');var status=make('p');status.setAttribute('role','status');
+    var record=action(controls,'coachRecord',tr('🎙 Duub codkaaga','🎙 Record your voice'),async function(){
+      record.disabled=true;
+      try{
+        if(!navigator.mediaDevices||!window.MediaRecorder)throw new Error('unsupported');
+        stream=await navigator.mediaDevices.getUserMedia({audio:true});
+        if(!controls.isConnected){stopTracks();return}
+        if(recordingUrl){URL.revokeObjectURL(recordingUrl);recordingUrl=null}audio.removeAttribute('src');
+        var chunks=[];recorder=new MediaRecorder(stream);recorder.ondataavailable=function(e){if(e.data.size)chunks.push(e.data)};
+        recorder.onstop=function(){stopTracks();if(controls.isConnected){recordingUrl=URL.createObjectURL(new Blob(chunks,{type:recorder.mimeType}));audio.src=recordingUrl;audio.hidden=false;record.disabled=false;stop.disabled=true;status.textContent=tr('Dib u dhegeyso codkaaga oo tusaalaha la barbar dhig.','Replay your voice and compare it with the example.')}};
+        recorder.start();stop.disabled=false;status.textContent=tr('Duubis ayaa socota · ugu badnaan 60 ilbiriqsi.','Recording · maximum 60 seconds.');recordTimer=setTimeout(function(){if(recorder.state!=='inactive')recorder.stop()},60000);
+      }catch(e){stopTracks();record.disabled=false;status.textContent=tr('Makarafoon lama heli karo. Oggolow makarafoonka ama ku tababar adigoo cod dheer ku hadlaya.','Microphone unavailable. Allow microphone access or practise aloud without recording.')}
+    },true);
+    var stop=action(controls,'coachStop',tr('■ Jooji duubista','■ Stop recording'),function(){if(recorder&&recorder.state!=='inactive')recorder.stop()});stop.disabled=true;
+    var audio=make('audio');audio.controls=true;audio.hidden=true;audio.setAttribute('aria-label',tr('Codkaaga duuban','Your recording'));controls.appendChild(audio);controls.appendChild(status);app.appendChild(controls);
+  }
+  // Stop recording when leaving the studio, including primary navigation.
+  new MutationObserver(function(){if(!document.getElementById('coachRecord'))cleanup()}).observe(app,{childList:true});
+  window.addEventListener('pagehide',cleanup);
+  function enhance(){
+    var home=app.querySelector('.simple-home-content');if(!home)return;
+    var subtitle=home.querySelector('.simple-intro');if(subtitle)subtitle.textContent=tr(goal()[1],goal()[2])+' · '+plan().minutes+' '+tr('daqiiqo maalintii','minutes a day');
+    var section=make('section','coach-today');var d=completed(),milestone=Math.floor(d/10)*10;
+    section.appendChild(make('h2','',tr('Tallaabadaada maanta','Your practice today')));
+    section.appendChild(make('p','',tr('Hal cashar baro, erayadii hore ku celi, dabadeed hal daqiiqo cod dheer ku hadal.','Learn one lesson, review earlier words, then speak aloud for one minute.')));
+    action(section,'coachSpeaking',tr('Ku tababar hadalka','Practise speaking'),speaking);
+    action(section,'coachPlan',tr('Hagaaji qorshahayga','Adjust my learning plan'),editPlan);
+    action(section,'coachProgress',tr('Eeg horumarkayga','See my progress'),progress);
+    if(milestone>0)section.appendChild(make('p','coach-milestone',tr('Waad dadaashay! Waxaad dhammaysay '+d+' cashar.','Well done! You have completed '+d+' lessons.')));
+    var recommended=recommendation();if(recommended)action(section,'coachRecommended',tr('Hadafkaaga ku habboon: ','For your goal: ')+(S.profile.ui==='en'?recommended.titleEn:recommended.titleSo),function(){openLesson(recommended.n)});
+    home.appendChild(section);
+  }
+  renderHome=function(){oldHome();enhance()};
+  renderProfile=function(){oldProfile();var rows=app.querySelector('.simple-profile-rows');if(rows){action(rows,'profileCoachPlan',tr('Qorshahayga waxbarashada','My learning plan'),editPlan);action(rows,'profileCoachProgress',tr('Waxaan bartay','What I have practised'),progress);action(rows,'profileCoachSpeaking',tr('Tababarka hadalka','Speaking studio'),speaking)}};
+  if(S&&S.profile&&S.profile.onboarded)render();
+})();
