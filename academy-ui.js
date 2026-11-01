@@ -309,7 +309,7 @@ window.ACADEMY_TUTOR_URL = 'https://somali-academy-tutor.rashkaa33.workers.dev';
     ['Make a social invitation','Invite a neighbour for tea on Saturday.','Would you like to come over for tea on Saturday?','Would you ___ to come over for tea on Saturday?','like']
   ];
   function showList() {
-    app.innerHTML = '<button class="simple-back" id="commBack">← Home</button><h1>Real-life English</h1><p>12 practical conversation lessons. Listen, answer, then practise both sides aloud. Your results stay on this device.</p>';
+    app.innerHTML = '<button class="simple-back" id="commBack">← Home</button><h1>Real-life English</h1><p>100 practical conversation lessons. Listen, answer, then practise both sides aloud. Your results stay on this device.</p>';
     document.getElementById('commBack').onclick = function () { setNav('home'); render(); };
     lessons.forEach(function (l,i) {
       var b=document.createElement('button');b.className='simple-row';b.textContent=(i+1)+'. '+l[0]+(S.communication&&S.communication[i]?' ✓':'');b.onclick=function(){showLesson(i)};app.appendChild(b);
@@ -329,6 +329,1417 @@ window.ACADEMY_TUTOR_URL = 'https://somali-academy-tutor.rashkaa33.workers.dev';
     ['A: I think we should finish the whole project this week.','B: I see your point, but I have a different view.','A: What concerns you?','B: We need more time to test the results.','A: What would you suggest?','B: Finish the first part now and test it next week.','A: That sounds reasonable. Let us adjust the plan.','B: Thank you for considering my suggestion.'],
     ['A: Hello! How has your week been?','B: Busy, but good. How about yours?','A: Good, thank you. Would you like to come over for tea on Saturday?','B: That sounds lovely. What time?','A: Would three o’clock suit you?','B: Yes. Should I bring anything?','A: Just yourself. I will make some snacks.','B: Thank you. I look forward to it.']
   ];
+  var extraConversations = [
+  {
+    "title": "Order a coffee",
+    "phrase": "Could I have a small coffee, please?",
+    "prompt": "Could I have a small coffee, ___?",
+    "answer": "please",
+    "dialogue": [
+      "A: Hello. Could we talk for a moment?",
+      "B: Of course. How can I help?",
+      "A: Could I have a small coffee, please?",
+      "B: Of course. Would you like milk?",
+      "A: Yes, a little milk, please.",
+      "B: That will be three pounds.",
+      "A: Thank you for your time.",
+      "B: You are welcome."
+    ]
+  },
+  {
+    "title": "Ask about food allergies",
+    "phrase": "Does this dish contain peanuts?",
+    "prompt": "Does this dish contain ___?",
+    "answer": "peanuts",
+    "dialogue": [
+      "A: Hello. Could we talk for a moment?",
+      "B: Of course. How can I help?",
+      "A: Does this dish contain peanuts?",
+      "B: Let me check with the kitchen.",
+      "A: Thank you. I have a peanut allergy.",
+      "B: Please wait before ordering until we confirm the ingredients.",
+      "A: Thank you for your time.",
+      "B: You are welcome."
+    ]
+  },
+  {
+    "title": "Reserve a restaurant table",
+    "phrase": "Could I reserve a table for four?",
+    "prompt": "Could I reserve a ___ for four?",
+    "answer": "table",
+    "dialogue": [
+      "A: Hello. Could we talk for a moment?",
+      "B: Of course. How can I help?",
+      "A: Could I reserve a table for four?",
+      "B: Certainly. What time would you like?",
+      "A: Seven o’clock on Friday, please.",
+      "B: We have a table available then.",
+      "A: Thank you for your time.",
+      "B: You are welcome."
+    ]
+  },
+  {
+    "title": "Ask for the bill",
+    "phrase": "Could we have the bill, please?",
+    "prompt": "Could we have the bill, ___?",
+    "answer": "please",
+    "dialogue": [
+      "A: Hello. Could we talk for a moment?",
+      "B: Of course. How can I help?",
+      "A: Could we have the bill, please?",
+      "B: Certainly. Would you like to pay together?",
+      "A: Could we pay separately?",
+      "B: Yes. I can split the bill.",
+      "A: Thank you for your time.",
+      "B: You are welcome."
+    ]
+  },
+  {
+    "title": "Report an incorrect order",
+    "phrase": "I ordered soup, but this is a salad.",
+    "prompt": "I ordered soup, but this is a ___.",
+    "answer": "salad",
+    "dialogue": [
+      "A: Hello. Could we talk for a moment?",
+      "B: Of course. How can I help?",
+      "A: I ordered soup, but this is a salad.",
+      "B: I am sorry. Let me check your order.",
+      "A: Thank you. Could you bring the soup instead?",
+      "B: Of course. I will replace it.",
+      "A: Thank you for your time.",
+      "B: You are welcome."
+    ]
+  },
+  {
+    "title": "Buy groceries",
+    "phrase": "Where can I find the rice?",
+    "prompt": "___ can I find the rice?",
+    "answer": "Where",
+    "dialogue": [
+      "A: Hello. Could we talk for a moment?",
+      "B: Of course. How can I help?",
+      "A: Where can I find the rice?",
+      "B: It is in aisle five, beside the pasta.",
+      "A: Is there a smaller bag?",
+      "B: Yes, on the bottom shelf.",
+      "A: Thank you for your time.",
+      "B: You are welcome."
+    ]
+  },
+  {
+    "title": "Compare prices",
+    "phrase": "Is this price for one item or two?",
+    "prompt": "Is this ___ for one item or two?",
+    "answer": "price",
+    "dialogue": [
+      "A: Hello. Could we talk for a moment?",
+      "B: Of course. How can I help?",
+      "A: Is this price for one item or two?",
+      "B: It is the price for two.",
+      "A: Can I buy just one?",
+      "B: Yes, but the discount only applies to two.",
+      "A: Thank you for your time.",
+      "B: You are welcome."
+    ]
+  },
+  {
+    "title": "Ask for another size",
+    "phrase": "Do you have this jacket in a larger size?",
+    "prompt": "Do you have this jacket in a ___ size?",
+    "answer": "larger",
+    "dialogue": [
+      "A: Hello. Could we talk for a moment?",
+      "B: Of course. How can I help?",
+      "A: Do you have this jacket in a larger size?",
+      "B: I will check the stockroom.",
+      "A: Thank you. Could I try it on?",
+      "B: Certainly. The changing rooms are over there.",
+      "A: Thank you for your time.",
+      "B: You are welcome."
+    ]
+  },
+  {
+    "title": "Exchange clothing",
+    "phrase": "Could I exchange this shirt for a smaller size?",
+    "prompt": "Could I exchange this shirt for a ___ size?",
+    "answer": "smaller",
+    "dialogue": [
+      "A: Hello. Could we talk for a moment?",
+      "B: Of course. How can I help?",
+      "A: Could I exchange this shirt for a smaller size?",
+      "B: Do you have your receipt?",
+      "A: Yes. The tags are still attached too.",
+      "B: Thank you. Let us find the right size.",
+      "A: Thank you for your time.",
+      "B: You are welcome."
+    ]
+  },
+  {
+    "title": "Ask for a shopping bag",
+    "phrase": "Could I have a bag, please?",
+    "prompt": "Could I have a bag, ___?",
+    "answer": "please",
+    "dialogue": [
+      "A: Hello. Could we talk for a moment?",
+      "B: Of course. How can I help?",
+      "A: Could I have a bag, please?",
+      "B: Would you like a reusable one?",
+      "A: Yes. How much is it?",
+      "B: It costs one pound.",
+      "A: Thank you for your time.",
+      "B: You are welcome."
+    ]
+  },
+  {
+    "title": "Ask for directions",
+    "phrase": "How do I get to the library from here?",
+    "prompt": "How do I get to the ___ from here?",
+    "answer": "library",
+    "dialogue": [
+      "A: Hello. Could we talk for a moment?",
+      "B: Of course. How can I help?",
+      "A: How do I get to the library from here?",
+      "B: Go straight and turn left at the lights.",
+      "A: Is it within walking distance?",
+      "B: Yes, it takes about ten minutes.",
+      "A: Thank you for your time.",
+      "B: You are welcome."
+    ]
+  },
+  {
+    "title": "Buy a train ticket",
+    "phrase": "I would like a return ticket to York.",
+    "prompt": "I would like a return ___ to York.",
+    "answer": "ticket",
+    "dialogue": [
+      "A: Hello. Could we talk for a moment?",
+      "B: Of course. How can I help?",
+      "A: I would like a return ticket to York.",
+      "B: When would you like to travel?",
+      "A: This morning, returning tomorrow.",
+      "B: Let me check the available fares.",
+      "A: Thank you for your time.",
+      "B: You are welcome."
+    ]
+  },
+  {
+    "title": "Find a platform",
+    "phrase": "Which platform does the Bristol train leave from?",
+    "prompt": "Which platform does the Bristol train ___ from?",
+    "answer": "leave",
+    "dialogue": [
+      "A: Hello. Could we talk for a moment?",
+      "B: Of course. How can I help?",
+      "A: Which platform does the Bristol train leave from?",
+      "B: It is currently listed on platform six.",
+      "A: Has the departure time changed?",
+      "B: Please check the board for the latest update.",
+      "A: Thank you for your time.",
+      "B: You are welcome."
+    ]
+  },
+  {
+    "title": "Ask about a delayed train",
+    "phrase": "Do you know why the train is delayed?",
+    "prompt": "Do you know why the train is ___?",
+    "answer": "delayed",
+    "dialogue": [
+      "A: Hello. Could we talk for a moment?",
+      "B: Of course. How can I help?",
+      "A: Do you know why the train is delayed?",
+      "B: There is a signalling problem.",
+      "A: Is another service available?",
+      "B: There is a bus replacement outside the station.",
+      "A: Thank you for your time.",
+      "B: You are welcome."
+    ]
+  },
+  {
+    "title": "Book a taxi",
+    "phrase": "Could I book a taxi for six tomorrow morning?",
+    "prompt": "Could I book a taxi for six tomorrow ___?",
+    "answer": "morning",
+    "dialogue": [
+      "A: Hello. Could we talk for a moment?",
+      "B: Of course. How can I help?",
+      "A: Could I book a taxi for six tomorrow morning?",
+      "B: Certainly. Where should we collect you?",
+      "A: Outside the main entrance of the hotel.",
+      "B: Please give me the hotel address.",
+      "A: Thank you for your time.",
+      "B: You are welcome."
+    ]
+  },
+  {
+    "title": "Confirm a destination",
+    "phrase": "Could you take me to the central station?",
+    "prompt": "Could you take me to the central ___?",
+    "answer": "station",
+    "dialogue": [
+      "A: Hello. Could we talk for a moment?",
+      "B: Of course. How can I help?",
+      "A: Could you take me to the central station?",
+      "B: Certainly. Which entrance do you need?",
+      "A: The entrance near the ticket office, please.",
+      "B: I will drop you beside it.",
+      "A: Thank you for your time.",
+      "B: You are welcome."
+    ]
+  },
+  {
+    "title": "Check in at a hotel",
+    "phrase": "I have a reservation under the name Ali.",
+    "prompt": "I have a reservation ___ the name Ali.",
+    "answer": "under",
+    "dialogue": [
+      "A: Hello. Could we talk for a moment?",
+      "B: Of course. How can I help?",
+      "A: I have a reservation under the name Ali.",
+      "B: Welcome. May I see your booking confirmation?",
+      "A: Here it is. Is breakfast included?",
+      "B: Let me check the details of your booking.",
+      "A: Thank you for your time.",
+      "B: You are welcome."
+    ]
+  },
+  {
+    "title": "Ask about hotel facilities",
+    "phrase": "What time does breakfast start?",
+    "prompt": "What time does breakfast ___?",
+    "answer": "start",
+    "dialogue": [
+      "A: Hello. Could we talk for a moment?",
+      "B: Of course. How can I help?",
+      "A: What time does breakfast start?",
+      "B: It starts at seven in the dining room.",
+      "A: Is there a place to leave my luggage?",
+      "B: Yes, we have a luggage room beside reception.",
+      "A: Thank you for your time.",
+      "B: You are welcome."
+    ]
+  },
+  {
+    "title": "Report a noisy room",
+    "phrase": "There is a lot of noise outside my room.",
+    "prompt": "There is a lot of noise ___ my room.",
+    "answer": "outside",
+    "dialogue": [
+      "A: Hello. Could we talk for a moment?",
+      "B: Of course. How can I help?",
+      "A: There is a lot of noise outside my room.",
+      "B: I am sorry. When did it begin?",
+      "A: About an hour ago. Could you help?",
+      "B: I will investigate and check whether another room is available.",
+      "A: Thank you for your time.",
+      "B: You are welcome."
+    ]
+  },
+  {
+    "title": "Check out of a hotel",
+    "phrase": "I would like to check out, please.",
+    "prompt": "I would like to check out, ___.",
+    "answer": "please",
+    "dialogue": [
+      "A: Hello. Could we talk for a moment?",
+      "B: Of course. How can I help?",
+      "A: I would like to check out, please.",
+      "B: Certainly. What is your room number?",
+      "A: Room two hundred and ten.",
+      "B: Thank you. Let me prepare your final bill.",
+      "A: Thank you for your time.",
+      "B: You are welcome."
+    ]
+  },
+  {
+    "title": "Check in for a flight",
+    "phrase": "Where can I check in for the morning flight?",
+    "prompt": "Where can I check in for the morning ___?",
+    "answer": "flight",
+    "dialogue": [
+      "A: Hello. Could we talk for a moment?",
+      "B: Of course. How can I help?",
+      "A: Where can I check in for the morning flight?",
+      "B: Please use the desks at the far end.",
+      "A: Can I check this bag in here?",
+      "B: The airline staff at those desks can help you.",
+      "A: Thank you for your time.",
+      "B: You are welcome."
+    ]
+  },
+  {
+    "title": "Ask about cabin luggage",
+    "phrase": "Is this bag small enough for the cabin?",
+    "prompt": "Is this bag small enough for the ___?",
+    "answer": "cabin",
+    "dialogue": [
+      "A: Hello. Could we talk for a moment?",
+      "B: Of course. How can I help?",
+      "A: Is this bag small enough for the cabin?",
+      "B: We need to check its dimensions and your ticket allowance.",
+      "A: Where can I measure it?",
+      "B: Please use the luggage frame beside the desk.",
+      "A: Thank you for your time.",
+      "B: You are welcome."
+    ]
+  },
+  {
+    "title": "Find a departure gate",
+    "phrase": "Where can I find gate twenty-two?",
+    "prompt": "Where can I find gate ___-two?",
+    "answer": "twenty",
+    "dialogue": [
+      "A: Hello. Could we talk for a moment?",
+      "B: Of course. How can I help?",
+      "A: Where can I find gate twenty-two?",
+      "B: Follow the signs past security.",
+      "A: Is it a long walk?",
+      "B: Allow about fifteen minutes and check the departure board.",
+      "A: Thank you for your time.",
+      "B: You are welcome."
+    ]
+  },
+  {
+    "title": "Report missing luggage",
+    "phrase": "My suitcase has not arrived.",
+    "prompt": "My suitcase has not ___.",
+    "answer": "arrived",
+    "dialogue": [
+      "A: Hello. Could we talk for a moment?",
+      "B: Of course. How can I help?",
+      "A: My suitcase has not arrived.",
+      "B: Please show me your baggage receipt.",
+      "A: Here it is. The suitcase is blue.",
+      "B: Thank you. We will start a missing-bag report.",
+      "A: Thank you for your time.",
+      "B: You are welcome."
+    ]
+  },
+  {
+    "title": "Ask for airport assistance",
+    "phrase": "Could someone help me reach my gate?",
+    "prompt": "Could someone help me ___ my gate?",
+    "answer": "reach",
+    "dialogue": [
+      "A: Hello. Could we talk for a moment?",
+      "B: Of course. How can I help?",
+      "A: Could someone help me reach my gate?",
+      "B: Certainly. What kind of assistance do you need?",
+      "A: I have difficulty walking long distances.",
+      "B: Let me contact the assistance team.",
+      "A: Thank you for your time.",
+      "B: You are welcome."
+    ]
+  },
+  {
+    "title": "Register at a clinic",
+    "phrase": "I would like to register as a patient.",
+    "prompt": "I would like to register as a ___.",
+    "answer": "patient",
+    "dialogue": [
+      "A: Hello. Could we talk for a moment?",
+      "B: Of course. How can I help?",
+      "A: I would like to register as a patient.",
+      "B: Please complete this registration form.",
+      "A: Could you explain this section?",
+      "B: It asks for your current contact details.",
+      "A: Thank you for your time.",
+      "B: You are welcome."
+    ]
+  },
+  {
+    "title": "Ask about a prescription",
+    "phrase": "Is my prescription ready to collect?",
+    "prompt": "Is my prescription ready to ___?",
+    "answer": "collect",
+    "dialogue": [
+      "A: Hello. Could we talk for a moment?",
+      "B: Of course. How can I help?",
+      "A: Is my prescription ready to collect?",
+      "B: Let me check with the pharmacist.",
+      "A: Do I need to bring anything?",
+      "B: Please bring the information requested by the pharmacy.",
+      "A: Thank you for your time.",
+      "B: You are welcome."
+    ]
+  },
+  {
+    "title": "Describe a sore throat",
+    "phrase": "My throat hurts when I swallow.",
+    "prompt": "My throat hurts when I ___.",
+    "answer": "swallow",
+    "dialogue": [
+      "A: Hello. Could we talk for a moment?",
+      "B: Of course. How can I help?",
+      "A: My throat hurts when I swallow.",
+      "B: How long has it been bothering you?",
+      "A: Since Monday. I would like to speak to a clinician.",
+      "B: I will help you arrange an assessment.",
+      "A: Thank you for your time.",
+      "B: You are welcome."
+    ]
+  },
+  {
+    "title": "Ask about medicine instructions",
+    "phrase": "Could you explain the instructions on this label?",
+    "prompt": "Could you explain the instructions on this ___?",
+    "answer": "label",
+    "dialogue": [
+      "A: Hello. Could we talk for a moment?",
+      "B: Of course. How can I help?",
+      "A: Could you explain the instructions on this label?",
+      "B: The pharmacist can go through them with you.",
+      "A: Thank you. I do not want to misunderstand the dose.",
+      "B: Please wait here while I call the pharmacist.",
+      "A: Thank you for your time.",
+      "B: You are welcome."
+    ]
+  },
+  {
+    "title": "Book a dental appointment",
+    "phrase": "I would like an appointment with a dentist.",
+    "prompt": "I would like an appointment with a ___.",
+    "answer": "dentist",
+    "dialogue": [
+      "A: Hello. Could we talk for a moment?",
+      "B: Of course. How can I help?",
+      "A: I would like an appointment with a dentist.",
+      "B: Is this a routine check-up?",
+      "A: No. One of my teeth has been hurting.",
+      "B: Let me check the available appointments.",
+      "A: Thank you for your time.",
+      "B: You are welcome."
+    ]
+  },
+  {
+    "title": "Change a clinic appointment",
+    "phrase": "Could I change my appointment to another day?",
+    "prompt": "Could I change my appointment to ___ day?",
+    "answer": "another",
+    "dialogue": [
+      "A: Hello. Could we talk for a moment?",
+      "B: Of course. How can I help?",
+      "A: Could I change my appointment to another day?",
+      "B: Certainly. Which day would suit you?",
+      "A: Wednesday afternoon, if possible.",
+      "B: I will check the schedule.",
+      "A: Thank you for your time.",
+      "B: You are welcome."
+    ]
+  },
+  {
+    "title": "Ask for an interpreter",
+    "phrase": "Could I have a Somali interpreter for my appointment?",
+    "prompt": "Could I have a Somali interpreter for my ___?",
+    "answer": "appointment",
+    "dialogue": [
+      "A: Hello. Could we talk for a moment?",
+      "B: Of course. How can I help?",
+      "A: Could I have a Somali interpreter for my appointment?",
+      "B: I will check what support is available.",
+      "A: Thank you. I want to understand everything clearly.",
+      "B: We will explain the arrangements before the appointment.",
+      "A: Thank you for your time.",
+      "B: You are welcome."
+    ]
+  },
+  {
+    "title": "Call about an emergency",
+    "phrase": "Please send an ambulance. Someone has collapsed.",
+    "prompt": "Please send an ambulance. Someone has ___.",
+    "answer": "collapsed",
+    "dialogue": [
+      "A: Hello. Could we talk for a moment?",
+      "B: Of course. How can I help?",
+      "A: Please send an ambulance. Someone has collapsed.",
+      "B: Tell me the exact location.",
+      "A: We are at the main entrance of Central Library.",
+      "B: Stay on the line and follow the call handler’s instructions.",
+      "A: Thank you for your time.",
+      "B: You are welcome."
+    ]
+  },
+  {
+    "title": "Describe a lost phone",
+    "phrase": "I think I left my phone on the bus.",
+    "prompt": "I think I left my ___ on the bus.",
+    "answer": "phone",
+    "dialogue": [
+      "A: Hello. Could we talk for a moment?",
+      "B: Of course. How can I help?",
+      "A: I think I left my phone on the bus.",
+      "B: What time were you travelling?",
+      "A: Around four this afternoon on route ten.",
+      "B: Please complete a lost-property report.",
+      "A: Thank you for your time.",
+      "B: You are welcome."
+    ]
+  },
+  {
+    "title": "Report a stolen wallet",
+    "phrase": "I would like to report a stolen wallet.",
+    "prompt": "I would like to report a stolen ___.",
+    "answer": "wallet",
+    "dialogue": [
+      "A: Hello. Could we talk for a moment?",
+      "B: Of course. How can I help?",
+      "A: I would like to report a stolen wallet.",
+      "B: Where did you last have it?",
+      "A: At the station about an hour ago.",
+      "B: I will explain how to make a report.",
+      "A: Thank you for your time.",
+      "B: You are welcome."
+    ]
+  },
+  {
+    "title": "Ask for help in a shop",
+    "phrase": "Could you help me reach that item?",
+    "prompt": "Could you help me ___ that item?",
+    "answer": "reach",
+    "dialogue": [
+      "A: Hello. Could we talk for a moment?",
+      "B: Of course. How can I help?",
+      "A: Could you help me reach that item?",
+      "B: Of course. Is it the blue box?",
+      "A: Yes, the one on the top shelf.",
+      "B: Here you are.",
+      "A: Thank you for your time.",
+      "B: You are welcome."
+    ]
+  },
+  {
+    "title": "View a rental property",
+    "phrase": "Could I arrange a viewing of the flat?",
+    "prompt": "Could I arrange a ___ of the flat?",
+    "answer": "viewing",
+    "dialogue": [
+      "A: Hello. Could we talk for a moment?",
+      "B: Of course. How can I help?",
+      "A: Could I arrange a viewing of the flat?",
+      "B: Are you available on Saturday?",
+      "A: Yes. Is the rent inclusive of bills?",
+      "B: No. I can send you a breakdown before the viewing.",
+      "A: Thank you for your time.",
+      "B: You are welcome."
+    ]
+  },
+  {
+    "title": "Ask about a tenancy",
+    "phrase": "How long is the rental agreement?",
+    "prompt": "How long is the rental ___?",
+    "answer": "agreement",
+    "dialogue": [
+      "A: Hello. Could we talk for a moment?",
+      "B: Of course. How can I help?",
+      "A: How long is the rental agreement?",
+      "B: The proposed term is twelve months.",
+      "A: Could I read the terms before deciding?",
+      "B: Certainly. I will send you a copy.",
+      "A: Thank you for your time.",
+      "B: You are welcome."
+    ]
+  },
+  {
+    "title": "Report a heating problem",
+    "phrase": "The heating in my flat is not working.",
+    "prompt": "The heating in my flat is not ___.",
+    "answer": "working",
+    "dialogue": [
+      "A: Hello. Could we talk for a moment?",
+      "B: Of course. How can I help?",
+      "A: The heating in my flat is not working.",
+      "B: Is it affecting every room?",
+      "A: Yes. I noticed it this morning.",
+      "B: I will arrange for someone to investigate.",
+      "A: Thank you for your time.",
+      "B: You are welcome."
+    ]
+  },
+  {
+    "title": "Arrange a delivery",
+    "phrase": "Could you deliver the furniture on Friday?",
+    "prompt": "Could you deliver the furniture on ___?",
+    "answer": "Friday",
+    "dialogue": [
+      "A: Hello. Could we talk for a moment?",
+      "B: Of course. How can I help?",
+      "A: Could you deliver the furniture on Friday?",
+      "B: We have an afternoon delivery slot.",
+      "A: Will someone call before arriving?",
+      "B: Yes. The driver will contact you.",
+      "A: Thank you for your time.",
+      "B: You are welcome."
+    ]
+  },
+  {
+    "title": "Ask a neighbour to reduce noise",
+    "phrase": "Could you turn the music down a little, please?",
+    "prompt": "Could you turn the music down a little, ___?",
+    "answer": "please",
+    "dialogue": [
+      "A: Hello. Could we talk for a moment?",
+      "B: Of course. How can I help?",
+      "A: Could you turn the music down a little, please?",
+      "B: I am sorry. I did not realise it was loud.",
+      "A: Thank you. I have an early start tomorrow.",
+      "B: Of course. I will lower it now.",
+      "A: Thank you for your time.",
+      "B: You are welcome."
+    ]
+  },
+  {
+    "title": "Introduce yourself to a neighbour",
+    "phrase": "Hello, I have just moved in next door.",
+    "prompt": "Hello, I have just ___ in next door.",
+    "answer": "moved",
+    "dialogue": [
+      "A: Hello. Could we talk for a moment?",
+      "B: Of course. How can I help?",
+      "A: Hello, I have just moved in next door.",
+      "B: Welcome to the building.",
+      "A: My name is Amina. It is nice to meet you.",
+      "B: Nice to meet you too. I am Sam.",
+      "A: Thank you for your time.",
+      "B: You are welcome."
+    ]
+  },
+  {
+    "title": "Arrange internet installation",
+    "phrase": "I would like to arrange an internet installation.",
+    "prompt": "I would like to arrange an internet ___.",
+    "answer": "installation",
+    "dialogue": [
+      "A: Hello. Could we talk for a moment?",
+      "B: Of course. How can I help?",
+      "A: I would like to arrange an internet installation.",
+      "B: What date would suit you?",
+      "A: Next Tuesday, if there is a morning slot.",
+      "B: Let me check engineer availability.",
+      "A: Thank you for your time.",
+      "B: You are welcome."
+    ]
+  },
+  {
+    "title": "Ask about an electricity bill",
+    "phrase": "Could you explain why this bill is higher?",
+    "prompt": "Could you explain why this bill is ___?",
+    "answer": "higher",
+    "dialogue": [
+      "A: Hello. Could we talk for a moment?",
+      "B: Of course. How can I help?",
+      "A: Could you explain why this bill is higher?",
+      "B: Let us compare the meter readings.",
+      "A: I have a recent reading here.",
+      "B: Thank you. That will help us check it.",
+      "A: Thank you for your time.",
+      "B: You are welcome."
+    ]
+  },
+  {
+    "title": "Open a bank account",
+    "phrase": "I would like information about opening an account.",
+    "prompt": "I would like information about opening an ___.",
+    "answer": "account",
+    "dialogue": [
+      "A: Hello. Could we talk for a moment?",
+      "B: Of course. How can I help?",
+      "A: I would like information about opening an account.",
+      "B: We can explain the available options.",
+      "A: What documents would I need?",
+      "B: The requirements depend on the account. Here is the checklist.",
+      "A: Thank you for your time.",
+      "B: You are welcome."
+    ]
+  },
+  {
+    "title": "Ask about a bank charge",
+    "phrase": "Could you explain this charge on my statement?",
+    "prompt": "Could you explain this charge on my ___?",
+    "answer": "statement",
+    "dialogue": [
+      "A: Hello. Could we talk for a moment?",
+      "B: Of course. How can I help?",
+      "A: Could you explain this charge on my statement?",
+      "B: Please tell me the date and description.",
+      "A: It appears beside yesterday’s payment.",
+      "B: I will check what the charge relates to.",
+      "A: Thank you for your time.",
+      "B: You are welcome."
+    ]
+  },
+  {
+    "title": "Report a missing bank card",
+    "phrase": "I cannot find my bank card.",
+    "prompt": "I ___ find my bank card.",
+    "answer": "cannot",
+    "dialogue": [
+      "A: Hello. Could we talk for a moment?",
+      "B: Of course. How can I help?",
+      "A: I cannot find my bank card.",
+      "B: We can explain how to freeze or report it.",
+      "A: Can I freeze it while I look for it?",
+      "B: Please use the bank’s official app or contact channel.",
+      "A: Thank you for your time.",
+      "B: You are welcome."
+    ]
+  },
+  {
+    "title": "Ask about a transfer",
+    "phrase": "How long will this transfer take?",
+    "prompt": "How long will this ___ take?",
+    "answer": "transfer",
+    "dialogue": [
+      "A: Hello. Could we talk for a moment?",
+      "B: Of course. How can I help?",
+      "A: How long will this transfer take?",
+      "B: It depends on the destination and transfer type.",
+      "A: Can I check the fee before confirming?",
+      "B: Yes. Review the quoted fee and details first.",
+      "A: Thank you for your time.",
+      "B: You are welcome."
+    ]
+  },
+  {
+    "title": "Make a budget appointment",
+    "phrase": "Could I speak to someone about managing my budget?",
+    "prompt": "Could I speak to someone about managing my ___?",
+    "answer": "budget",
+    "dialogue": [
+      "A: Hello. Could we talk for a moment?",
+      "B: Of course. How can I help?",
+      "A: Could I speak to someone about managing my budget?",
+      "B: We have an adviser available next week.",
+      "A: Is there anything I should prepare?",
+      "B: Bring a list of your income and regular expenses.",
+      "A: Thank you for your time.",
+      "B: You are welcome."
+    ]
+  },
+  {
+    "title": "Ask about a job vacancy",
+    "phrase": "Are you currently hiring staff?",
+    "prompt": "Are you currently hiring ___?",
+    "answer": "staff",
+    "dialogue": [
+      "A: Hello. Could we talk for a moment?",
+      "B: Of course. How can I help?",
+      "A: Are you currently hiring staff?",
+      "B: Yes. Our vacancies are listed online.",
+      "A: Can I apply for a part-time role?",
+      "B: Yes. Check the hours in each job description.",
+      "A: Thank you for your time.",
+      "B: You are welcome."
+    ]
+  },
+  {
+    "title": "Ask about working hours",
+    "phrase": "What hours does this role involve?",
+    "prompt": "What hours does this role ___?",
+    "answer": "involve",
+    "dialogue": [
+      "A: Hello. Could we talk for a moment?",
+      "B: Of course. How can I help?",
+      "A: What hours does this role involve?",
+      "B: It includes some evening shifts.",
+      "A: How far in advance is the schedule shared?",
+      "B: Usually two weeks before the shifts begin.",
+      "A: Thank you for your time.",
+      "B: You are welcome."
+    ]
+  },
+  {
+    "title": "Confirm an interview location",
+    "phrase": "Could you confirm where the interview will take place?",
+    "prompt": "Could you confirm where the interview will take ___?",
+    "answer": "place",
+    "dialogue": [
+      "A: Hello. Could we talk for a moment?",
+      "B: Of course. How can I help?",
+      "A: Could you confirm where the interview will take place?",
+      "B: It is at our city-centre office.",
+      "A: Should I ask for anyone at reception?",
+      "B: Please ask for the recruitment team.",
+      "A: Thank you for your time.",
+      "B: You are welcome."
+    ]
+  },
+  {
+    "title": "Explain availability",
+    "phrase": "I am available to start in two weeks.",
+    "prompt": "I am available to start in two ___.",
+    "answer": "weeks",
+    "dialogue": [
+      "A: Hello. Could we talk for a moment?",
+      "B: Of course. How can I help?",
+      "A: I am available to start in two weeks.",
+      "B: Would you be able to work weekends?",
+      "A: I can work Saturdays, but not Sundays.",
+      "B: Thank you for explaining your availability.",
+      "A: Thank you for your time.",
+      "B: You are welcome."
+    ]
+  },
+  {
+    "title": "Ask for training at work",
+    "phrase": "Could someone show me how to use this system?",
+    "prompt": "Could someone show me how to use this ___?",
+    "answer": "system",
+    "dialogue": [
+      "A: Hello. Could we talk for a moment?",
+      "B: Of course. How can I help?",
+      "A: Could someone show me how to use this system?",
+      "B: Yes. I can arrange a training session.",
+      "A: Could I take notes during the session?",
+      "B: Of course. You can also ask questions afterwards.",
+      "A: Thank you for your time.",
+      "B: You are welcome."
+    ]
+  },
+  {
+    "title": "Ask a colleague for help",
+    "phrase": "Could you help me check this document?",
+    "prompt": "Could you help me check this ___?",
+    "answer": "document",
+    "dialogue": [
+      "A: Hello. Could we talk for a moment?",
+      "B: Of course. How can I help?",
+      "A: Could you help me check this document?",
+      "B: Certainly. Which part concerns you?",
+      "A: I want to make sure the totals are correct.",
+      "B: Let us go through them together.",
+      "A: Thank you for your time.",
+      "B: You are welcome."
+    ]
+  },
+  {
+    "title": "Report a mistake at work",
+    "phrase": "I noticed an error in the report I sent.",
+    "prompt": "I noticed an error in the ___ I sent.",
+    "answer": "report",
+    "dialogue": [
+      "A: Hello. Could we talk for a moment?",
+      "B: Of course. How can I help?",
+      "A: I noticed an error in the report I sent.",
+      "B: Thank you for telling me.",
+      "A: I have corrected it. May I send the updated version?",
+      "B: Yes. Please explain what changed.",
+      "A: Thank you for your time.",
+      "B: You are welcome."
+    ]
+  },
+  {
+    "title": "Request time off",
+    "phrase": "Could I request a day off next month?",
+    "prompt": "Could I request a day off next ___?",
+    "answer": "month",
+    "dialogue": [
+      "A: Hello. Could we talk for a moment?",
+      "B: Of course. How can I help?",
+      "A: Could I request a day off next month?",
+      "B: Which date do you have in mind?",
+      "A: The fifteenth, if cover is available.",
+      "B: Please submit the request so we can review it.",
+      "A: Thank you for your time.",
+      "B: You are welcome."
+    ]
+  },
+  {
+    "title": "Call in sick",
+    "phrase": "I am unwell and cannot come to work today.",
+    "prompt": "I am unwell and cannot come to work ___.",
+    "answer": "today",
+    "dialogue": [
+      "A: Hello. Could we talk for a moment?",
+      "B: Of course. How can I help?",
+      "A: I am unwell and cannot come to work today.",
+      "B: Thank you for letting me know.",
+      "A: Is there a reporting procedure I should follow?",
+      "B: Yes. I will explain our absence process.",
+      "A: Thank you for your time.",
+      "B: You are welcome."
+    ]
+  },
+  {
+    "title": "Give a project update",
+    "phrase": "The first part of the project is complete.",
+    "prompt": "The first part of the project is ___.",
+    "answer": "complete",
+    "dialogue": [
+      "A: Hello. Could we talk for a moment?",
+      "B: Of course. How can I help?",
+      "A: The first part of the project is complete.",
+      "B: What is still outstanding?",
+      "A: We need to check the figures and write the summary.",
+      "B: Please let me know if the deadline is at risk.",
+      "A: Thank you for your time.",
+      "B: You are welcome."
+    ]
+  },
+  {
+    "title": "Ask for feedback",
+    "phrase": "Could you give me some feedback on my presentation?",
+    "prompt": "Could you give me some feedback on my ___?",
+    "answer": "presentation",
+    "dialogue": [
+      "A: Hello. Could we talk for a moment?",
+      "B: Of course. How can I help?",
+      "A: Could you give me some feedback on my presentation?",
+      "B: Your examples were clear.",
+      "A: What could I improve next time?",
+      "B: Try slowing down when you explain the main figures.",
+      "A: Thank you for your time.",
+      "B: You are welcome."
+    ]
+  },
+  {
+    "title": "Respond to feedback",
+    "phrase": "Thank you for pointing that out.",
+    "prompt": "Thank you for ___ that out.",
+    "answer": "pointing",
+    "dialogue": [
+      "A: Hello. Could we talk for a moment?",
+      "B: Of course. How can I help?",
+      "A: Thank you for pointing that out.",
+      "B: Would you like to discuss the changes?",
+      "A: Yes. Could we review one example together?",
+      "B: Certainly. Let us start with the introduction.",
+      "A: Thank you for your time.",
+      "B: You are welcome."
+    ]
+  },
+  {
+    "title": "Suggest an improvement",
+    "phrase": "Could we try a simpler way to record requests?",
+    "prompt": "Could we try a simpler way to record ___?",
+    "answer": "requests",
+    "dialogue": [
+      "A: Hello. Could we talk for a moment?",
+      "B: Of course. How can I help?",
+      "A: Could we try a simpler way to record requests?",
+      "B: What do you suggest?",
+      "A: One shared form might reduce duplicated work.",
+      "B: Let us test it with a small group first.",
+      "A: Thank you for your time.",
+      "B: You are welcome."
+    ]
+  },
+  {
+    "title": "Negotiate a deadline",
+    "phrase": "Would it be possible to extend the deadline?",
+    "prompt": "Would it be possible to extend the ___?",
+    "answer": "deadline",
+    "dialogue": [
+      "A: Hello. Could we talk for a moment?",
+      "B: Of course. How can I help?",
+      "A: Would it be possible to extend the deadline?",
+      "B: What extra time would you need?",
+      "A: Two days would allow us to check the work properly.",
+      "B: Let us discuss which parts are most urgent.",
+      "A: Thank you for your time.",
+      "B: You are welcome."
+    ]
+  },
+  {
+    "title": "Hand over a task",
+    "phrase": "I have finished the checks and saved the notes.",
+    "prompt": "I have finished the checks and saved the ___.",
+    "answer": "notes",
+    "dialogue": [
+      "A: Hello. Could we talk for a moment?",
+      "B: Of course. How can I help?",
+      "A: I have finished the checks and saved the notes.",
+      "B: Is there anything I should follow up?",
+      "A: Please confirm the delivery time with the supplier.",
+      "B: I will do that this afternoon.",
+      "A: Thank you for your time.",
+      "B: You are welcome."
+    ]
+  },
+  {
+    "title": "Introduce yourself in class",
+    "phrase": "Hello, I am new to this class.",
+    "prompt": "Hello, I am new to this ___.",
+    "answer": "class",
+    "dialogue": [
+      "A: Hello. Could we talk for a moment?",
+      "B: Of course. How can I help?",
+      "A: Hello, I am new to this class.",
+      "B: Welcome. What is your name?",
+      "A: My name is Hassan. I am here to improve my English.",
+      "B: Nice to meet you. Please take a seat.",
+      "A: Thank you for your time.",
+      "B: You are welcome."
+    ]
+  },
+  {
+    "title": "Ask a teacher a question",
+    "phrase": "Could you explain the difference between these words?",
+    "prompt": "Could you explain the difference between these ___?",
+    "answer": "words",
+    "dialogue": [
+      "A: Hello. Could we talk for a moment?",
+      "B: Of course. How can I help?",
+      "A: Could you explain the difference between these words?",
+      "B: Certainly. Which words do you mean?",
+      "A: Borrow and lend. I keep mixing them up.",
+      "B: Let us look at who gives and who receives the item.",
+      "A: Thank you for your time.",
+      "B: You are welcome."
+    ]
+  },
+  {
+    "title": "Ask for extra study materials",
+    "phrase": "Do you have any extra listening exercises?",
+    "prompt": "Do you have any extra listening ___?",
+    "answer": "exercises",
+    "dialogue": [
+      "A: Hello. Could we talk for a moment?",
+      "B: Of course. How can I help?",
+      "A: Do you have any extra listening exercises?",
+      "B: Yes. There are some in the learning portal.",
+      "A: Which ones would suit my level?",
+      "B: Start with the short everyday conversations.",
+      "A: Thank you for your time.",
+      "B: You are welcome."
+    ]
+  },
+  {
+    "title": "Join a library",
+    "phrase": "I would like to join the library.",
+    "prompt": "I would like to join the ___.",
+    "answer": "library",
+    "dialogue": [
+      "A: Hello. Could we talk for a moment?",
+      "B: Of course. How can I help?",
+      "A: I would like to join the library.",
+      "B: You can register at this desk.",
+      "A: Can I borrow books straight away?",
+      "B: We will explain the borrowing rules after registration.",
+      "A: Thank you for your time.",
+      "B: You are welcome."
+    ]
+  },
+  {
+    "title": "Ask about a course",
+    "phrase": "Could you tell me about the evening English course?",
+    "prompt": "Could you tell me about the evening English ___?",
+    "answer": "course",
+    "dialogue": [
+      "A: Hello. Could we talk for a moment?",
+      "B: Of course. How can I help?",
+      "A: Could you tell me about the evening English course?",
+      "B: It meets twice a week.",
+      "A: Is there a level assessment before joining?",
+      "B: Yes. That helps us recommend a suitable class.",
+      "A: Thank you for your time.",
+      "B: You are welcome."
+    ]
+  },
+  {
+    "title": "Discuss homework",
+    "phrase": "I found the last question difficult.",
+    "prompt": "I found the last question ___.",
+    "answer": "difficult",
+    "dialogue": [
+      "A: Hello. Could we talk for a moment?",
+      "B: Of course. How can I help?",
+      "A: I found the last question difficult.",
+      "B: Which part did you find confusing?",
+      "A: I understood the words but not the instructions.",
+      "B: Let us read the instructions together.",
+      "A: Thank you for your time.",
+      "B: You are welcome."
+    ]
+  },
+  {
+    "title": "Arrange a study session",
+    "phrase": "Would you like to practise English together?",
+    "prompt": "Would you like to practise English ___?",
+    "answer": "together",
+    "dialogue": [
+      "A: Hello. Could we talk for a moment?",
+      "B: Of course. How can I help?",
+      "A: Would you like to practise English together?",
+      "B: Yes. When are you free?",
+      "A: Could we meet at the library on Wednesday?",
+      "B: That works for me. Shall we practise speaking?",
+      "A: Thank you for your time.",
+      "B: You are welcome."
+    ]
+  },
+  {
+    "title": "Ask about a school absence",
+    "phrase": "How should I report my child’s absence?",
+    "prompt": "How should I report my child’s ___?",
+    "answer": "absence",
+    "dialogue": [
+      "A: Hello. Could we talk for a moment?",
+      "B: Of course. How can I help?",
+      "A: How should I report my child’s absence?",
+      "B: Please contact the school office.",
+      "A: Should I call each day they are absent?",
+      "B: The office can explain the school’s procedure.",
+      "A: Thank you for your time.",
+      "B: You are welcome."
+    ]
+  },
+  {
+    "title": "Discuss a child’s learning",
+    "phrase": "How can I help with reading at home?",
+    "prompt": "How can I help with ___ at home?",
+    "answer": "reading",
+    "dialogue": [
+      "A: Hello. Could we talk for a moment?",
+      "B: Of course. How can I help?",
+      "A: How can I help with reading at home?",
+      "B: Short, regular practice can help.",
+      "A: Could you suggest a suitable book?",
+      "B: Yes. Let us choose one at an appropriate level.",
+      "A: Thank you for your time.",
+      "B: You are welcome."
+    ]
+  },
+  {
+    "title": "Make a new friend",
+    "phrase": "Is this your first time at the group?",
+    "prompt": "Is this your first time at the ___?",
+    "answer": "group",
+    "dialogue": [
+      "A: Hello. Could we talk for a moment?",
+      "B: Of course. How can I help?",
+      "A: Is this your first time at the group?",
+      "B: Yes. I moved here recently.",
+      "A: What do you enjoy doing in your free time?",
+      "B: I like walking and cooking. How about you?",
+      "A: Thank you for your time.",
+      "B: You are welcome."
+    ]
+  },
+  {
+    "title": "Accept an invitation",
+    "phrase": "Thank you for inviting me. I would love to come.",
+    "prompt": "Thank you for inviting me. I ___ love to come.",
+    "answer": "would",
+    "dialogue": [
+      "A: Hello. Could we talk for a moment?",
+      "B: Of course. How can I help?",
+      "A: Thank you for inviting me. I would love to come.",
+      "B: Wonderful. We are starting at six.",
+      "A: Is there anything I can bring?",
+      "B: A small snack to share would be lovely.",
+      "A: Thank you for your time.",
+      "B: You are welcome."
+    ]
+  },
+  {
+    "title": "Decline an invitation politely",
+    "phrase": "Thank you, but I cannot make it on Friday.",
+    "prompt": "Thank you, but I cannot make it on ___.",
+    "answer": "Friday",
+    "dialogue": [
+      "A: Hello. Could we talk for a moment?",
+      "B: Of course. How can I help?",
+      "A: Thank you, but I cannot make it on Friday.",
+      "B: No problem. Perhaps another time.",
+      "A: I would like that. Are you free next week?",
+      "B: Let us check our calendars.",
+      "A: Thank you for your time.",
+      "B: You are welcome."
+    ]
+  },
+  {
+    "title": "Apologise for being late",
+    "phrase": "I am sorry I am late. My bus was delayed.",
+    "prompt": "I am sorry I am late. My bus was ___.",
+    "answer": "delayed",
+    "dialogue": [
+      "A: Hello. Could we talk for a moment?",
+      "B: Of course. How can I help?",
+      "A: I am sorry I am late. My bus was delayed.",
+      "B: Thank you for letting me know.",
+      "A: Have I missed anything important?",
+      "B: Only the introduction. I can summarise it for you.",
+      "A: Thank you for your time.",
+      "B: You are welcome."
+    ]
+  },
+  {
+    "title": "Make plans with a friend",
+    "phrase": "Shall we go for a walk this weekend?",
+    "prompt": "Shall we go for a walk this ___?",
+    "answer": "weekend",
+    "dialogue": [
+      "A: Hello. Could we talk for a moment?",
+      "B: Of course. How can I help?",
+      "A: Shall we go for a walk this weekend?",
+      "B: That sounds good. Which day?",
+      "A: Would Sunday morning work for you?",
+      "B: Yes. Let us meet at the park entrance.",
+      "A: Thank you for your time.",
+      "B: You are welcome."
+    ]
+  },
+  {
+    "title": "Talk about hobbies",
+    "phrase": "What do you enjoy doing after work?",
+    "prompt": "What do you enjoy doing ___ work?",
+    "answer": "after",
+    "dialogue": [
+      "A: Hello. Could we talk for a moment?",
+      "B: Of course. How can I help?",
+      "A: What do you enjoy doing after work?",
+      "B: I usually play football or read.",
+      "A: How often do you play football?",
+      "B: Once a week with some friends.",
+      "A: Thank you for your time.",
+      "B: You are welcome."
+    ]
+  },
+  {
+    "title": "Talk about the weather",
+    "phrase": "Do you think it will rain this afternoon?",
+    "prompt": "Do you think it will rain this ___?",
+    "answer": "afternoon",
+    "dialogue": [
+      "A: Hello. Could we talk for a moment?",
+      "B: Of course. How can I help?",
+      "A: Do you think it will rain this afternoon?",
+      "B: The forecast says there may be showers.",
+      "A: Shall we choose somewhere indoors instead?",
+      "B: Good idea. We could visit the museum.",
+      "A: Thank you for your time.",
+      "B: You are welcome."
+    ]
+  },
+  {
+    "title": "Describe your daily routine",
+    "phrase": "What does a typical morning look like for you?",
+    "prompt": "What does a typical ___ look like for you?",
+    "answer": "morning",
+    "dialogue": [
+      "A: Hello. Could we talk for a moment?",
+      "B: Of course. How can I help?",
+      "A: What does a typical morning look like for you?",
+      "B: I get up early and prepare breakfast.",
+      "A: Do you travel far to work?",
+      "B: No. It is a short bus journey.",
+      "A: Thank you for your time.",
+      "B: You are welcome."
+    ]
+  },
+  {
+    "title": "Tell a story about yesterday",
+    "phrase": "What did you do yesterday?",
+    "prompt": "What did you do ___?",
+    "answer": "yesterday",
+    "dialogue": [
+      "A: Hello. Could we talk for a moment?",
+      "B: Of course. How can I help?",
+      "A: What did you do yesterday?",
+      "B: I visited a friend and helped with a garden.",
+      "A: Did you enjoy it?",
+      "B: Yes. We finished the work and had lunch together.",
+      "A: Thank you for your time.",
+      "B: You are welcome."
+    ]
+  },
+  {
+    "title": "Talk about future plans",
+    "phrase": "What are you hoping to do next year?",
+    "prompt": "What are you ___ to do next year?",
+    "answer": "hoping",
+    "dialogue": [
+      "A: Hello. Could we talk for a moment?",
+      "B: Of course. How can I help?",
+      "A: What are you hoping to do next year?",
+      "B: I would like to take a training course.",
+      "A: Have you chosen a subject yet?",
+      "B: I am interested in healthcare, but I am still exploring.",
+      "A: Thank you for your time.",
+      "B: You are welcome."
+    ]
+  },
+  {
+    "title": "Explain a preference",
+    "phrase": "Would you rather meet online or in person?",
+    "prompt": "Would you rather meet online or in ___?",
+    "answer": "person",
+    "dialogue": [
+      "A: Hello. Could we talk for a moment?",
+      "B: Of course. How can I help?",
+      "A: Would you rather meet online or in person?",
+      "B: I would prefer to meet in person.",
+      "A: Is there a particular reason?",
+      "B: I find it easier to follow the conversation.",
+      "A: Thank you for your time.",
+      "B: You are welcome."
+    ]
+  },
+  {
+    "title": "Check a misunderstanding",
+    "phrase": "I thought we agreed to meet on Thursday.",
+    "prompt": "I thought we agreed to meet on ___.",
+    "answer": "Thursday",
+    "dialogue": [
+      "A: Hello. Could we talk for a moment?",
+      "B: Of course. How can I help?",
+      "A: I thought we agreed to meet on Thursday.",
+      "B: I meant Tuesday. I am sorry for the confusion.",
+      "A: Could we confirm the date in a message?",
+      "B: Yes. I will send the details now.",
+      "A: Thank you for your time.",
+      "B: You are welcome."
+    ]
+  },
+  {
+    "title": "Leave a voicemail",
+    "phrase": "Hello, this is Amina calling about our appointment.",
+    "prompt": "Hello, this is Amina calling about our ___.",
+    "answer": "appointment",
+    "dialogue": [
+      "A: Hello. Could we talk for a moment?",
+      "B: Of course. How can I help?",
+      "A: Hello, this is Amina calling about our appointment.",
+      "B: Please leave a message after the tone.",
+      "A: Could you call me back to confirm the time? Thank you.",
+      "B: Your message has been recorded.",
+      "A: Thank you for your time.",
+      "B: You are welcome."
+    ]
+  },
+  {
+    "title": "End a conversation politely",
+    "phrase": "It has been lovely talking to you.",
+    "prompt": "It has been lovely ___ to you.",
+    "answer": "talking",
+    "dialogue": [
+      "A: Hello. Could we talk for a moment?",
+      "B: Of course. How can I help?",
+      "A: It has been lovely talking to you.",
+      "B: I have enjoyed it too.",
+      "A: I need to go now, but I hope we can talk again soon.",
+      "B: Of course. Have a good afternoon.",
+      "A: Thank you for your time.",
+      "B: You are welcome."
+    ]
+  },
+  {
+    "title": "Ask for accessibility information",
+    "phrase": "Is there a step-free entrance to the building?",
+    "prompt": "Is there a step-free entrance to the ___?",
+    "answer": "building",
+    "dialogue": [
+      "A: Hello. Could we talk for a moment?",
+      "B: Of course. How can I help?",
+      "A: Is there a step-free entrance to the building?",
+      "B: Yes. It is on the east side.",
+      "A: Could you tell me how to reach it from here?",
+      "B: Follow this path and turn right beside the main sign.",
+      "A: Thank you for your time.",
+      "B: You are welcome."
+    ]
+  }
+];
+  extraConversations.forEach(function(item){lessons.push([item.title,"Practise: "+item.title.toLowerCase()+".",item.phrase,item.prompt,item.answer]);conversations.push(item.dialogue)});
   function showLesson(i) {
     var l=lessons[i], answers=[], question=0;
     function frame(label) {
@@ -366,7 +1777,7 @@ window.ACADEMY_TUTOR_URL = 'https://somali-academy-tutor.rashkaa33.workers.dev';
     study();
   }
   var home=renderHome,profile=renderProfile;
-  function add(){var rows=app.querySelector('.simple-home-content')||app.querySelector('.simple-profile-rows');if(!rows)return;var tutor=document.createElement('button');tutor.id='homeAiTutor';tutor.className='simple-row';tutor.textContent=S.profile.ui==='en'?'AI Tutor · Ask a question':'Macallinka AI · AI Tutor';tutor.onclick=function(){var n=1;while(n<LESSONS.length&&S.completed['L'+n])n++;openLesson(n);var panel=document.getElementById('academyTutor');if(panel){panel.open=true;panel.scrollIntoView({block:'center'});panel.querySelector('textarea').focus()}};rows.insertBefore(tutor,rows.querySelector('.simple-next')||rows.firstChild);var b=document.createElement('button');b.className='simple-row';b.id='communicationLessons';b.textContent='Real-life English · 12 conversation lessons';b.onclick=showList;rows.appendChild(b)}
+  function add(){var rows=app.querySelector('.simple-home-content')||app.querySelector('.simple-profile-rows');if(!rows)return;var tutor=document.createElement('button');tutor.id='homeAiTutor';tutor.className='simple-row';tutor.textContent=S.profile.ui==='en'?'AI Tutor · Ask a question':'Macallinka AI · AI Tutor';tutor.onclick=function(){var n=1;while(n<LESSONS.length&&S.completed['L'+n])n++;openLesson(n);var panel=document.getElementById('academyTutor');if(panel){panel.open=true;panel.scrollIntoView({block:'center'});panel.querySelector('textarea').focus()}};rows.insertBefore(tutor,rows.querySelector('.simple-next')||rows.firstChild);var b=document.createElement('button');b.className='simple-row';b.id='communicationLessons';b.textContent='Real-life English · 100 conversation lessons';b.onclick=showList;rows.appendChild(b)}
   renderHome=function(){home();add()};renderProfile=function(){profile();add()};
   if(S&&S.profile&&S.profile.onboarded)render();
 })();
