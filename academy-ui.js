@@ -56,6 +56,7 @@
     nav.innerHTML = [['home', t('Hoyga', 'Home'), 'home'], ['dict', t('Qaamuus', 'Dictionary'), 'book'], ['profile', t('Boggaaga', 'Profile'), 'user']].map(function (item) {
       return '<button type="button" data-view="' + item[0] + '"' + (parent === item[0] ? ' class="active" aria-current="page"' : '') + '>' + icon(item[2]) + '<span>' + item[1] + '</span></button>';
     }).join('');
+    nav.dataset.ready = 'true';
     document.body.classList.toggle('simple-home', view === 'home');
   }
   function nextLesson() { var n = 1; while (n < LESSONS.length && S.completed['L' + n]) n++; return LESSONS[n - 1]; }
@@ -280,7 +281,7 @@ window.ACADEMY_TUTOR_URL = 'https://somali-academy-tutor.rashkaa33.workers.dev';
       if (panel) { panel.open = true; panel.scrollIntoView({ behavior: 'smooth', block: 'center' }); panel.querySelector('textarea').focus(); }
     });
     action(en() ? 'Review words due today' : 'Ku celceli erayada maanta', function () { setNav('review'); render(); });
-    var day = Math.floor(Date.now() / 86400000), words = LESSONS[Math.min(LESSONS.length - 1, Math.floor(day / 7) % LESSONS.length)].vocab;
+    var day = Math.floor(Date.now() / 86400000), words = LESSONS.flatMap(function (lesson) { return lesson.vocab; }).filter(function (entry) { return /^[A-Za-z]+(?:[-’'][A-Za-z]+)*$/.test(entry.en) && entry.so; });
     var word = words[day % words.length];
     var p = document.createElement('p'); p.textContent = (en() ? 'Word of the day: ' : 'Erayga maanta: ') + word.en + ' — ' + word.so; box.appendChild(p);
     action(en() ? 'Listen to this word' : 'Dhageyso erayga', function () { speak(word.en); });
@@ -1882,40 +1883,55 @@ window.ACADEMY_TUTOR_URL = 'https://somali-academy-tutor.rashkaa33.workers.dev';
     return qs;
   };
   plComputeResult=function(answers){var correct=answers.filter(function(a){return a.ok}).length;var pct=Math.round(correct/50*100);var band=Math.min(9,Math.floor(pct/10));return{correct:correct,asked:50,pct:pct,band:band,startLesson:starts[band]}};
+  // S is restored by the existing async boot before placement can be opened.
+  // Journal the draft synchronously: a reload can abort an outstanding IDB write.
+  function draftKey(){return 'sea-placement-draft:'+ROOT.activeId}
+  function recover(){
+    try{var draft=JSON.parse(localStorage.getItem(draftKey()));if(draft&&draft.version===50)S.placementDraft=draft}catch(e){}
+  }
   plBegin=function(){
-    plCtx='profile';var draft=S.placementDraft;
+    recover();plCtx='profile';var draft=S.placementDraft;
     plState=draft&&draft.version===50?JSON.parse(JSON.stringify(draft.state)):{qs:plBuildQuestions(),idx:0,answers:[],result:null,done:false};
-    window.__plTest=plState;plScreenRender();
+    window.__plTest=plState;persist();plScreenRender();
   };
-  function persist(){S.placementDraft={version:50,state:JSON.parse(JSON.stringify(plState))};return save()}
+  function persist(){
+    S.placementDraft={version:50,state:JSON.parse(JSON.stringify(plState))};
+    var key=draftKey(),snapshot=JSON.stringify(S.placementDraft);
+    try{localStorage.setItem(key,snapshot)}catch(e){}
+    return save().then(function(){try{if(localStorage.getItem(key)===snapshot)localStorage.removeItem(key)}catch(e){}});
+  }
   plAnswer=async function(opt){
     if(!plState||plState.done)return;
     var q=plState.qs[plState.idx];
     plState.answers[plState.idx]={stage:q.stage,ok:opt!==null&&norm(opt)===norm(q.ans),choice:opt};
     plState.idx++;
     if(plState.idx===50){plState.result=plComputeResult(plState.answers);plState.done=true}
-    try{await persist();plScreenRender()}catch(e){plScreenRender();var warning=document.createElement('p');warning.textContent=t('Kaydintu way fashilantay. Ha xirin bogga.','Could not save. Keep this page open.');app.prepend(warning)}
+    try{await persist();if(view==='placement')plScreenRender()}catch(e){if(view!=='placement')return;plScreenRender();var warning=document.createElement('p');warning.textContent=t('Kaydintu way fashilantay. Ha xirin bogga.','Could not save. Keep this page open.');app.prepend(warning)}
   };
   plScreenRender=function(){
     setNav('placement');app.innerHTML='<button class="simple-back" id="plBack">← '+t('Hoyga · Kaydi oo sii wad mar dambe','Home · Resume later')+'</button><h1>'+t('Imtixaanka meelaynta','Placement test')+'</h1>';
     document.getElementById('plBack').onclick=function(){setNav('home');render()};
+    if(!plState.done){
+      var skip=document.createElement('button');skip.id='plSkip';skip.className='simple-row';skip.textContent='Skip for now / Ka bood hadda';
+      skip.onclick=function(){persist();setNav('home');render()};app.appendChild(skip);
+    }
     if(plState.done){
       var r=plState.result;
       app.insertAdjacentHTML('beforeend','<h2>'+r.correct+' / 50 · '+r.pct+'%</h2><p>'+t('Waxaad ka bilaabaysaa casharka ','Your recommended start is Lesson ')+r.startLesson+'</p><p>'+t('Dhibcaha ka hooseeya 10% waxay ka bilaabaan aasaaska. 10% kasta oo kordha wuxuu kuu wareejiyaa qayb sare. Tani waa talo waxbarasho, ma aha shahaado heer luqadeed.','Below 10% starts at the basics. Each ten-percentage-point band moves the recommended start higher. This is learning guidance, not a certified language level.')+'</p><button class="simple-primary" id="plStartThere">'+t('Halkaas ka bilow','Start at my level')+' →</button>');
-      document.getElementById('plStartThere').onclick=async function(){this.disabled=true;plApplyPlacement(r);S.profile.placementVersion=50;delete S.placementDraft;await save();setNav('home');render()};return;
+      document.getElementById('plStartThere').onclick=async function(){this.disabled=true;plApplyPlacement(r);S.profile.placementVersion=50;delete S.placementDraft;try{localStorage.removeItem(draftKey())}catch(e){}await save();setNav('home');render()};return;
     }
     var q=plState.qs[plState.idx];
     app.insertAdjacentHTML('beforeend','<p>'+t('Su’aasha ','Question ')+(plState.idx+1)+' / 50</p><progress max="50" value="'+plState.idx+'" style="width:100%"></progress><p>'+t('Dooro jawaabta saxda ah. Haddii aadan garanayn, dooro “Ma garanayo”. Jawaabaha lama muujinayo inta imtixaanku socdo.','Choose an answer, or select “I don’t know”. Answers are not revealed during the test.')+'</p><h2>'+esc(q.q)+'</h2>'+(q.qSo?'<p lang="so">'+esc(q.qSo)+'</p>':'')+'<div class="opts">'+q.opts.map(function(o){return '<button class="opt" data-plopt="'+esc(o)+'">'+esc(o)+'</button>'}).join('')+'</div><button class="simple-row" id="plUnknown">'+t('Ma garanayo →','I don’t know →')+'</button>');
     function answer(opt){app.querySelectorAll('[data-plopt],#plUnknown').forEach(function(b){b.disabled=true});plAnswer(opt)}
     app.querySelectorAll('[data-plopt]').forEach(function(b){b.onclick=function(){answer(b.dataset.plopt)}});document.getElementById('plUnknown').onclick=function(){answer(null)};
-    if(plState.idx>0){var back=document.createElement('button');back.className='simple-back';back.id='plPrevious';back.textContent=t('← Su’aashii hore','← Previous question');back.onclick=function(){plState.idx--;plState.done=false;plScreenRender()};app.appendChild(back)}
+    if(plState.idx>0){var back=document.createElement('button');back.className='simple-back';back.id='plPrevious';back.textContent=t('← Su’aashii hore','← Previous question');back.onclick=function(){plState.idx--;plState.done=false;persist();plScreenRender()};app.appendChild(back)}
   };
   var home=renderHome,open=openLesson;
   function needsPlacement(){return !S.profile.placementVersion&&!S.profile.placedLesson&&!Object.values(S.completed||{}).some(function(v){return !v.placed})}
-  renderHome=function(){home();if(needsPlacement()){
-    var b=document.getElementById('academyContinue');if(b){b.textContent=t('Ogow heerkayga · 50 su’aalood →','Find my level · 50 questions →');b.onclick=function(){plBegin('profile')}}
+  renderHome=function(){recover();home();if(needsPlacement()||S.placementDraft){
+    var b=document.getElementById('academyContinue');if(b){b.textContent=S.placementDraft?t('Sii wad imtixaanka →','Continue the test →'):t('Ogow heerkayga · 50 su’aalood →','Find my level · 50 questions →');b.onclick=function(){plBegin('profile')}}
     var heading=app.querySelector('.simple-next h2');if(heading)heading.textContent=t('Marka hore ogow heerkaaga','Start with your placement test');
   }};
-  openLesson=function(n){if(!guestMode&&needsPlacement()){plBegin('profile');return}if(!guestMode&&!isUnlocked(n))return;open(n)};
+  openLesson=function(n){if(!guestMode&&!isUnlocked(n))return;open(n)};
   if(S&&S.profile&&S.profile.onboarded)render();
 })();

@@ -1,3 +1,4 @@
+#mainNav:not([data-ready="true"]){visibility:hidden}
 /* Minimal design system: one language, three destinations, one main action. */
 :root,:root[data-theme="light"]{--teal:#136f63;--teal2:#0d554c;--ink:#192c32;--muted:#62737a;--bg:#fff;--card:#fff;--line:#e3e9ec;--soft:#edf6f3;--tint:#edf6f3;--simple-neutral:#f4f6f7;--l-bg:var(--bg);--l-surface:var(--card);--l-border:var(--line);--l-text:var(--ink);--l-muted:var(--muted);--l-teal:var(--teal);--l-teal-dark:#fff;--l-blue:var(--teal);--l-gold:#a96a14}
 :root[data-theme="dark"]{--teal:#82d7c7;--teal2:#b0ebdf;--ink:#edf6f5;--muted:#adc1c4;--bg:#101e23;--card:#101e23;--line:#2b4148;--soft:#19342f;--tint:#19342f;--simple-neutral:#192a30}
