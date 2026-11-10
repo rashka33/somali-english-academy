@@ -113,7 +113,8 @@ details{padding:var(--s-3) var(--s-4)}summary{font-weight:600;font-family:var(--
 .btn.ghost,body.view-profile .btn.ghost{background:transparent;color:var(--ink);border-color:var(--line)}
 .btn.amber,:root[data-theme="dark"] .btn.amber{background:var(--surface);border-color:var(--warn);color:var(--warn)}
 :root[data-theme="dark"] .btn{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
-:root[data-theme="dark"] .btn.secondary{background:var(--surface);color:var(--ink)}
+:root[data-theme="dark"] .btn.secondary{background:var(--surface);color:var(--ink);border-color:var(--line-2)}
+:root[data-theme="dark"] .btn.ghost,:root[data-theme="dark"] .btn.amber{background:transparent;color:var(--ink);border-color:var(--line)}
 .btn:disabled,.simple-primary:disabled{opacity:.5}
 .iconbtn,.simple-icon-button{min-width:44px;min-height:44px;width:44px;height:44px;border-radius:var(--r-full);border:1px solid var(--line);background:var(--surface);color:var(--ink);display:inline-flex;align-items:center;justify-content:center;padding:0;font-size:var(--t-md)}
 .iconbtn:hover,.simple-icon-button:hover{background:var(--soft);border-color:var(--line-2)}
