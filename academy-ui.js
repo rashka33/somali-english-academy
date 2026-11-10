@@ -1935,3 +1935,21 @@ window.ACADEMY_TUTOR_URL = 'https://somali-academy-tutor.rashkaa33.workers.dev';
   openLesson=function(n){if(!guestMode&&!isUnlocked(n))return;open(n)};
   if(S&&S.profile&&S.profile.onboarded)render();
 })();
+
+/* Watch next: the Watch episode paired with the learner's next lesson, shown on Home. */
+(function(){
+  var home=renderHome;
+  renderHome=function(){
+    home();
+    if(typeof watchNextFor!=='function'||!S||!S.profile)return;
+    var box=app.querySelector('.simple-home-content');if(!box||document.getElementById('homeWatchNext'))return;
+    var n=1;while(n<LESSONS.length&&S.completed['L'+n])n++;
+    var ep=watchNextFor(n);if(!ep)return;
+    var en=S.profile.ui==='en';
+    var b=document.createElement('button');b.type='button';b.id='homeWatchNext';b.className='simple-row';
+    b.innerHTML='<svg class="simple-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="m10 8 6 4-6 4z"/></svg><span>'+(en?'Watch next: ':'Daawo marka xigta: ')+esc(en?ep.titleEn:ep.titleSo)+'</span><small>'+(en?'Lesson '+n:'Cashar '+n)+'</small><svg class="simple-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg>';
+    b.onclick=function(){watchEp=ep.yt;if(typeof watchWord!=='undefined')watchWord=null;setNav('watch');render();window.scrollTo(0,0)};
+    var anchor=box.querySelector('.simple-next');if(anchor)anchor.insertAdjacentElement('afterend',b);else box.appendChild(b);
+  };
+  if(S&&S.profile&&S.profile.onboarded)render();
+})();
