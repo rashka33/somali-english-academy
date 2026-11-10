@@ -4,7 +4,7 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
 <meta name="color-scheme" content="light dark"/>
-<meta name="theme-color" content="#0e5a8a"/>
+<meta name="theme-color" content="#faf7f1"/>
 <link rel="manifest" href="manifest.json"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
@@ -360,6 +360,10 @@ body.view-home .jwrap .jsvg polyline{stroke:var(--l-border)}
 .l-rowcard .chev{margin-left:auto;color:var(--muted);font-size:22px}
 </style>
 <link rel="stylesheet" href="academy-ui.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="academy-theme.css">
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="i-camel" viewBox="0 -6 120 102"><rect x="33" y="56" width="6.5" height="26" rx="3.2" fill="#a06a30"/><rect x="79" y="56" width="6.5" height="26" rx="3.2" fill="#a06a30"/><rect x="33" y="78" width="6.5" height="5" rx="2" fill="#7c4f1e"/><rect x="79" y="78" width="6.5" height="5" rx="2" fill="#7c4f1e"/><path d="M25 33 q-9 3-8 14 q.5 6 5 10 l3.5-2.5 q-3.5-3.5-3-9 q.3-6 5-9.5 z" fill="#b57e3e"/><path d="M22 40 a13 13 0 0 1 11-12.8 h9 a15 13 0 0 1 28 0 h7 a13 13 0 0 1 13 12.8 v5 a13 13 0 0 1-13 13 H35 a13 13 0 0 1-13-13 z" fill="#c98d4e"/><rect x="42" y="54" width="7.5" height="29" rx="3.7" fill="#c98d4e"/><rect x="68" y="54" width="7.5" height="29" rx="3.7" fill="#c98d4e"/><rect x="42" y="79" width="7.5" height="5" rx="2" fill="#8a5a24"/><rect x="68" y="79" width="7.5" height="5" rx="2" fill="#8a5a24"/><path d="M44 13.5 h24 a3 3 0 0 1 3 3 v10 a3 3 0 0 1-3 3 h-24 a3 3 0 0 1-3-3 v-10 a3 3 0 0 1 3-3 z" fill="#0e7c86"/><rect x="41" y="23" width="30" height="3.4" fill="#f7c948"/><rect x="88" y="8" width="13" height="34" rx="6.5" transform="rotate(24 94 25)" fill="#c98d4e"/><path d="M95 2 q11-2.5 14.5 4.5 q1.8 5.5-2.5 9 L99 19.5 q-5 .8-6.8-3.5 L91 8.5 Q91.6 3.6 95 2z" fill="#c98d4e"/><path d="M96.5 3.2 l1.2-4.6 3.4 3.8z" fill="#b57e3e"/><ellipse cx="106.5" cy="12.5" rx="5" ry="3.8" fill="#e8c491"/><circle cx="104" cy="15" r="1.1" fill="#8a5a24"/><circle class="camelEye" cx="99.5" cy="8" r="2.1" fill="#33241a"/></symbol><symbol id="i-home" viewBox="0 0 24 24"><path d="M3 11l9-8 9 8"/><path d="M5 9.5V21h14V9.5"/></symbol><symbol id="i-map" viewBox="0 0 24 24"><path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2-6-2z"/><path d="M9 4v14M15 6v14"/></symbol><symbol id="i-review" viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.34-5.66"/><path d="M20 3v4h-4"/></symbol><symbol id="i-mic" viewBox="0 0 24 24"><rect x="9" y="2.5" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3.5"/></symbol><symbol id="i-book" viewBox="0 0 24 24"><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v17.5H6.5A2.5 2.5 0 0 0 4 22z"/><path d="M4 19.5V4.5M20 19.5H6.5"/></symbol><symbol id="i-cap" viewBox="0 0 24 24"><path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11.5V16c0 1.7 12 1.7 12 0v-4.5M22 9v5"/></symbol><symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c.6-3.8 3.8-5.5 8-5.5s7.4 1.7 8 5.5"/></symbol><symbol id="i-play" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M10 9.5l5 2.5-5 2.5z" fill="currentColor" stroke="none"/></symbol><symbol id="i-flame" viewBox="0 0 24 24"><path d="M12 22c4.4 0 7-2.8 7-6.6 0-3-2-5.4-3.5-6.9C14 6.7 13 5 13 2c-3 2-5.5 5-5.5 8.5 0 1 .2 1.9.5 2.7-.7-.9-1.3-1.9-1.5-3.2C5.6 11.8 5 13.6 5 15.4 5 19.2 7.6 22 12 22z"/></symbol></svg>
@@ -3550,7 +3554,7 @@ function lJourneyHTML(){
   if(it.t==="c")return '<div class="jrow" style="height:76px"><button class="jchest" data-chest="1" style="left:'+x+'%" aria-label="Sanduuqa dib-u-eegista / Review chest">🧰</button><span class="jlabel" style="left:'+x+'%;top:66px">Sanduuqa dib-u-eegista<br>Review chest</span></div>';
   var l=LESSONS[it.n-1];var done=!!S.completed[l.id];var isCur=it.n===curN;var un=isUnlocked(it.n);
   var camel=isCur?'<span class="jcamel" style="left:calc('+x+'% + 58px)">'+camelSVG("idle",54)+"</span>":"";
-  return '<div class="jrow" style="height:76px"><button class="jnode'+(done?" done":isCur?" cur":"")+(un?"":" lock")+'" data-jn="'+it.n+'" style="left:'+x+'%;width:64px;height:64px" aria-label="Cashirka '+it.n+" / Lesson "+it.n+": "+esc(l.titleEn)+'">'+(done?"✓":it.n)+'<span class="jlabel">'+esc(l.titleEn)+"</span></button>"+camel+"</div>";
+  return '<div class="jrow" style="height:76px"><button class="jy-node'+(done?" done":isCur?" cur":"")+(un?"":" lock")+'" data-jn="'+it.n+'" style="left:'+x+'%;width:64px;height:64px" aria-label="Cashirka '+it.n+" / Lesson "+it.n+": "+esc(l.titleEn)+'">'+(done?"✓":it.n)+'<span class="jlabel">'+esc(l.titleEn)+"</span></button>"+camel+"</div>";
  }).join("");
  return '<div class="l-placehead"><h2>'+pl.emoji+" "+esc(pl.so)+" / "+esc(pl.en)+(placeDone?' <span style="color:var(--l-gold)" aria-label="La dhammeeyay / Completed">★</span>':"")+'</h2><p class="small" style="color:var(--l-muted);margin:.2em 0">Marxaladda '+(pl.stage+1)+" / Stage "+(pl.stage+1)+": "+esc(st[0])+" — "+esc(st[1])+" · Cashirrada "+pl.from+"–"+pl.to+" / Lessons "+pl.from+"–"+pl.to+" · "+doneInPlace+" / "+placeTot+' la dhammeeyay / done</p><div class="progress"><i style="width:'+Math.round(doneInPlace/placeTot*100)+'%"></i></div>'
  +'<div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap"><button class="btn secondary" id="lPlacePrev" '+(hPlaceIdx<=0?"disabled":"")+'>← Meeshii hore / Previous place</button><button class="btn secondary" id="lPlaceNext" '+(hPlaceIdx>=places.length-1?"disabled":"")+'>Meesha xigta / Next place →</button></div></div>'
@@ -4503,6 +4507,94 @@ var _auditO=bilingualAudit;
 bilingualAudit=function(){var r=_auditO();var en=0,soF=0;function chk(e,s){if(e){en++;if(s&&String(s).trim())soF++}}ROLEPLAYS.forEach(function(rp){if(rp.introEn)chk(rp.introEn,rp.introSo)});var out={};Object.keys(r).forEach(function(k){out[k]=r[k]});out.en=r.en+en;out.so=r.so+soF;out.gaps=(r.en+en)-(r.so+soF);out.stageO={en:en,so:soF,gaps:en-soF};return out};
 </script>
 <script>
+/* ============ STAGE L — DESIGN SYSTEM HELPERS (presentation only) ============
+   One inline-SVG icon set (1.75 stroke), one fixed colour per learning stage,
+   a progress ring, the 12-stage journey map, and a post-render pass that strips
+   emoji used as UI icons from headings/buttons/labels (lesson content that
+   teaches with emoji — vocab cards, picture options, dialogues — is excluded).
+   Lesson data, unlock rules, XP/streak, SRS, placement, state shape: untouched. */
+var UI_ICONS={
+ home:'<path d="m3 10 9-7 9 7M5 9v12h14V9M9 21v-7h6v7"/>',
+ book:'<path d="M12 5C8 2 4 3 2 4v15c4-2 7-1 10 1 3-2 6-3 10-1V4c-2-1-6-2-10 1zm0 0v15"/>',
+ user:'<circle cx="12" cy="7" r="4"/><path d="M4 21v-2a8 8 0 0 1 16 0v2"/>',
+ search:'<circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/>',
+ play:'<path d="M7 4.5v15l12-7.5z"/>',
+ playCircle:'<circle cx="12" cy="12" r="9"/><path d="m10 8 6 4-6 4z"/>',
+ speaker:'<path d="M11 4 5 9H2v6h3l6 5zM15 8a6 6 0 0 1 0 8m3-11a10 10 0 0 1 0 14"/>',
+ check:'<path d="m5 12 4 4L19 6"/>',
+ lock:'<rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/>',
+ chevron:'<path d="m9 5 7 7-7 7"/>',
+ arrow:'<path d="M4 12h16m-6-6 6 6-6 6"/>',
+ back:'<path d="M20 12H4m6-6-6 6 6 6"/>',
+ close:'<path d="M6 6l12 12M18 6 6 18"/>',
+ plus:'<path d="M12 5v14M5 12h14"/>',
+ video:'<rect x="3" y="6" width="13" height="12" rx="2"/><path d="m16 10 5-3v10l-5-3"/>',
+ tv:'<rect x="3" y="5" width="18" height="13" rx="2"/><path d="M8 21h8M12 18v3"/>',
+ sparkle:'<path d="M12 3v4m0 10v4M3 12h4m10 0h4M6.5 6.5 9 9m6 6 2.5 2.5m0-11L15 9m-6 6-2.5 2.5"/>',
+ star:'<path d="m12 3 2.8 5.9 6.4.8-4.7 4.4 1.2 6.4L12 17.4l-5.7 3.1 1.2-6.4L2.8 9.7l6.4-.8z"/>',
+ flame:'<path d="M12 3s5 4 5 9a5 5 0 0 1-10 0c0-2 1-3 1-3s1 2 2 2c0-3 2-8 2-8z"/>',
+ layers:'<path d="m12 3 9 5-9 5-9-5zM3 13l9 5 9-5M3 17l9 5 9-5"/>',
+ map:'<path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2zM9 4v14m6-12v14"/>',
+ globe:'<circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><path d="M3 12h18"/>',
+ trophy:'<path d="M8 4h8v5a4 4 0 0 1-8 0zM8 6H5a3 3 0 0 0 3 4m8-4h3a3 3 0 0 1-3 4M12 13v4m-4 4h8m-4-4a4 4 0 0 1-2-1"/>',
+ bookmark:'<path d="M6 3h12v18l-6-4-6 4z"/>',
+ list:'<path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>',
+ signal:'<path d="M2 20h.01M7 20v-4m5 4v-8m5 8V8m5 12V4"/>',
+ external:'<path d="M14 4h6v6m0-6-9 9M11 6H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-5"/>',
+ translate:'<path d="M4 5h8M8 3v2c0 4-2 7-5 9m2-6c1 3 4 6 7 7M14 21l4-10 4 10m-6.5-3h5"/>',
+ clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+ mic:'<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/>',
+ refresh:'<path d="M20 12a8 8 0 1 1-2.3-5.7M20 4v5h-5"/>'
+};
+function uiIcon(name,cls){return '<svg class="ui-ic'+(cls?" "+cls:"")+'" viewBox="0 0 24 24" aria-hidden="true">'+(UI_ICONS[name]||"")+'</svg>'}
+function stage12Of(n){for(var i=0;i<STAGES12.length;i++){if(n>=STAGES12[i][2]&&n<=STAGES12[i][3])return i}return n<1?0:11}
+function stageColor(n){return "var(--st"+(stage12Of(n)+1)+")"}
+function stageStyle(n){return 'style="--stage:'+stageColor(n)+'"'}
+function stageDone(si){var st=STAGES12[si];var d=0;for(var i=st[2];i<=st[3];i++){if(S&&S.completed&&S.completed["L"+i])d++}return d}
+function ringHTML(pct,label){var r=30,c=2*Math.PI*r;var off=c*(1-Math.max(0,Math.min(1,pct)));return '<div class="ring" role="img" aria-label="'+esc(label||Math.round(pct*100)+"%")+'"><svg viewBox="0 0 72 72"><circle class="ring-bg" cx="36" cy="36" r="'+r+'"/><circle class="ring-fg" cx="36" cy="36" r="'+r+'" stroke-dasharray="'+c.toFixed(1)+'" stroke-dashoffset="'+off.toFixed(1)+'"/></svg><b>'+Math.round(pct*100)+'%</b></div>'}
+function journeyHTML(nextN,en){
+ var cur=stage12Of(nextN);var totalDone=S&&S.completed?Object.keys(S.completed).length:0;
+ var h='<section class="journey" aria-label="'+(en?"Your learning journey":"Safarkaaga waxbarasho")+'"><div class="journey-head"><h2>'+(en?"Your journey · 12 stages":"Safarkaaga · 12 marxaladood")+'</h2><span>'+totalDone+' / 1000</span></div><ol>';
+ STAGES12.forEach(function(st,i){
+  var total=st[3]-st[2]+1,done=stageDone(i);var state=done>=total?"j-done":i===cur?"j-cur":(i<cur?"":"j-locked");
+  if(i>cur&&typeof isUnlocked==="function"&&isUnlocked(st[2]))state="";
+  h+='<li><button type="button" class="jy-node '+state+'" data-jstage="'+i+'" '+stageStyle(st[2])+' aria-label="'+esc((en?st[0]:st[1])+" · "+done+"/"+total)+'"><span class="jy-dot">'+(state==="j-done"?uiIcon("check"):(i+1))+'</span><span class="jy-body"><span class="jy-title">'+esc(en?st[0]:st[1])+'</span><span class="jy-sub">'+esc(en?st[1]:st[0])+' · '+(en?"Lessons ":"Cashirrada ")+st[2]+'–'+st[3]+'</span>'+(done>0&&done<total?'<span class="jy-bar"><i style="width:'+Math.round(done/total*100)+'%"></i></span>':"")+'</span><span class="jy-count">'+done+'/'+total+'</span></button></li>';
+ });
+ return h+'</ol></section>';
+}
+/* speaker buttons app-wide: real icon instead of an emoji glyph */
+speakBtn=function(text,slow){return '<button type="button" class="iconbtn" data-speak="'+esc(text)+'" data-slow="'+(slow?1:0)+'" aria-label="Dhegeyso / Listen">'+uiIcon("speaker")+'</button>'};
+var EMO_RE_LEAD=/^\s*(?:(?:\p{Extended_Pictographic}|[☀-➿⭐⭕⬆⬇←-⇿✔✖✓]|[\u{1F1E6}-\u{1F1FF}]{2}|[0-9#*]️?⃣)(?:️|‍\p{Extended_Pictographic})*\s*)+/u;
+var EMO_RE_TAIL=/\s*(?:(?:\p{Extended_Pictographic}|[☀-➿⭐⭕✔✖✓]|[\u{1F1E6}-\u{1F1FF}]{2})(?:️|‍\p{Extended_Pictographic})*\s*)+$/u;
+var EMO_SKIP=".opt,.vitem,.vocab,.dialogue,.wordchips,.wline,.vis,[data-vis],.visual,.pic,.scene,.flash,.mapword,.emoji,.keep-emoji,pre,code,textarea,input";
+function stripUiEmoji(root){
+ if(!root||typeof root.querySelectorAll!=="function")return;
+ var sel="h1,h2,h3,h4,summary,button,label,.pill,.badge,.chipbtn,.simple-row,.simple-text-button,.simple-back,.stepbar span,.navind,p.small.muted,.kpi div span,.hero-eyebrow";
+ root.querySelectorAll(sel).forEach(function(el){
+  if(el.closest(EMO_SKIP))return;
+  var nodes=el.childNodes;if(!nodes.length)return;
+  var first=null,last=null;
+  for(var i=0;i<nodes.length;i++){var n=nodes[i];if(n.nodeType===3){if(n.nodeValue.trim()){first=n;break}}else if(n.nodeType===1){if(n.tagName==="SVG"||n.tagName==="svg"){continue}break}}
+  for(var j=nodes.length-1;j>=0;j--){var m=nodes[j];if(m.nodeType===3){if(m.nodeValue.trim()){last=m;break}}else if(m.nodeType===1){if(m.tagName==="SVG"||m.tagName==="svg")continue;break}}
+  if(first&&EMO_RE_LEAD.test(first.nodeValue)){var v=first.nodeValue.replace(EMO_RE_LEAD,"");if(v.trim()||el.querySelector("svg"))first.nodeValue=v}
+  if(last&&(el.tagName==="BUTTON"||el.tagName==="H2"||el.tagName==="SUMMARY")&&EMO_RE_TAIL.test(last.nodeValue)){var w=last.nodeValue.replace(EMO_RE_TAIL,"");if(w.trim())last.nodeValue=w}
+ });
+ /* glyph-only buttons (🔊 ✕ ✓ ▶) become icons */
+ root.querySelectorAll("button").forEach(function(b){
+  if(b.closest(EMO_SKIP)||b.querySelector("svg,img"))return;
+  var t=b.textContent.trim();var name=null;
+  if(t==="🔊")name="speaker";else if(t==="✕"||t==="×")name="close";else if(t==="▶")name="play";else if(t==="✓")name="check";else if(t==="➕"||t==="＋")name="plus";
+  if(name){if(!b.getAttribute("aria-label"))b.setAttribute("aria-label",t);b.innerHTML=uiIcon(name)}
+ });
+}
+function uiPolish(){
+ try{stripUiEmoji(app);var top=document.querySelector(".topbar");if(top)stripUiEmoji(top);var nav=document.getElementById("lesNav");if(nav)stripUiEmoji(nav)}catch(e){}
+ try{app.querySelectorAll("button.simple-row").forEach(function(b){if(b.querySelector("svg"))return;var lead=b.id==="homeAiTutor"?"sparkle":"book";b.insertAdjacentHTML("afterbegin",'<svg class="simple-icon" viewBox="0 0 24 24" aria-hidden="true">'+UI_ICONS[lead]+"</svg>");var txt=[].slice.call(b.childNodes).filter(function(n){return n.nodeType===3});txt.forEach(function(n){var sp=document.createElement("span");sp.textContent=n.nodeValue;b.replaceChild(sp,n)});b.insertAdjacentHTML("beforeend",'<svg class="simple-icon" viewBox="0 0 24 24" aria-hidden="true">'+UI_ICONS.chevron+"</svg>")})}catch(e){}
+ try{var ai=document.getElementById("homeAiTutor"),all=document.getElementById("academyAllLessons");if(ai&&all&&ai.compareDocumentPosition(all)&Node.DOCUMENT_POSITION_FOLLOWING){all.insertAdjacentElement("afterend",ai)}}catch(e){}
+ try{if(typeof step!=="undefined"&&typeof cur!=="undefined"&&cur&&document.body.classList.contains("inLesson")&&step===10){app.classList.add("lesson-result");var h2=app.querySelector("h2");if(h2&&!app.querySelector(".lesson-done-mark")){var ok=/gudubtay|passed/i.test(h2.textContent);h2.insertAdjacentHTML("beforebegin",'<span class="lesson-done-mark" aria-hidden="true" style="'+(ok?"":"background:var(--warn-soft);color:var(--warn)")+'">'+uiIcon(ok?"check":"refresh")+'</span>')}}else app.classList.remove("lesson-result")}catch(e){}
+}
+</script>
+<script>
 /* ============ STAGE K — WATCH: CHANNEL + LATEST UPLOADS, SOMALI LEARNING PANEL, GROUPS, SEARCH, HOME WATCH-NEXT ============
    Presentation + navigation only. EPISODES entries and their lesson pairings are
    untouched (this block only reads them). Lesson IDs/order, the unlock chain,
@@ -4601,10 +4693,10 @@ function watchSheetHTML(){
   var saved=inDeck(hit.en);
   h+='<div class="wsheet-row"><div style="min-width:0"><div class="wsheet-en" lang="en">'+esc(hit.en)+(norm(hit.en)!==norm(w)?' <span class="small muted">('+esc(w)+')</span>':"")+'</div><div class="wsheet-so" lang="so">'+esc(hit.so)+'</div>'
    +(hit.exEn?'<p class="small" style="margin:6px 0 0" lang="en">'+esc(hit.exEn)+(hit.exSo?'<br><span class="muted" lang="so">'+esc(hit.exSo)+"</span>":"")+"</p>":"")+'</div>'
-   +'<div style="display:flex;gap:8px;flex:0 0 auto;align-items:flex-start">'+speakBtn(hit.en)+'<button type="button" class="iconbtn" id="wsheetClose" aria-label="Xir / Close">✕</button></div></div>'
-   +'<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px"><button type="button" class="btn" id="wsheetSave"'+(saved?" disabled":"")+'>'+(saved?"✓ Kaararkaaga ayuu ku jiraa / In your review deck":"＋ Kaydi dib-u-eegis / Save to review")+'</button></div>';
+   +'<div style="display:flex;gap:8px;flex:0 0 auto;align-items:flex-start">'+speakBtn(hit.en)+'<button type="button" class="iconbtn" id="wsheetClose" aria-label="Xir / Close">'+uiIcon("close")+'</button></div></div>'
+   +'<div style="display:flex;gap:var(--s-2);flex-wrap:wrap;margin-top:var(--s-3)"><button type="button" class="btn" id="wsheetSave"'+(saved?" disabled":"")+'>'+(saved?uiIcon("check")+"Kaararkaaga ayuu ku jiraa / In your review deck":uiIcon("plus")+"Kaydi dib-u-eegis / Save to review")+'</button></div>';
  }else{
-  h+='<div class="wsheet-row"><div><div class="wsheet-en" lang="en">'+esc(w)+'</div><p class="muted" style="margin:4px 0 0" lang="so">Eraygan wali qaamuuska kuma jiro. / This word is not in the dictionary yet.</p></div><div style="display:flex;gap:8px;flex:0 0 auto">'+speakBtn(w)+'<button type="button" class="iconbtn" id="wsheetClose" aria-label="Xir / Close">✕</button></div></div>';
+  h+='<div class="wsheet-row"><div><div class="wsheet-en" lang="en">'+esc(w)+'</div><p class="muted" style="margin:4px 0 0" lang="so">Eraygan wali qaamuuska kuma jiro. / This word is not in the dictionary yet.</p></div><div style="display:flex;gap:8px;flex:0 0 auto">'+speakBtn(w)+'<button type="button" class="iconbtn" id="wsheetClose" aria-label="Xir / Close">'+uiIcon("close")+'</button></div></div>';
  }
  return h+'</div></div>';
 }
@@ -4618,33 +4710,33 @@ function paintWatchSheet(){
  var sv=document.getElementById("wsheetSave");if(sv)sv.addEventListener("click",function(){
   if(!S||!watchWord||!watchWord.hit)return;
   addSRS(watchWord.hit.en,watchWord.hit.so);save();
-  sv.disabled=true;sv.textContent="✓ Waa la kaydiyay — kaararka dib-u-eegista / Saved to your review deck";
+  sv.disabled=true;sv.innerHTML=uiIcon("check")+"Waa la kaydiyay — kaararka dib-u-eegista / Saved to your review deck";
   var live=document.getElementById("wsheetLive");if(live)live.textContent="Saved";
  });
 }
 function watchLinesHTML(ep){
  var lines=epLines(ep);if(!lines.length)return "";
- return '<div class="card wpanel" style="margin-top:12px"><h3 style="margin:.1em 0 .3em">🇸🇴 Macnaha Soomaaliga / Somali meaning</h3><p class="small muted" style="margin:0 0 10px">Eray kasta oo Ingiriisi ah taabo si aad u aragto macnihiisa Soomaali, kadibna kaydi dib-u-eegistaada. / Tap any English word to see its Somali meaning, then save it to your review deck.</p>'
+ return '<div class="card wpanel" style="margin-top:12px"><h3 style="margin:0 0 var(--s-2)">'+uiIcon("translate")+'Macnaha Soomaaliga / Somali meaning</h3><p class="small muted" style="margin:0 0 10px">Eray kasta oo Ingiriisi ah taabo si aad u aragto macnihiisa Soomaali, kadibna kaydi dib-u-eegistaada. / Tap any English word to see its Somali meaning, then save it to your review deck.</p>'
  +lines.map(function(p){return '<div class="wline"><p class="wline-en"><span class="wline-txt">'+tapLineHTML(p[0])+'</span>'+speakBtn(p[0])+'</p>'+(p[1]?'<p class="wline-so" lang="so">'+esc(p[1])+'</p>':"")+'</div>'}).join("")
  +'<p class="sr-only" id="wsheetLive" aria-live="polite"></p></div>';
 }
 function watchChannelHTML(){
  var h='<div class="card wchannel" style="margin-top:12px"><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap"><span class="wch-logo" aria-hidden="true">SEA</span><div style="flex:1;min-width:160px"><h2 style="margin:0">Somali English Academy</h2><p class="small muted" style="margin:.1em 0">Kanaalka YouTube ee akadeemiyadda / The academy’s YouTube channel</p></div>'
- +'<a class="btn secondary" href="'+YT_CHANNEL_URL+'" target="_blank" rel="noopener noreferrer">▶ Kanaalka fur / Open channel ↗</a></div>'
- +'<h3 style="margin:.9em 0 .3em">🆕 Muuqaalladii ugu dambeeyay / Latest videos</h3>';
+ +'<a class="btn secondary" href="'+YT_CHANNEL_URL+'" target="_blank" rel="noopener noreferrer">Kanaalka fur / Open channel '+uiIcon("external")+'</a></div>'
+ +'<h3 style="margin:var(--s-5) 0 var(--s-2);display:flex;align-items:center;gap:var(--s-2)">'+uiIcon("sparkle")+'Muuqaalladii ugu dambeeyay / Latest videos</h3>';
  if(watchLatestOpen){
-  h+='<div class="wframe"><iframe src="https://www.youtube-nocookie.com/embed/videoseries?list='+YT_UPLOADS_LIST+'&playsinline=1&rel=0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen playsinline title="Somali English Academy — latest videos" loading="lazy"></iframe></div>'
+  h+='<div class="wframe skel"><iframe src="https://www.youtube-nocookie.com/embed/videoseries?list='+YT_UPLOADS_LIST+'&playsinline=1&rel=0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen playsinline title="Somali English Academy — latest videos" loading="lazy"></iframe></div>'
   +'<p class="small muted" style="margin:.5em 0 0">Muuqaal kasta oo cusub oo kanaalka la geliyo halkan ayuu si toos ah uga soo baxaa. Liiska ka dooro muuqaal. / Every new channel video appears here automatically. Pick a video from the list inside the player.</p>';
  }else{
-  h+='<button type="button" class="wlatest" id="watchLatestBtn" aria-label="Muuqaalladii ugu dambeeyay daawo / Watch the latest videos"><span class="wlatest-play">▶</span><span><strong>Taabo si aad u daawato / Tap to load</strong><br><span class="small muted">Muuqaallada cusub ee kanaalka — internet ayay u baahan yihiin. / The channel’s newest uploads — needs internet.</span></span></button>';
+  h+='<button type="button" class="wlatest" id="watchLatestBtn" aria-label="Muuqaalladii ugu dambeeyay daawo / Watch the latest videos"><span class="wlatest-play">'+uiIcon("play")+'</span><span><strong>Taabo si aad u daawato / Tap to load</strong><br><span class="small muted">Muuqaallada cusub ee kanaalka — internet ayay u baahan yihiin. / The channel’s newest uploads — needs internet.</span></span></button>';
  }
  return h+'</div>';
 }
 function watchPlayerHTML(sel){
- return '<div class="card" id="watchPlayer" style="margin-top:12px"><div class="wframe"><iframe src="https://www.youtube-nocookie.com/embed/'+sel.yt+'?playsinline=1&rel=0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen playsinline title="'+esc(sel.titleEn)+'"></iframe></div>'
+ return '<div class="card" id="watchPlayer" style="margin-top:12px"><div class="wframe skel"><iframe src="https://www.youtube-nocookie.com/embed/'+sel.yt+'?playsinline=1&rel=0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen playsinline title="'+esc(sel.titleEn)+'"></iframe></div>'
  +'<h2 style="margin:.6em 0 .2em">'+esc(sel.titleSo)+'</h2><p class="muted" style="margin:.1em 0">'+esc(sel.titleEn)+'</p>'
- +'<h3 style="margin:.7em 0 .3em">📚 Waxaad baran doontaa / What you will learn</h3><ul style="margin:.2em 0;padding-left:20px">'+sel.learn.map(function(b){return '<li style="margin:.25em 0">'+esc(b[1])+'<br><span class="muted">'+esc(b[0])+'</span></li>'}).join("")+'</ul>'
- +'<p style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">'+(sel.rp?('<button class="btn" data-eprp="'+sel.rp+'">🎭 Tababar: fur door-ka-ciyaarka / Practise: open the role-play →</button>'):('<button class="btn" data-eplesson="'+sel.lesson+'">Tag cashirka '+sel.lesson+' / Go to Lesson '+sel.lesson+' →</button>'))+'<button class="btn secondary" id="watchBack">← Liiska / Back to list</button></p></div>'
+ +'<h3 style="margin:var(--s-4) 0 var(--s-2);display:flex;align-items:center;gap:var(--s-2)">'+uiIcon("book")+'Waxaad baran doontaa / What you will learn</h3><ul style="margin:.2em 0;padding-left:20px">'+sel.learn.map(function(b){return '<li style="margin:.25em 0">'+esc(b[1])+'<br><span class="muted">'+esc(b[0])+'</span></li>'}).join("")+'</ul>'
+ +'<p style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">'+(sel.rp?('<button class="btn" data-eprp="'+sel.rp+'">'+uiIcon("mic")+'Tababar: fur door-ka-ciyaarka / Practise the role-play</button>'):('<button class="btn" data-eplesson="'+sel.lesson+'">Tag cashirka '+sel.lesson+' / Go to Lesson '+sel.lesson+uiIcon("arrow")+'</button>'))+'<button class="btn secondary" id="watchBack">'+uiIcon("back")+'Liiska / Back to list</button></p></div>'
  +watchLinesHTML(sel);
 }
 function renderWatch(){
@@ -4652,17 +4744,17 @@ function renderWatch(){
  var q=norm(watchQuery);
  var hits=EPISODES.filter(function(ep){return epMatches(ep,q)});
  var groups=watchGroups(hits);
- var h='<h1>🎬 Daawo / Watch</h1><p class="muted">Casharro muuqaal ah oo leh jilayaal isku mid ah — Ayaan, Faadumo iyo Mr. Daniel — Soomaali iyo Ingiriisi. Kaadh taabo si aad u daawato. / Video lessons with the same cast — Ayaan, Faadumo and Mr. Daniel — in Somali and English. Tap a card to watch.</p><p class="small muted">📶 Muuqaalladu waxay u baahan yihiin internet / Videos need internet</p>';
+ var h='<h1>Daawo <span class="muted" style="font-weight:500">/ Watch</span></h1><p class="muted">Casharro muuqaal ah oo leh jilayaal isku mid ah — Ayaan, Faadumo iyo Mr. Daniel — Soomaali iyo Ingiriisi. Kaadh taabo si aad u daawato. / Video lessons with the same cast — Ayaan, Faadumo and Mr. Daniel — in Somali and English. Tap a card to watch.</p><p class="small muted" style="display:flex;gap:var(--s-2);align-items:center">'+uiIcon("signal")+'Muuqaalladu waxay u baahan yihiin internet / Videos need internet</p>';
  if(sel)h+=watchPlayerHTML(sel);
  h+=watchChannelHTML();
- h+='<div class="wsearch"><label for="watchSearch" style="margin:14px 0 6px">🔍 Raadi cashar muuqaal ah / Search episodes</label><input type="search" id="watchSearch" value="'+esc(watchQuery)+'" placeholder="salaam, market, cashar 5, daily life…" autocomplete="off" aria-describedby="watchCount"><p class="small muted" id="watchCount" style="margin:6px 0 0">'+hits.length+' / '+EPISODES.length+' cashar / episodes</p></div>';
+ h+='<div class="wsearch"><label for="watchSearch">Raadi cashar muuqaal ah / Search episodes</label><input type="search" id="watchSearch" value="'+esc(watchQuery)+'" placeholder="salaam, market, cashar 5, daily life…" autocomplete="off" aria-describedby="watchCount"><p class="small muted" id="watchCount" style="margin:6px 0 0">'+hits.length+' / '+EPISODES.length+' cashar / episodes</p></div>';
  if(groups.length){
-  h+='<div class="wchips" role="navigation" aria-label="Kooxaha / Groups">'+groups.map(function(g){return '<a class="chipbtn'+(g.newest?" sel":"")+'" href="#wg-'+g.key+'" data-wjump="wg-'+g.key+'">'+(g.newest?"🆕 ":"")+esc(g.so||g.en)+' / '+esc(g.en)+' ('+g.eps.length+')</a>'}).join("")+'</div>';
+  h+='<div class="wchips" role="navigation" aria-label="Kooxaha / Groups">'+groups.map(function(g){return '<a class="chipbtn'+(g.newest?" sel":"")+'" href="#wg-'+g.key+'" data-wjump="wg-'+g.key+'" '+(g.key==="dl"?"":stageStyle(g.eps[0].lesson))+'>'+(g.newest?uiIcon("sparkle"):'<i aria-hidden="true"></i>')+esc(g.so||g.en)+' / '+esc(g.en)+' ('+g.eps.length+')</a>'}).join("")+'</div>';
   groups.forEach(function(g){
-   h+='<section class="wgroup" id="wg-'+g.key+'"><h2 style="margin:.2em 0 .1em">'+esc(g.so||g.en)+' <span class="muted" style="font-weight:600">/ '+esc(g.en)+'</span>'+(g.newest?' <span class="pill" style="vertical-align:middle">🆕 Cusub / Newest</span>':"")+'</h2><p class="small muted" style="margin:0 0 10px">'+esc(g.sub)+'</p><div style="display:grid;gap:14px">'+g.eps.map(epCardHTML).join("")+'</div></section>';
+   h+='<section class="wgroup" id="wg-'+g.key+'" '+(g.key==="dl"?"":stageStyle(g.eps[0].lesson))+'><h2><i aria-hidden="true"></i>'+esc(g.so||g.en)+' <span class="muted">/ '+esc(g.en)+'</span>'+(g.newest?'<span class="pill">'+uiIcon("sparkle")+'Cusub / Newest</span>':"")+'</h2><p class="small muted">'+esc(g.sub)+'</p><div style="display:grid;gap:var(--s-3)">'+g.eps.map(epCardHTML).join("")+'</div></section>';
   });
  }else{
-  h+='<div class="card" style="margin-top:14px"><h2 style="margin:.1em 0">Natiijo lama helin / No episodes found</h2><p class="muted">Isku day eray kale, ama nadiifi raadinta. / Try another word, or clear the search.</p><button class="btn secondary" id="watchClear">🧹 Nadiifi raadinta / Clear search</button></div>';
+  h+='<div class="card empty" style="margin-top:var(--s-4)">'+uiIcon("search")+'<h2>Natiijo lama helin / No episodes found</h2><p class="muted">Isku day eray kale, ama nadiifi raadinta. / Try another word, or clear the search.</p><p style="margin-top:var(--s-4)"><button class="btn secondary" id="watchClear">Nadiifi raadinta / Clear search</button></p></div>';
  }
  app.innerHTML=h;
  bindSpeak(app);
@@ -4675,8 +4767,21 @@ function renderWatch(){
  var lb=document.getElementById("watchLatestBtn");if(lb)lb.addEventListener("click",function(){watchLatestOpen=true;renderWatch();var c=app.querySelector(".wchannel");if(c)c.scrollIntoView({block:"start"})});
  var ws=document.getElementById("watchSearch");if(ws)ws.addEventListener("input",function(){watchQuery=ws.value;clearTimeout(window.__wsT);window.__wsT=setTimeout(function(){var pos=ws.selectionStart;var top=window.scrollY;renderWatch();var n=document.getElementById("watchSearch");if(n){n.focus({preventScroll:true});try{n.setSelectionRange(pos,pos)}catch(e){}}window.scrollTo(0,top)},180)});
  var wc=document.getElementById("watchClear");if(wc)wc.addEventListener("click",function(){watchQuery="";renderWatch();var n=document.getElementById("watchSearch");if(n)n.focus()});
+ app.querySelectorAll(".wframe.skel iframe").forEach(function(f){f.addEventListener("load",function(){f.parentNode.classList.remove("skel")})});
  paintWatchSheet();
+ if(typeof uiPolish==="function")uiPolish();
 }
+/* episode card: stage-coloured, real play icon, no inline one-offs */
+epCardHTML=function(ep){
+ var st=ep.lesson!=null?stageStyle(ep.lesson):"";
+ return '<div class="card" '+st+'>'
+ +'<button type="button" data-ep="'+ep.yt+'" style="display:block;width:100%;padding:0;border:0;background:none;cursor:pointer;border-radius:var(--r-md)" aria-label="Daawo / Watch: '+esc(ep.titleEn)+'"><span style="display:block;position:relative;border-radius:var(--r-md);overflow:hidden;background:var(--soft)"><img src="https://i.ytimg.com/vi/'+ep.yt+'/hqdefault.jpg" alt="" loading="lazy" style="width:100%;display:block;aspect-ratio:16/9;object-fit:cover"><span class="wplay"><span>'+uiIcon("play")+'</span></span></span></button>'
+ +'<p style="margin:var(--s-3) 0 var(--s-1);display:flex;gap:var(--s-2);align-items:center;flex-wrap:wrap"><span class="pill"><i aria-hidden="true"></i>'+(ep.dl?("Nolosha Maalinlaha "+ep.dl+" / Daily Life "+ep.dl):("Cashar "+ep.n+" / Episode "+ep.n))+'</span><span class="small muted" style="display:inline-flex;align-items:center;gap:var(--s-1)">'+uiIcon("clock")+ep.dur+'</span></p>'
+ +'<h2 style="margin:var(--s-1) 0 0">'+esc(ep.titleSo)+'</h2><p class="muted" style="margin:0 0 var(--s-2)">'+esc(ep.titleEn)+'</p>'
+ +'<p style="margin:0 0 var(--s-2)" lang="so">'+esc(ep.descSo)+'<br><span class="muted" lang="en">'+esc(ep.descEn)+'</span></p>'
+ +'<p class="small muted" style="margin:0 0 var(--s-3)">Waxay la socotaa / Pairs with: '+esc(ep.lessonsSo)+' / '+esc(ep.lessonsEn)+'</p>'
+ +'<button type="button" class="btn" data-ep="'+ep.yt+'">'+uiIcon("play")+'Daawo / Watch</button></div>';
+};
 
 /* ---- Home: "watch next" joins the existing Next-for-you rotation ----
    Order stays: due reviews → open mistakes → weakest skill → (GED) → then, when the
@@ -4689,7 +4794,7 @@ nextForYou=function(){
  var ep=watchNextFor(base.lesson);if(!ep)return base;
  var r=epRange(ep);var from=Math.max(r[0],ep.lesson);
  for(var i=from;i<=r[1];i++){if(S.completed["L"+i])return base}
- return{kind:"watch",lesson:base.lesson,yt:ep.yt,en:"Watch next: "+ep.titleEn+" — before Lesson "+base.lesson,so:"Daawo marka xigta: "+ep.titleSo+" — ka hor Cashirka "+base.lesson,btn:"🎬 Daawo / Watch"};
+ return{kind:"watch",lesson:base.lesson,yt:ep.yt,en:"Watch next: "+ep.titleEn+" — before Lesson "+base.lesson,so:"Daawo marka xigta: "+ep.titleSo+" — ka hor Cashirka "+base.lesson,btn:"Daawo / Watch"};
 };
 var _wshK=wireSmartHome;
 wireSmartHome=function(next){_wshK(next);var nf=document.getElementById("nfGo");if(nf&&nf.dataset.kind==="watch"){var cl=nf.cloneNode(true);nf.parentNode.replaceChild(cl,nf);cl.addEventListener("click",function(){var ep=watchNextFor(+cl.dataset.lesson||next);watchEp=ep?ep.yt:null;watchWord=null;setNav("watch");render()})}};

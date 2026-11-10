@@ -5,6 +5,7 @@
   var query = '', live = null, loading = false, request = null, sequence = 0, unit = null;
   var profilePage = '', profileId = null;
   var paths = {
+    list: '<path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>',
     home: '<path d="m3 10 9-7 9 7M5 9v12h14V9M9 21v-7h6v7"/>',
     book: '<path d="M12 5C8 2 4 3 2 4v15c4-2 7-1 10 1 3-2 6-3 10-1V4c-2-1-6-2-10 1zm0 0v15"/>',
     user: '<circle cx="12" cy="7" r="4"/><path d="M4 21v-2a8 8 0 0 1 16 0v2"/>',
@@ -64,19 +65,30 @@
     var lesson = nextLesson(), count = todayLessonsCount(), goal = Math.max(1, Number(S.profile.goal) || 2);
     var complete = Object.keys(S.completed).length >= LESSONS.length;
     app.innerHTML = '<div class="simple-home-content"><h1>' + t('Diyaar ma u tahay casharka xiga?', 'Ready for your next lesson?') + '</h1><p class="simple-intro">' + t('Tababar yar, maalin kasta.', 'A little practice, every day.') + '</p>'
-      + '<section class="simple-next"><p class="simple-lesson-number">' + t('Casharka ', 'Lesson ') + lesson.n + '</p><h2>' + esc(title(lesson)) + '</h2><button type="button" class="simple-primary" id="academyContinue">' + (complete ? t('Ku celceli cashirka', 'Review lesson') : t('Sii wad barashada', 'Continue learning')) + icon('arrow') + '</button>'
-      + '<div class="simple-progress" role="progressbar" aria-label="' + t('Hadafka maanta', 'Daily goal') + '" aria-valuemin="0" aria-valuemax="' + goal + '" aria-valuenow="' + Math.min(count, goal) + '"><i style="width:' + Math.min(100, count / goal * 100) + '%"></i></div><p class="simple-progress-caption">' + (english() ? count + ' of ' + goal + ' lessons today' : count + ' ka mid ah ' + goal + ' cashar maanta') + '</p></section>'
-      + row('academyAllLessons', t('Eeg casharrada', 'Browse lessons')) + '</div><p class="simple-device-note">' + t('Horumarkaagu wuxuu ku kaydsan yahay aaladdan.', 'Progress stays on this device.') + '</p>';
+      + (function(){
+          var si = stage12Of(lesson.n), st = STAGES12[si], total = st[3] - st[2] + 1, done = stageDone(si), all = Object.keys(S.completed).length;
+          return '<section class="simple-next" ' + stageStyle(lesson.n) + '><div class="hero-top"><div class="hero-meta"><p class="hero-eyebrow"><i aria-hidden="true"></i>' + esc(english() ? st[0] : st[1]) + ' · ' + (si + 1) + '/12</p>'
+            + '<p class="simple-lesson-number">' + (all ? t('Sii wad meeshii aad ka joogtay — Casharka ', 'Continue where you left off — Lesson ') : t('Casharka ', 'Lesson ')) + lesson.n + '</p><h2>' + esc(title(lesson)) + '</h2></div>'
+            + ringHTML(done / total, (english() ? 'Stage progress ' : 'Horumarka marxaladda ') + done + '/' + total) + '</div>'
+            + '<p class="hero-stats"><span><b>' + done + '</b> / ' + total + ' ' + t('marxaladdan', 'this stage') + '</span><span><b>' + all + '</b> / 1000 ' + t('guud', 'overall') + '</span></p>'
+            + '<button type="button" class="simple-primary" id="academyContinue">' + (complete ? t('Ku celceli cashirka', 'Review lesson') : t('Sii wad barashada', 'Continue learning')) + icon('arrow') + '</button>'
+            + '<div class="simple-progress" role="progressbar" aria-label="' + t('Hadafka maanta', 'Daily goal') + '" aria-valuemin="0" aria-valuemax="' + goal + '" aria-valuenow="' + Math.min(count, goal) + '"><i style="width:' + Math.min(100, count / goal * 100) + '%"></i></div><p class="simple-progress-caption">' + (english() ? count + ' of ' + goal + ' lessons today' : count + ' ka mid ah ' + goal + ' cashar maanta') + '</p></section>';
+        })()
+      + row('academyAllLessons', t('Eeg casharrada', 'Browse lessons'), 'list') + journeyHTML(lesson.n, english()) + '</div><p class="simple-device-note">' + t('Horumarkaagu wuxuu ku kaydsan yahay aaladdan.', 'Progress stays on this device.') + '</p>';
     document.getElementById('academyContinue').onclick = function () { openLesson(lesson.n); };
     document.getElementById('academyAllLessons').onclick = function () { unit = Math.floor((lesson.n - 1) / 10); go('simpleLessons'); };
+    app.querySelectorAll('[data-jstage]').forEach(function (b) { b.onclick = function () { unit = Math.floor((STAGES12[+b.dataset.jstage][2] - 1) / 10); go('simpleLessons'); }; });
   };
   function renderLessons() {
     var lesson = nextLesson(), first = (unit === null ? Math.floor((lesson.n - 1) / 10) : unit) * 10;
-    app.innerHTML = backButton(t('Hoyga', 'Home')) + '<h1>' + t('Casharrada', 'Lessons') + '</h1><p>' + t('Eeg dhammaan qaybaha. Casharrada qufulan waxay furmaan markaad casharka ka horreeya gudubto.', 'Explore every unit. Locked lessons open when you pass the previous lesson.') + '</p><label for="academyUnit" class="simple-label">' + t('Dooro qayb', 'Choose a unit') + '</label><select id="academyUnit">' + LESSONS.filter(function (_, i) { return i % 10 === 0; }).map(function (l, i) {
+    var si = stage12Of(first + 1), st = STAGES12[si], stTotal = st[3] - st[2] + 1, stDone = stageDone(si);
+    app.innerHTML = backButton(t('Hoyga', 'Home')) + '<h1>' + t('Casharrada', 'Lessons') + '</h1><p class="simple-intro">' + t('Eeg dhammaan qaybaha. Casharrada qufulan waxay furmaan markaad casharka ka horreeya gudubto.', 'Explore every unit. Locked lessons open when you pass the previous lesson.') + '</p>'
+      + '<div class="stage-head" ' + stageStyle(first + 1) + '><div class="stage-head-row"><i aria-hidden="true"></i><b>' + (si + 1) + '. ' + esc(english() ? st[0] : st[1]) + '</b><span>' + stDone + ' / ' + stTotal + '</span></div><div class="progress" role="progressbar" aria-label="' + esc((english() ? st[0] : st[1]) + ' ' + stDone + '/' + stTotal) + '" aria-valuemin="0" aria-valuemax="' + stTotal + '" aria-valuenow="' + stDone + '"><i style="width:' + Math.round(stDone / stTotal * 100) + '%"></i></div></div>'
+      + '<label for="academyUnit" class="simple-label">' + t('Dooro qayb', 'Choose a unit') + '</label><select id="academyUnit">' + LESSONS.filter(function (_, i) { return i % 10 === 0; }).map(function (l, i) {
       return '<option value="' + i + '"' + (i * 10 === first ? ' selected' : '') + '>' + (i + 1) + '. ' + esc(title(l)) + ' (' + l.n + '–' + Math.min(l.n + 9, LESSONS.length) + ')</option>';
     }).join('') + '</select><div class="simple-lesson-list">' + LESSONS.slice(first, first + 10).map(function (l) {
       var done = !!S.completed[l.id], unlocked = isUnlocked(l.n);
-      return '<button type="button" class="simple-lesson" data-academy-lesson="' + l.n + '"' + (unlocked ? '' : ' disabled') + '><span class="simple-lesson-index">' + (done ? icon('check') : l.n) + '</span><span>' + esc(title(l)) + '</span>' + icon(unlocked ? 'chevron' : 'lock') + '</button>';
+      return '<button type="button" class="simple-lesson' + (done ? ' is-done' : '') + '" data-academy-lesson="' + l.n + '"' + (unlocked ? '' : ' disabled') + ' ' + stageStyle(l.n) + '><span class="simple-lesson-index">' + (done ? icon('check') : l.n) + '</span><span>' + esc(title(l)) + '</span>' + icon(unlocked ? 'chevron' : 'lock') + '</button>';
     }).join('') + '</div>';
     document.getElementById('simpleBack').onclick = function () { go('home'); };
     document.getElementById('academyUnit').onchange = function () { unit = Number(this.value); render(); document.getElementById('academyUnit').focus(); };
@@ -1951,5 +1963,14 @@ window.ACADEMY_TUTOR_URL = 'https://somali-academy-tutor.rashkaa33.workers.dev';
     b.onclick=function(){watchEp=ep.yt;if(typeof watchWord!=='undefined')watchWord=null;setNav('watch');render();window.scrollTo(0,0)};
     var anchor=box.querySelector('.simple-next');if(anchor)anchor.insertAdjacentElement('afterend',b);else box.appendChild(b);
   };
+  if(S&&S.profile&&S.profile.onboarded)render();
+})();
+/* Design-system polish after every render: icon pass + lesson-complete moment. */
+(function(){
+  var r=render,l=renderLesson,p=renderProfile,h=renderHome;
+  render=function(){r();if(typeof uiPolish==='function')uiPolish()};
+  renderLesson=function(){l();if(typeof uiPolish==='function')uiPolish()};
+  renderProfile=function(){p();if(typeof uiPolish==='function')uiPolish()};
+  renderHome=function(){h();if(typeof uiPolish==='function')uiPolish()};
   if(S&&S.profile&&S.profile.onboarded)render();
 })();
