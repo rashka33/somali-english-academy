@@ -87,3 +87,4 @@ Accepting results unlocks the recommended start and marks earlier lessons as pla
 - Duel Dash: pass-and-play, challenge by code (`?duel=CODE`; the code carries a seed, difficulty, score and a checksum, and the seed regenerates the exact questions), and the family leaderboard (profiles on this device ranked by game XP). The solo race against Geel remains as practice.
 - Daily quests (one game, one review, five new words) with a treasure stop, shown on the games home and echoed on Home.
 - Three difficulties (Xad fudud / Dhexe / Adag), Ladder lifelines, Word Catch parallax, and a seventh game, Word Road 3D.
+- `world.js` is Word Town 3D: a small open world on a hand-written WebGL renderer (no engine, no downloads). Errands are English tasks (go, talk, fetch, give a ride); conversations reuse the curriculum's own `ROLEPLAYS`. It plugs into the shared level engine in `games.js` under game id `run`.

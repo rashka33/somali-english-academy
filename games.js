@@ -33,7 +33,7 @@
     { id: 'match', so: 'Isku Aadi', en: 'Memory Match', ic: 'cards', tip: ['Raadi labada kaar ee is leh.', 'Find the two cards that belong together.'] },
     { id: 'duel', so: 'Tartanka Degdegga', en: 'Duel Dash', ic: 'flag', tip: ['Geel ka hor gaar xariiqda dhammaadka.', 'Reach the finish line before Geel does.'] },
     { id: 'slice', so: 'Jar Erayga', en: 'Word Slice', ic: 'slice', tip: ['Fartaada ku jar erayga saxda ah. Kuwa khaldan ha taaban.', 'Swipe through the correct word. Do not touch the wrong ones.'] },
-    { id: 'run', so: 'Waddada Erayada 3D', en: 'Word Road 3D', ic: 'road', tip: ['Adduun 3D ah dhex orod. Ka gudub calaamadda erayga saxda ah, lacagtana ururso.', 'Run through a 3D world. Pass the sign with the right word and collect the coins.'] }
+    { id: 'run', so: 'Magaalada Erayada 3D', en: 'Word Town 3D', ic: 'road', tip: ['Magaalo 3D ah dhex soco ama gaari ku kaxee. Dadka la hadal, hawlahana Ingiriisi ku dhammee.', 'Walk or drive through a 3D town. Talk to people and finish your errands in English.'] }
   ];
   var PLACES = [['Guriga', 'Home'], ['Dugsiga', 'School'], ['Suuqa', 'Market'], ['Maktabadda', 'Library'], ['Beerta', 'Park'], ['Xafiiska', 'Office'], ['Magaalada', 'City'], ['Garoonka', 'Airport'], ['Jaamacadda', 'University'], ['Buurta sare', 'Summit']];
   var P = { route: 'home', game: null, R: null };
@@ -117,7 +117,7 @@
     var hard = diff === 'hard', med = diff === 'medium', t = (L - 1) / 9;
     return { L: L, hard: hard, med: med, t: Math.min(1.15, t + (hard ? 0.22 : med ? 0.11 : 0)), lives: Math.max(1, (L <= 3 ? 4 : L <= 8 ? 3 : 2) - (hard ? 1 : 0)), maxLen: Math.min(11, 4 + Math.floor(L * 0.7)), lessons: 25 * L, opts: L <= 2 ? 2 : L <= 6 ? 3 : 4 };
   }
-  var NEED = { snake: function (L) { return 2 + Math.floor(L / 3); }, catch: function (L) { return 4 + Math.floor(L / 2); }, ladder: function (L) { return 5 + Math.floor(L / 2); }, match: function (L) { return [3, 4, 4, 5, 6, 6, 7, 8, 8, 10][L - 1]; }, duel: function (L) { return 6 + Math.floor(L / 2); }, slice: function (L) { return 6 + L; }, run: function (L) { return 5 + L; } };
+  var NEED = { snake: function (L) { return 2 + Math.floor(L / 3); }, catch: function (L) { return 4 + Math.floor(L / 2); }, ladder: function (L) { return 5 + Math.floor(L / 2); }, match: function (L) { return [3, 4, 4, 5, 6, 6, 7, 8, 8, 10][L - 1]; }, duel: function (L) { return 6 + Math.floor(L / 2); }, slice: function (L) { return 6 + L; }, run: function (L) { return 3 + Math.floor(L / 2); } };
   function wordPool(c) {
     var ok = function (e) { return /^[a-z]+$/i.test(e.en) && e.en.length >= 2; };
     var p = DICT_ENTRIES.filter(function (e) { return ok(e) && e.en.length <= c.maxLen && e.lesson <= c.lessons; });
@@ -164,7 +164,7 @@
     R.fail = function () { if (!R.over) finish(false); };
     document.getElementById('gmQuit').onclick = function () { stopGame(); P.route = 'levels'; paint(); };
     document.getElementById('gmMute').onclick = function () { g.sound = !g.sound; save(); this.innerHTML = ic(g.sound ? 'speaker' : 'mute'); };
-    R.hud(); ({ snake: gSnake, catch: gCatch, ladder: gLadder, match: gMatch, duel: gDuel, slice: gSlice, run: gRun })[id](R, stage);
+    R.hud(); ({ snake: gSnake, catch: gCatch, ladder: gLadder, match: gMatch, duel: gDuel, slice: gSlice, run: function (r, st) { window.gWorld(r, st, { T: T, ic: ic, sfx: sfx, burst: burst, shuf: shuf, rnd: rnd, lerp: lerp, distract: distract, cssv: cssv }); } })[id](R, stage);
     var last = performance.now();
     R.raf = requestAnimationFrame(function f(ts) { if (R.over) return; var dt = Math.min(0.05, (ts - last) / 1000) * R.ts; last = ts; if (R.step) R.step(dt); R.raf = requestAnimationFrame(f); });
     window.scrollTo({ top: 0, behavior: 'instant' });
@@ -355,48 +355,6 @@
   }
 
 
-
-  /* ---------------- 7. Word Road 3D — a world she runs through ---------------- */
-  function gRun(R, stage) {
-    stage.classList.add('gm-run3d'); var dpr = Math.min(2, window.devicePixelRatio || 1), cv = document.createElement('canvas'), x = cv.getContext('2d'), W = stage.clientWidth, H = stage.clientHeight; stage.innerHTML = ''; stage.appendChild(cv);
-    cv.style.width = W + 'px'; cv.style.height = H + 'px'; cv.width = W * dpr; cv.height = H * dpr; x.setTransform(dpr, 0, 0, dpr, 0, 0);
-    var hor = H * 0.34, lane = 0, px = 0, gates = [], coins = [], props = [], dist = 0, sp = lerp(2.3, 5, Math.min(1, R.c.t)), words = shuf(R.pool), wi = 0, target, FAR = 13;
-    var skies = [['#e1f1ec', '#f6e7c1'], ['#dfeaf6', '#efe6cf'], ['#fbe6d4', '#f3dfb5'], ['#e6e2f3', '#eadfc6'], ['#d8efe7', '#f6e7c1']], sk = skies[(R.c.L - 1) % skies.length], col = { road: '#3b3a36', line: '#f3efe7', a: cssv('--accent'), g: cssv('--gold'), gi: cssv('--gold-ink'), ink: '#1b1a17', paper: '#fffdf8', tree: '#3f7d3a', trunk: '#8a5a3c', hut: '#c8553d', hill: '#b9d8cc' };
-    function pr(z, l) { var s = 1 / (1 + (z - 1) * 0.36); return { x: W / 2 + l * W * 0.3 * s, y: hor + (H - hor) * 0.86 * s, s: s }; }
-    function gate() {
-      target = words[wi++ % words.length]; R.setTarget(target); var n = R.c.L <= 2 ? 2 : 3, ds = distract(target, R, n - 1), ls = shuf([-1, 0, 1]).slice(0, n);
-      gates.push({ z: FAR, signs: ls.map(function (l, i) { return { l: l, w: i === 0 ? target : ds[i - 1], ok: i === 0 }; }), done: false });
-      coins.push({ z: FAR - 4, l: Math.floor(rnd(-1, 2)) }, { z: FAR - 7.5, l: Math.floor(rnd(-1, 2)) });
-    }
-    for (var i = 0; i < 12; i++) props.push({ z: 1 + i * 1.1, side: i % 2 ? 1 : -1, k: Math.floor(rnd(0, 3)), off: rnd(1.9, 2.6) });
-    function steer(d) { lane = Math.max(-1, Math.min(1, lane + d)); sfx('pop'); }
-    var o = null; cv.onpointerdown = function (e) { o = [e.clientX, e.clientY, false]; };
-    cv.onpointermove = function (e) { if (!o || o[2]) return; var dx = e.clientX - o[0]; if (Math.abs(dx) > 24) { steer(dx > 0 ? 1 : -1); o[2] = true; } };
-    cv.onpointerup = function (e) { if (o && !o[2]) { var r = cv.getBoundingClientRect(); steer(e.clientX - r.left > W / 2 ? 1 : -1); } o = null; }; cv.onpointercancel = function () { o = null; };
-    var key = function (e) { if (e.key === 'ArrowLeft') steer(-1); else if (e.key === 'ArrowRight') steer(1); }; addEventListener('keydown', key);
-    function prop(p) { var q = pr(p.z, p.side * p.off), s = q.s, b = 70 * s; if (p.k === 2) { x.fillStyle = col.hut; x.fillRect(q.x - b * 0.5, q.y - b * 0.7, b, b * 0.7); x.fillStyle = col.trunk; x.beginPath(); x.moveTo(q.x - b * 0.65, q.y - b * 0.7); x.lineTo(q.x, q.y - b * 1.25); x.lineTo(q.x + b * 0.65, q.y - b * 0.7); x.fill(); } else { x.fillStyle = col.trunk; x.fillRect(q.x - b * 0.07, q.y - b * 0.9, b * 0.14, b * 0.9); x.fillStyle = col.tree; x.beginPath(); if (p.k === 1) x.ellipse(q.x, q.y - b * 1.0, b * 0.7, b * 0.26, 0, 0, 6.3); else x.arc(q.x, q.y - b * 1.05, b * 0.42, 0, 6.3); x.fill(); } }
-    function sign(g, sg) { var q = pr(g.z, sg.l), s = q.s, bw = W * 0.27 * s, bh = W * 0.15 * s, top = q.y - bh * 1.9; x.fillStyle = col.trunk; x.fillRect(q.x - 2 * s - 1, top + bh, 4 * s + 2, bh * 0.9); x.fillStyle = col.paper; x.strokeStyle = col.a; x.lineWidth = Math.max(1.5, 4 * s); x.beginPath(); if (x.roundRect) x.roundRect(q.x - bw / 2, top, bw, bh, 8 * s); else x.rect(q.x - bw / 2, top, bw, bh); x.fill(); x.stroke(); var f = Math.min(W * 0.062 * s, bw * 1.5 / Math.max(3, sg.w.en.length)); if (f >= 8) { x.fillStyle = col.ink; x.font = '700 ' + f.toFixed(1) + 'px Inter,system-ui,sans-serif'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText(sg.w.en, q.x, top + bh / 2 + 1); } }
-    function draw() {
-      x.fillStyle = sk[0]; x.fillRect(0, 0, W, hor); x.fillStyle = col.g; x.beginPath(); x.arc(W * 0.78, hor * 0.42, 22, 0, 6.3); x.fill();
-      x.fillStyle = col.hill; x.beginPath(); x.ellipse(W * 0.22, hor + 4, W * 0.34, hor * 0.34, 0, Math.PI, 0); x.fill(); x.beginPath(); x.ellipse(W * 0.8, hor + 4, W * 0.4, hor * 0.24, 0, Math.PI, 0); x.fill();
-      x.fillStyle = sk[1]; x.fillRect(0, hor, W, H - hor);
-      var a = pr(FAR + 6, -1.6), b = pr(FAR + 6, 1.6), c = pr(0.55, 1.6), d = pr(0.55, -1.6); x.fillStyle = col.road; x.beginPath(); x.moveTo(a.x, a.y); x.lineTo(b.x, b.y); x.lineTo(c.x, c.y); x.lineTo(d.x, d.y); x.fill();
-      x.strokeStyle = col.line; [-0.5, 0.5].forEach(function (l) { for (var z = FAR + 5 - (dist % 1.6); z > 0.6; z -= 1.6) { var p1 = pr(z, l), p2 = pr(Math.max(0.6, z - 0.7), l); x.lineWidth = Math.max(1, 5 * p1.s); x.beginPath(); x.moveTo(p1.x, p1.y); x.lineTo(p2.x, p2.y); x.stroke(); } });
-      var all = []; props.forEach(function (p) { all.push([p.z, 0, p]); }); gates.forEach(function (g) { all.push([g.z, 1, g]); }); coins.forEach(function (q) { all.push([q.z, 2, q]); }); all.sort(function (m, n) { return n[0] - m[0]; });
-      all.forEach(function (it) { if (it[1] === 0) prop(it[2]); else if (it[1] === 1) it[2].signs.forEach(function (sg) { sign(it[2], sg); }); else { var q = pr(it[2].z, it[2].l); x.fillStyle = col.g; x.strokeStyle = col.gi; x.lineWidth = Math.max(1, 3 * q.s); x.beginPath(); x.ellipse(q.x, q.y - 26 * q.s, 14 * q.s * Math.abs(Math.cos(dist * 3 + it[2].z)) + 2, 14 * q.s, 0, 0, 6.3); x.fill(); x.stroke(); } });
-      var me = pr(1, px), bob = Math.sin(dist * 7) * 3; x.fillStyle = 'rgba(0,0,0,.22)'; x.beginPath(); x.ellipse(me.x, me.y + 4, 24, 7, 0, 0, 6.3); x.fill();
-      x.fillStyle = col.a; x.beginPath(); if (x.roundRect) x.roundRect(me.x - 17, me.y - 54 + bob, 34, 46, 12); else x.rect(me.x - 17, me.y - 54 + bob, 34, 46); x.fill(); x.beginPath(); x.arc(me.x, me.y - 66 + bob, 13, 0, 6.3); x.fill(); x.fillStyle = col.g; x.fillRect(me.x - 17, me.y - 40 + bob, 34, 6);
-    }
-    gate(); draw();
-    R.step = function (dt) {
-      var v = sp * dt; dist += v; px += (lane - px) * Math.min(1, dt * 12);
-      props.forEach(function (p) { p.z -= v; if (p.z < 0.5) p.z += 13.2; });
-      coins = coins.filter(function (q) { q.z -= v; if (q.z <= 1.12) { if (q.l === lane) { sfx('blip'); R.score += 2; R.hud(); var p = R.at(pr(1, lane).x, pr(1, lane).y - 40); burst(p[0], p[1], [col.g, '#fff3c4'], 8, 160); } return false; } return true; });
-      gates = gates.filter(function (g) { g.z -= v; if (!g.done && g.z <= 1.1) { g.done = true; var sg = g.signs.filter(function (s) { return s.l === lane; })[0], p = pr(1, lane); if (sg && sg.ok) R.good(target, p.x, p.y - 60); else if (sg) R.bad(target); else R.soft(); if (!R.over) gate(); } return g.z > 0.45; });
-      if (!R.over) draw();
-    };
-    R.cleanup = function () { removeEventListener('keydown', key); };
-  }
 
   /* ---------------- daily quests: one game, one review, one new word set ---------------- */
   function qz() { var g = gz(), t = todayStr(); if (!g.q || g.q.d !== t) g.q = { d: t }; return g.q; }

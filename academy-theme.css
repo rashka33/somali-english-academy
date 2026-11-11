@@ -622,3 +622,28 @@ body.gm-playing{overscroll-behavior:none}
 .about-top a:first-child{font-family:var(--font-display);font-weight:700;font-size:var(--t-lg);color:var(--ink);text-decoration:none}.about-top .btn{text-decoration:none;min-height:44px;padding:var(--s-2) var(--s-4);font-size:var(--t-sm)}
 .about-standalone .about-page{max-width:680px;margin:0 auto;padding:var(--s-4)}
 .gm-run3d{border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;min-height:min(60dvh,500px);background:var(--surface)}.gm-run3d canvas{display:block}
+
+/* ---------- 13. WORD TOWN 3D ---------- */
+.gm-town{min-height:min(66dvh,580px);background:var(--soft)}
+.gm[data-game="run"] .gm-target{align-items:flex-start}.gm[data-game="run"] .gm-tt{flex:1}
+.tw-en{font-family:var(--font-display);font-weight:700;font-size:var(--t-lg);line-height:var(--lh-snug)}.tw-so{font-size:var(--t-sm);color:var(--ink-2);line-height:var(--lh-snug)}
+.tw-labels{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.tw-labels span{position:absolute;transform:translate(-50%,-100%);display:flex;flex-direction:column;align-items:center;background:var(--surface);color:var(--ink);border:1px solid var(--line-2);border-radius:var(--r-sm);padding:1px var(--s-2);font-size:var(--t-xs);line-height:1.25;white-space:nowrap;box-shadow:var(--sh-1)}
+.tw-labels b{font-weight:700}.tw-labels i{font-style:normal;color:var(--ink-2);font-size:11px}
+.tw-labels .tw-item{background:var(--gold);border-color:var(--gold-ink);color:var(--gold-ink);font-size:var(--t-md);padding:2px var(--s-3)}
+.tw-labels .tw-npc{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:600}
+.tw-compass{position:absolute;top:var(--s-2);right:var(--s-2);display:flex;align-items:center;gap:var(--s-2);background:var(--surface);border:1px solid var(--line-2);border-radius:var(--r-full);padding:var(--s-1) var(--s-3) var(--s-1) var(--s-1);box-shadow:var(--sh-1)}
+.tw-compass i{width:28px;height:28px;border-radius:var(--r-full);background:var(--gold-soft);position:relative;display:block}
+.tw-compass i::after{content:"";position:absolute;left:50%;top:4px;margin-left:-6px;border:6px solid transparent;border-bottom:12px solid var(--gold-ink);border-top:0}
+.tw-compass b{font-size:var(--t-sm);font-variant-numeric:tabular-nums}
+.tw-stick{position:absolute;left:var(--s-3);bottom:var(--s-3);width:112px;height:112px;border-radius:var(--r-full);background:color-mix(in srgb,var(--surface) 72%,transparent);border:2px solid var(--line-2);touch-action:none}
+.tw-stick i{position:absolute;left:50%;top:50%;width:48px;height:48px;margin:-24px 0 0 -24px;border-radius:var(--r-full);background:var(--accent);box-shadow:var(--sh-1);pointer-events:none}
+.tw-acts{position:absolute;right:var(--s-3);bottom:var(--s-3);display:flex;flex-direction:column;gap:var(--s-2);align-items:flex-end}
+.tw-btn{display:inline-flex;align-items:center;gap:var(--s-2);min-height:56px;min-width:112px;justify-content:center;padding:0 var(--s-4);border-radius:var(--r-full);border:0;background:var(--gold);color:var(--gold-ink);font-weight:700;font-size:var(--t-md);box-shadow:var(--sh-1);cursor:pointer}
+.tw-btn[hidden]{display:none}.tw-btn#twTalk{background:var(--accent);color:var(--accent-ink)}
+.tw-say{position:absolute;left:var(--s-3);right:var(--s-3);top:48px;display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line-2);border-radius:var(--r-lg);padding:var(--s-3) var(--s-4);box-shadow:var(--sh-1);animation:rise var(--dur-2) var(--ease)}
+.tw-say[hidden],.tw-dlg[hidden]{display:none}.tw-say b{font-size:var(--t-xs);color:var(--accent);text-transform:uppercase;letter-spacing:.06em}.tw-say span{font-weight:600;font-size:var(--t-lg);line-height:var(--lh-snug)}.tw-say small{color:var(--ink-2);font-size:var(--t-sm)}
+.tw-dlg{position:absolute;left:0;right:0;bottom:0;max-height:100%;overflow:auto;background:var(--surface);border-top:4px solid var(--accent);border-radius:var(--r-lg) var(--r-lg) 0 0;padding:var(--s-4);box-shadow:0 -8px 30px rgba(0,0,0,.2);animation:rise var(--dur-2) var(--ease)}
+.tw-line{font-family:var(--font-display);font-weight:700;font-size:var(--t-lg);line-height:var(--lh-snug);margin:0;flex:1}.tw-dlg .tw-so{margin:0 0 var(--s-3)}.tw-dlg .cz-qrow{margin:0 0 var(--s-1)}
+.tw-dlg .opt{min-height:52px;font-size:var(--t-md);text-align:left}.tw-why{font-size:var(--t-sm);color:var(--ink-2);min-height:1.5em;margin:var(--s-2) 0 0}
+.gm-town.tw-hurt{outline:3px solid var(--bad);outline-offset:-3px}
