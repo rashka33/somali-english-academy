@@ -1,7 +1,7 @@
 {
  "edition": "2025",
  "source": "USCIS form M-1778 (09/25), 128 Civics Questions and Answers (2025 version), uscis.gov",
- "note": "Questions and answers verified verbatim against the official USCIS text on 2026-11-10. explain_so lines are DRAFT Somali explanations — pending the Somali quality pass before shipping in the app. 'changes' marks answers that depend on current office-holders or the learner's state (check uscis.gov/citizenship/testupdates before an interview).",
+ "note": "Questions and answers verified verbatim against USCIS form M-1778 (09/25) on 2026-11-10, and re-verified by script against the PDF downloaded from uscis.gov on 2026-11-11. explain_so lines are the academy's own Somali teaching notes (not official text). 'changes' marks answers that depend on current office-holders or the learner's state (check uscis.gov/citizenship/testupdates before an interview).",
  "questions": [
   {
    "n": 1,
@@ -14,7 +14,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Maraykanku waa jamhuuriyad ay dadku doorasho ku xukuntaan."
+   "explain_so": "Maraykanku waa jamhuuriyad: dadka ayaa doorta madaxda u hadasha, boqorna ma jiro. Saddexda jawaabood mid ka mid ah ayaa kugu filan."
   },
   {
    "n": 2,
@@ -25,7 +25,7 @@
    ],
    "star65": true,
    "changes": false,
-   "explain_so": "Dastuurka Maraykanku waa sharciga ugu sarreeya dalka."
+   "explain_so": "Constitution-ku (dastuurka) waa sharciga ugu sarreeya dalka. Sharci kasta oo kale waa inuu isaga waafaqo."
   },
   {
    "n": 3,
@@ -39,7 +39,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Dastuurku wuxuu dhisaa dowladda oo qeexaa awoodahaheeda."
+   "explain_so": "Constitution-ku wuxuu dhisaa dowladda, wuxuu qeexaa awoodaheeda iyo qaybaheeda, wuxuuna ilaaliyaa xuquuqda dadka. Hal mid sheeg."
   },
   {
    "n": 4,
@@ -54,7 +54,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Waxay la macno tahay dadka ayaa is xukuma."
+   "explain_so": "“We the People” waa saddexda eray ee Constitution-ku ku bilaabmo. Macnahoodu waa: awoodda dalka dadka ayaa iska leh, iyaga ayaana is xukuma."
   },
   {
    "n": 5,
@@ -66,7 +66,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Dastuurka waxaa lagu beddelaa isbeddelo la yiraahdo amendments."
+   "explain_so": "Constitution-ka waxaa lagu beddelaa “amendment” — wax-ka-beddel ama kordhin si rasmi ah loogu daro."
   },
   {
    "n": 6,
@@ -78,7 +78,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Bill of Rights wuxuu ilaaliyaa xuquuqda aasaasiga ah ee dadka."
+   "explain_so": "Bill of Rights waa tobanka amendment ee ugu horreeya. Waxay ilaaliyaan xuquuqda aasaasiga ah ee qof kasta oo Maraykanka ku nool."
   },
   {
    "n": 7,
@@ -89,7 +89,7 @@
    ],
    "star65": true,
    "changes": false,
-   "explain_so": "Dastuurka wuxuu leeyahay toddoba iyo labaatan (27) isbeddel."
+   "explain_so": "Ilaa hadda Constitution-ka 27 jeer ayaa wax laga beddelay. Tirada xusuuso: twenty-seven."
   },
   {
    "n": 8,
@@ -103,7 +103,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Waxay muhiim tahay sababtoo ah waxay sheegtay in Maraykanku xor ka yahay Ingiriiska."
+   "explain_so": "Declaration of Independence waa qoraalkii lagu dhawaaqay in Maraykanku ka xoroobay Ingiriiska, in dadku siman yihiin, xuquuqna ku dhasheen."
   },
   {
    "n": 9,
@@ -114,7 +114,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Dastuurka ku dhawaaqista madaxbannaanida ayaa sheegay in mustamaraadku xor yihiin."
+   "explain_so": "Declaration of Independence — ku-dhawaaqistii xornimada — ayaa sheegtay in gumeysigii Maraykanku ka xoroobay Britain."
   },
   {
    "n": 10,
@@ -130,7 +130,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Fikradaha muhiimka ah waxaa ka mid ah sinnaanta iyo xorriyadda."
+   "explain_so": "Labada qoraal waxay xambaarsan yihiin fikrado waaweyn sida sinnaan (equality) iyo xorriyad (liberty). Laba ka dooro liiska."
   },
   {
    "n": 11,
@@ -141,7 +141,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Erayadaas waxay ku qoran yihiin Dastuurka ku dhawaaqista madaxbannaanida."
+   "explain_so": "Erayadan caanka ah — nolol, xorriyad iyo raadinta farxadda — waxay ku qoran yihiin Declaration of Independence."
   },
   {
    "n": 12,
@@ -153,7 +153,7 @@
    ],
    "star65": true,
    "changes": false,
-   "explain_so": "Dhaqaalaha Maraykanku waa suuq xorta ah oo ganacsi ku salaysan."
+   "explain_so": "Dhaqaalaha Maraykanku waa capitalism: ganacsiga waxaa iska leh dadka iyo shirkadaha, suuquna waa xor."
   },
   {
    "n": 13,
@@ -167,7 +167,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Sharciga waa in qof walba u hoggaansamo, xitaa hoggaamiyayaasha."
+   "explain_so": "Rule of law waxay ka dhigan tahay: qofna sharciga kama sarreeyo. Madax, dowlad iyo shacabba waa inay sharciga raacaan."
   },
   {
    "n": 14,
@@ -185,7 +185,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Dastuurka waxaa saameeyay dukumentiyo badan, sida Dastuurka ku dhawaaqista madaxbannaanida."
+   "explain_so": "Qoraallo hore ayaa saamayn ku yeeshay Constitution-ka. Kan ugu fudud ee la xusuusto waa Declaration of Independence."
   },
   {
    "n": 15,
@@ -198,7 +198,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Saddexda laamood ayaa loo qaybiyay si aan midna u xoog badnaan."
+   "explain_so": "Dowladda waxaa loo qaybiyay saddex laamood si aan midkoodna u noqon mid awood xad-dhaaf ah leh — mid walba kuwa kale ayuu ilaaliyaa (checks and balances)."
   },
   {
    "n": 16,
@@ -210,7 +210,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Saddexda laamood waa sharci-dejinta, fulinta iyo garsoorka."
+   "explain_so": "Saddexda laamood: legislative (Congress — sharci-dejinta), executive (madaxweynaha — fulinta) iyo judicial (maxkamadaha — garsoorka)."
   },
   {
    "n": 17,
@@ -221,7 +221,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Madaxweynuhu wuxuu hoggaamiyaa laanta fulinta."
+   "explain_so": "Madaxweynuhu wuxuu hoggaamiyaa laanta fulinta — executive branch."
   },
   {
    "n": 18,
@@ -234,7 +234,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Kongarasku wuxuu qoraa sharciyada."
+   "explain_so": "Sharciyada federaalka waxaa qora Congress-ka, oo ah laanta sharci-dejinta."
   },
   {
    "n": 19,
@@ -245,7 +245,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Kongarasku wuxuu ka kooban yahay Senate iyo House."
+   "explain_so": "Congress-ku wuxuu ka kooban yahay laba aqal: Senate iyo House of Representatives."
   },
   {
    "n": 20,
@@ -258,7 +258,7 @@
    ],
    "star65": true,
    "changes": false,
-   "explain_so": "Kongarasku wuxuu qoraa sharciyo, dagaal ku dhawaaqaa, oo miisaaniyad sameeyaa."
+   "explain_so": "Congress-ku wuxuu qoraa sharciyada, wuxuu ku dhawaaqaa dagaal, wuxuuna sameeyaa miisaaniyadda federaalka. Hal mid sheeg."
   },
   {
    "n": 21,
@@ -269,7 +269,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Waxaa jira boqol (100) senator."
+   "explain_so": "Waxaa jira 100 senator — gobol kasta laba."
   },
   {
    "n": 22,
@@ -280,7 +280,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Senator wuxuu shaqeeyaa lix sano."
+   "explain_so": "Senator-ka waxaa loo doortaa lix sano markiiba."
   },
   {
    "n": 23,
@@ -291,7 +291,7 @@
    ],
    "star65": false,
    "changes": true,
-   "explain_so": "Jawaabtu way is beddeli kartaa, waana inaad sheegto senator-ka gobolkaaga; hubi ka hor wareysiga."
+   "explain_so": "Jawaabtu waxay ku xiran tahay gobolka aad deggan tahay. Baro magaca mid ka mid ah labada senator ee gobolkaaga, kana hubi senate.gov ka hor wareysiga."
   },
   {
    "n": 24,
@@ -302,7 +302,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "House of Representatives wuxuu leeyahay afar boqol iyo shan iyo soddon (435) xubnood oo cod bixiya."
+   "explain_so": "House of Representatives wuxuu leeyahay 435 xubnood oo cod leh."
   },
   {
    "n": 25,
@@ -313,7 +313,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Xubin House-ka wuxuu shaqeeyaa laba sano."
+   "explain_so": "Xubinta House-ka waxaa loo doortaa laba sano markiiba."
   },
   {
    "n": 26,
@@ -324,7 +324,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Waqtiga gaaban wuxuu u oggolaanayaa inay si dhow u raacaan ra'yiga dadweynaha."
+   "explain_so": "Maadaama laba sano kasta la doorto, representatives-ku waxay si dhow ula socdaan waxa dadku rabaan."
   },
   {
    "n": 27,
@@ -335,7 +335,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Gobol kastaa wuxuu leeyahay laba senator."
+   "explain_so": "Gobol kasta, weyn ama yar, wuxuu leeyahay laba senator."
   },
   {
    "n": 28,
@@ -347,7 +347,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Gobol walba wuxuu leeyahay laba senator si loo helo matalaad siman."
+   "explain_so": "Laba senator gobolkiiba waxay gobollada yaryar siinaysaa cod la mid ah kan kuwa waaweyn. Heshiiskaas waxaa la yiraahdaa Great Compromise."
   },
   {
    "n": 29,
@@ -358,7 +358,7 @@
    ],
    "star65": false,
    "changes": true,
-   "explain_so": "Jawaabtu way is beddeli kartaa, waana inaad sheegto xubintaada House-ka; hubi ka hor wareysiga."
+   "explain_so": "Jawaabtu waxay ku xiran tahay degmada (district) aad ku nooshahay. Magaca wakiilkaaga ka raadi house.gov adigoo gelinaya ZIP code-kaaga."
   },
   {
    "n": 30,
@@ -369,7 +369,7 @@
    ],
    "star65": true,
    "changes": true,
-   "explain_so": "Jawaabtu way is beddeli kartaa marka Speaker cusub yimaado, sidaas darteed hubi uscis.gov ka hor wareysiga."
+   "explain_so": "Speaker-ku waa guddoomiyaha House of Representatives. Magacu wuu is beddeli karaa — ka hubi uscis.gov/citizenship/testupdates ka hor wareysigaaga."
   },
   {
    "n": 31,
@@ -381,7 +381,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Senator wuxuu matalaa dadka gobolkiisa."
+   "explain_so": "Senator-ku wuxuu matalaa dhammaan dadka gobolkiisa."
   },
   {
    "n": 32,
@@ -392,7 +392,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Dadka gobolka ayaa dooranaya senator-ka."
+   "explain_so": "Senator-ka waxaa doorta muwaadiniinta gobolkiisa."
   },
   {
    "n": 33,
@@ -406,7 +406,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Xubinta House waxay matashaa dadka deggan district-keeda."
+   "explain_so": "Xubinta House-ku waxay matashaa dadka degmadeeda (congressional district)."
   },
   {
    "n": 34,
@@ -417,7 +417,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Dadka district-ka ayaa dooranaya xubinta House-ka."
+   "explain_so": "Waxaa doorta muwaadiniinta degmadaas ku nool."
   },
   {
    "n": 35,
@@ -430,7 +430,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Gobollada dadka badan waxay leeyihiin xubno badan."
+   "explain_so": "Gobolka dadkiisu bato ayaa hela representatives badan; tirada waxaa lagu saleeyaa tirada dadka."
   },
   {
    "n": 36,
@@ -441,7 +441,7 @@
    ],
    "star65": true,
    "changes": false,
-   "explain_so": "Madaxweynaha waxaa la dooranayaa afar sano."
+   "explain_so": "Madaxweynaha waxaa loo doortaa afar sano."
   },
   {
    "n": 37,
@@ -453,7 +453,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Madaxweynuhu wuxuu shaqayn karaa laba xilli oo keliya si aanu u xoog badnaan."
+   "explain_so": "Amendment-ka 22aad ayaa xaddiday laba xilli, si aan madaxweyne u noqon mid awood xad-dhaaf ah yeesha."
   },
   {
    "n": 38,
@@ -464,7 +464,7 @@
    ],
    "star65": true,
    "changes": true,
-   "explain_so": "Magaca madaxweynaha wuu is beddeli karaa, sidaas darteed hubi uscis.gov ka hor wareysiga."
+   "explain_so": "Sheeg magaca madaxweynaha hadda xilka haya. Doorasho ka dib wuu is beddeli karaa — ka hubi uscis.gov/citizenship/testupdates."
   },
   {
    "n": 39,
@@ -475,7 +475,7 @@
    ],
    "star65": true,
    "changes": true,
-   "explain_so": "Magaca madaxweyne ku xigeenka wuu is beddeli karaa, sidaas darteed hubi uscis.gov ka hor wareysiga."
+   "explain_so": "Sheeg magaca madaxweyne-ku-xigeenka hadda xilka haya. Wuu is beddeli karaa — ka hubi uscis.gov/citizenship/testupdates."
   },
   {
    "n": 40,
@@ -486,7 +486,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Haddii madaxweynuhu shaqayn karin, madaxweyne ku xigeenka ayaa noqda madaxweyne."
+   "explain_so": "Haddii madaxweynuhu shaqada gudan kari waayo, madaxweyne-ku-xigeenka (Vice President) ayaa beddela."
   },
   {
    "n": 41,
@@ -502,7 +502,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Madaxweynuhu wuxuu saxeexaa sharciyo, joojiyaa sharciyo, wuxuuna hoggaamiyaa ciidamada."
+   "explain_so": "Madaxweynuhu wuxuu saxiixaa sharciyada, wuu diidi karaa (veto), wuxuuna yahay taliyaha guud ee ciidamada. Hal awood sheeg."
   },
   {
    "n": 42,
@@ -513,7 +513,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Madaxweynuhu waa taliyaha guud ee ciidamada Maraykanka."
+   "explain_so": "Commander in Chief waa taliyaha ugu sarreeya ciidamada — waa madaxweynaha."
   },
   {
    "n": 43,
@@ -524,7 +524,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Madaxweynuhu wuxuu saxeexaa sharciyada si ay sharci u noqdaan."
+   "explain_so": "Bill waa sharci-qabyo. Marka madaxweynuhu saxiixo ayuu sharci noqdaa."
   },
   {
    "n": 44,
@@ -535,7 +535,7 @@
    ],
    "star65": true,
    "changes": false,
-   "explain_so": "Madaxweynuhu wuxuu joojin karaa sharci (veto)."
+   "explain_so": "Veto waa diidmo: madaxweynuhu wuu diidi karaa sharci-qabyo uu Congress-ku u soo gudbiyay."
   },
   {
    "n": 45,
@@ -546,7 +546,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Madaxweynuhu wuxuu magacaabaa garsoorayaasha federaalka."
+   "explain_so": "Garsoorayaasha federaalka waxaa magacaaba madaxweynaha."
   },
   {
    "n": 46,
@@ -559,7 +559,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Laanta fulinta waxaa ka mid ah madaxweynaha iyo golaha wasiirada."
+   "explain_so": "Laanta fulinta waxaa ka mid ah madaxweynaha, Cabinet-ka (golaha wasiirrada) iyo hay'adaha federaalka."
   },
   {
    "n": 47,
@@ -570,7 +570,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Golaha wasiirada waxay talo siiyaan madaxweynaha."
+   "explain_so": "Cabinet-ku waa lataliyayaasha madaxweynaha — wasiirrada ayaa talo siiya."
   },
   {
    "n": 48,
@@ -602,7 +602,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Xilalka heer wasiir waxaa ka mid ah Xeer Ilaaliyaha Guud iyo wasiiro badan."
+   "explain_so": "Cabinet-ka waxaa ku jira wasiirro sida Secretary of State iyo Secretary of Defense. Laba xil sheeg."
   },
   {
    "n": 49,
@@ -614,7 +614,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Electoral College ayaa go'aamisa cidda madaxweyne noqonaysa."
+   "explain_so": "Electoral College waa habka lagu go'aamiyo cidda madaxweyne noqonaysa: gobol kasta wuxuu leeyahay codad doorasho."
   },
   {
    "n": 50,
@@ -626,7 +626,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Laanta garsoorka waxaa ka mid ah Maxkamadda Sare."
+   "explain_so": "Laanta garsoorka waxaa ka mid ah Supreme Court iyo maxkamadaha federaalka."
   },
   {
    "n": 51,
@@ -640,7 +640,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Laanta garsoorku waxay dib u eegtaa sharciyada oo xalliyaa khilaafaadka."
+   "explain_so": "Laanta garsoorku waxay dib u eegtaa oo sharxdaa sharciyada, waxayna xallisaa khilaafaadka sharciga."
   },
   {
    "n": 52,
@@ -651,7 +651,7 @@
    ],
    "star65": true,
    "changes": false,
-   "explain_so": "Maxkamadda Sare waa maxkamadda ugu sarreysa Maraykanka."
+   "explain_so": "Supreme Court waa maxkamadda ugu sarreysa dalka."
   },
   {
    "n": 53,
@@ -662,7 +662,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Maxkamadda Sare waxay leedahay sagaal (9) kursi."
+   "explain_so": "Supreme Court waxay leedahay sagaal kursi."
   },
   {
    "n": 54,
@@ -673,7 +673,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Shan (5) garsoore ayaa badanaa loo baahan yahay si kiis loo go'aamiyo."
+   "explain_so": "Si go'aan loo gaaro waxaa badanaa loo baahan yahay shan garsoore — aqlabiyadda sagaalka."
   },
   {
    "n": 55,
@@ -686,7 +686,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Garsoorayaasha Maxkamadda Sare waxay shaqeeyaan inta ay nool yihiin."
+   "explain_so": "Garsoorayaasha Supreme Court waxay shaqeeyaan inta ay nool yihiin, ama ilaa ay ka fariistaan."
   },
   {
    "n": 56,
@@ -698,7 +698,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Waxay shaqeeyaan inta ay nool yihiin si ay uga madaxbannaadaan siyaasadda."
+   "explain_so": "Nolosha oo dhan ayay u shaqeeyaan si ay siyaasadda uga madax bannaanaadaan."
   },
   {
    "n": 57,
@@ -709,7 +709,7 @@
    ],
    "star65": false,
    "changes": true,
-   "explain_so": "Magaca Madaxa Garsoorka wuu is beddeli karaa, sidaas darteed hubi uscis.gov ka hor wareysiga."
+   "explain_so": "Chief Justice waa garsooraha ugu sarreeya Supreme Court. Magaca hadda ka hubi uscis.gov/citizenship/testupdates."
   },
   {
    "n": 58,
@@ -725,7 +725,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Dowladda federaalku waxay daabacdaa lacagta oo dagaal ku dhawaaqdaa."
+   "explain_so": "Awoodaha u gaarka ah dowladda federaalka waxaa ka mid ah daabacaadda lacagta, ku-dhawaaqista dagaalka iyo heshiisyada caalamiga ah."
   },
   {
    "n": 59,
@@ -740,7 +740,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Gobolladu waxay bixiyaan waxbarasho iyo shatiga darawalnimada."
+   "explain_so": "Gobolladu waxay bixiyaan waxbarashada, booliska, dab-damiska iyo liisanka darawalnimada. Hal mid sheeg."
   },
   {
    "n": 60,
@@ -751,7 +751,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "10th Amendment waxay sheegaysaa in awoodaha aan federaalka la siin ay leeyihiin gobollada ama dadka."
+   "explain_so": "Amendment-ka 10aad wuxuu leeyahay: awood kasta oo aan la siin dowladda federaalka waxaa iska leh gobollada ama dadka."
   },
   {
    "n": 61,
@@ -762,7 +762,7 @@
    ],
    "star65": true,
    "changes": true,
-   "explain_so": "Guddoomiyaha gobolkaagu wuu is beddeli karaa, waana inaad magaciisa sheegto; hubi ka hor wareysiga."
+   "explain_so": "Sheeg magaca guddoomiyaha (governor) gobolka aad deggan tahay. Ka hubi bogga rasmiga ah ee gobolkaaga ka hor wareysiga."
   },
   {
    "n": 62,
@@ -773,7 +773,7 @@
    ],
    "star65": false,
    "changes": true,
-   "explain_so": "Caasimadda gobolkaagu way ku xiran tahay gobolka aad deggan tahay, sidaas darteed hubi ka hor wareysiga."
+   "explain_so": "Sheeg caasimadda gobolkaaga — tusaale, Minnesota waa Saint Paul, Ohio waa Columbus. Jawaabtu gobol walba way ku kala duwan tahay."
   },
   {
    "n": 63,
@@ -787,7 +787,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Mid ka mid ah afar isbeddel oo ku saabsan cidda cod bixin karta waa in qof kasta oo 18 jir ah uu cod bixin karo."
+   "explain_so": "Afar amendment ayaa ballaariyay xaqa codaynta: muwaadin kasta oo 18 jir ah ama ka weyn, rag iyo dumarba, wuu codayn karaa, lacagna lagama qaado. Hal mid sharax."
   },
   {
    "n": 64,
@@ -800,7 +800,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Muwaadiniinta Maraykanka oo keliya ayaa cod bixiya, u tartami kara xafiis federaal, oo ka mid noqon kara xeerbeegti."
+   "explain_so": "Saddexdan arrimood — codaynta doorashada federaalka, u-tartanka xil federaal iyo ka-qaybgalka jury — waxaa iska leh muwaadiniinta oo keliya."
   },
   {
    "n": 65,
@@ -816,7 +816,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Qof kasta oo Maraykanka deggan wuxuu leeyahay xorriyad hadal, isu-imaatin iyo diin."
+   "explain_so": "Qof kasta oo Maraykanka ku nool wuxuu leeyahay xorriyadda hadalka, diinta iyo isu-imaatinka. Saddex sheeg."
   },
   {
    "n": 66,
@@ -828,7 +828,7 @@
    ],
    "star65": true,
    "changes": false,
-   "explain_so": "Marka aad tidhaahdo Pledge of Allegiance waxaad daacad u tahay Maraykanka iyo calankiisa."
+   "explain_so": "Pledge of Allegiance waa ballanta daacadnimada: waxaan daacad u nahay Maraykanka iyo calankiisa."
   },
   {
    "n": 67,
@@ -844,7 +844,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Muwaadin cusub wuxuu ballan qaadayaa inuu ilaaliyo dastuurka oo u hoggaansamo sharciyada."
+   "explain_so": "Oath of Allegiance waa dhaarta jinsiyadda. Waxaad ballanqaadaysaa inaad daacadnimada dal kale ka tagto, Constitution-ka difaacdo, sharcigana raacdo. Laba sheeg."
   },
   {
    "n": 68,
@@ -857,7 +857,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Qof wuxuu muwaadin noqon karaa isagoo ku dhashay Maraykanka ama isagoo naturalize sameeya."
+   "explain_so": "Jinsiyadda waxaa lagu helaa in dalka lagu dhasho, in la qaato (naturalization — waddada aad adigu hadda ku jirto), ama in waalid laga helo."
   },
   {
    "n": 69,
@@ -877,7 +877,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Ka qaybgalka bulshada waxaa ka mid ah cod bixinta iyo la xiriirka mas'uuliyiinta la doortay."
+   "explain_so": "Ka-qaybgalka bulshada: codee, xisbi ku biir, koox bulsho ka mid noqo, ama wakiilkaaga la xiriir. Laba tusaale sheeg."
   },
   {
    "n": 70,
@@ -893,7 +893,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Waxaad dalkaaga u adeegi kartaa adigoo cod bixiya ama ciidamada ku biira."
+   "explain_so": "Dalka waxaa loogu adeegi karaa codayn, canshuur bixin, sharci-raacid ama ciidanka oo laga mid noqdo. Hal mid sheeg."
   },
   {
    "n": 71,
@@ -907,7 +907,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Canshuurta federaalka waa waajib sharci ah oo dowladda lagu maalgeliyo."
+   "explain_so": "Canshuurta federaalka sharciga ayaa waajibinaya; lacagtaas ayaa lagu maamulaa dowladda."
   },
   {
    "n": 72,
@@ -920,7 +920,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Ragga 18 ilaa 25 jir ah waa inay iska diiwaangeliyaan Selective Service waana waajib sharci ah."
+   "explain_so": "Selective Service waa diiwaanka ragga 18 ilaa 25 jir ah ee ciidanka loogu yeeri karo haddii loo baahdo. Is-diiwaangelintu waa sharci iyo waajib muwaadin."
   },
   {
    "n": 73,
@@ -935,7 +935,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Dadkii hore ee Yurub waxay u yimaadeen Maraykanka si ay xorriyad u helaan."
+   "explain_so": "Dadkii ugu horreeyay ee Yurub ka yimid (colonists) waxay raadinayeen xorriyad — gaar ahaan xorriyad diimeed — iyo fursad dhaqaale. Hal sabab sheeg."
   },
   {
    "n": 74,
@@ -947,7 +947,7 @@
    ],
    "star65": true,
    "changes": false,
-   "explain_so": "Ka hor Yurubta, waxaa Maraykanka degganaa Hindida Maraykanka (Native Americans)."
+   "explain_so": "Yurubiyaanka ka hor, dhulkan waxaa ku noolaa American Indians, oo sidoo kale loo yaqaan Native Americans."
   },
   {
    "n": 75,
@@ -959,7 +959,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Dadka Afrikaanka ah ayaa la qaatay oo addoommo ahaan loo iibiyay."
+   "explain_so": "Dad Afrikaan ah ayaa xoog lagu keenay oo addoon ahaan loo iibiyay."
   },
   {
    "n": 76,
@@ -972,7 +972,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Dagaalkii Kacaanka Maraykanka ayaa xornimada laga qaatay Ingiriiska."
+   "explain_so": "Dagaalkii xornimada ee Ingiriiska lagala dagaallamay waxaa la yiraahdaa American Revolution."
   },
   {
    "n": 77,
@@ -992,7 +992,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Canshuurta badan iyo matalaad la'aanta ayaa sabab u ahayd madaxbannaanida."
+   "explain_so": "Sababaha xornimada loogu dhawaaqay waxaa ka mid ah canshuur culus oo aan wakiil laga lahayn, iyo is-xukun la'aan. Hal sheeg."
   },
   {
    "n": 78,
@@ -1003,7 +1003,7 @@
    ],
    "star65": true,
    "changes": false,
-   "explain_so": "Thomas Jefferson ayaa qoray Dastuurka ku dhawaaqista madaxbannaanida."
+   "explain_so": "Thomas Jefferson ayaa qoray Declaration of Independence."
   },
   {
    "n": 79,
@@ -1014,7 +1014,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Waxaa la ansixiyay 4da Luulyo 1776."
+   "explain_so": "Waxaa la ansixiyay July 4, 1776 — maalinta dhalashada Maraykanka."
   },
   {
    "n": 80,
@@ -1030,7 +1030,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Dhacdooyinka muhiimka ah waxaa ka mid ah Dagaalkii Bunker Hill."
+   "explain_so": "Dhacdooyinka kacaankii Maraykanka waxaa ka mid ah dagaalladii Bunker Hill, Saratoga iyo Yorktown. Hal sheeg."
   },
   {
    "n": 81,
@@ -1053,7 +1053,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "13 gobol ayaa ahaa kuwii ugu horreeyay, sida New York iyo Virginia."
+   "explain_so": "Saddex iyo tobankii gobol ee ugu horreeyay waxay ku yaalleen xeebta bari. Shan sheeg — tusaale: New York, New Jersey, Virginia, Georgia iyo Delaware."
   },
   {
    "n": 82,
@@ -1064,7 +1064,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Dastuurka Maraykanka ayaa la qoray 1787."
+   "explain_so": "Constitution-ka waxaa la qoray 1787."
   },
   {
    "n": 83,
@@ -1078,7 +1078,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Qorayaasha Federalist Papers waxaa ka mid ahaa James Madison."
+   "explain_so": "Federalist Papers waa maqaallo taageeray Constitution-ka. Waxaa qoray Madison, Hamilton iyo Jay. Hal qoraa sheeg."
   },
   {
    "n": 84,
@@ -1090,7 +1090,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Waxay dadka ka caawisay inay fahmaan dastuurka oo ay taageeraan."
+   "explain_so": "Maqaalladaas waxay dadka ka caawiyeen inay Constitution-ka fahmaan oo ay ansixintiisa taageeraan."
   },
   {
    "n": 85,
@@ -1105,7 +1105,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Benjamin Franklin wuxuu ahaa hal-abuur badan oo ka caawiyay qorista Dastuurka madaxbannaanida."
+   "explain_so": "Benjamin Franklin wuxuu ahaa diblomaasi iyo hal-abuure, wuxuuna aasaasay maktabadihii bilaashka ahaa ee ugu horreeyay. Hal sheeg."
   },
   {
    "n": 86,
@@ -1119,7 +1119,7 @@
    ],
    "star65": true,
    "changes": false,
-   "explain_so": "George Washington wuxuu ahaa madaxweynihii ugu horreeyay ee Maraykanka."
+   "explain_so": "George Washington waa “Father of Our Country” — aabbaha dalka — iyo madaxweynihii ugu horreeyay."
   },
   {
    "n": 87,
@@ -1135,7 +1135,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Thomas Jefferson wuxuu qoray Dastuurka madaxbannaanida oo ahaa madaxweynihii saddexaad."
+   "explain_so": "Thomas Jefferson wuxuu qoray Declaration of Independence, wuxuuna ahaa madaxweynihii saddexaad."
   },
   {
    "n": 88,
@@ -1149,7 +1149,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "James Madison waxaa loo yaqaan aabbaha dastuurka."
+   "explain_so": "James Madison waxaa loo yaqaan “Father of the Constitution”; wuxuu ahaa madaxweynihii afraad."
   },
   {
    "n": 89,
@@ -1164,7 +1164,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Alexander Hamilton wuxuu ahaa wasiirkii ugu horreeyay ee khasnadda."
+   "explain_so": "Alexander Hamilton wuxuu ahaa wasiirkii maaliyadda ee ugu horreeyay (Secretary of the Treasury)."
   },
   {
    "n": 90,
@@ -1176,7 +1176,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "1803 Maraykanku wuxuu Faransiiska ka iibsaday dhulka Louisiana."
+   "explain_so": "Sannadkii 1803 Maraykanku wuxuu Faransiiska ka iibsaday dhulka Louisiana, taasoo dalka laba jibbaartay."
   },
   {
    "n": 91,
@@ -1190,7 +1190,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Dagaallada qarnigii 1800 waxaa ka mid ahaa Dagaalkii Sokeeye."
+   "explain_so": "Dagaalladii qarnigii 19aad waxaa ka mid ah War of 1812 iyo Civil War. Hal sheeg."
   },
   {
    "n": 92,
@@ -1201,7 +1201,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Dagaalkii u dhexeeyay Waqooyiga iyo Koonfurta waxaa la yiraahdaa Dagaalkii Sokeeye."
+   "explain_so": "Dagaalkii sokeeye ee Waqooyi iyo Koonfur dhex maray waxaa la yiraahdaa Civil War."
   },
   {
    "n": 93,
@@ -1219,7 +1219,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Dhacdooyinka Dagaalkii Sokeeye waxaa ka mid ah Emancipation Proclamation."
+   "explain_so": "Dhacdooyinka Civil War waxaa ka mid ah dagaalkii Gettysburg iyo Emancipation Proclamation. Hal sheeg."
   },
   {
    "n": 94,
@@ -1234,7 +1234,7 @@
    ],
    "star65": true,
    "changes": false,
-   "explain_so": "Abraham Lincoln wuxuu xoreeyay addoommada oo uu hoggaamiyay dalka Dagaalkii Sokeeye."
+   "explain_so": "Abraham Lincoln wuxuu xoreeyay addoommadii, wuxuuna midnimada dalka badbaadiyay xilligii Civil War. Hal sheeg."
   },
   {
    "n": 95,
@@ -1248,7 +1248,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Emancipation Proclamation waxay xoreysay addoommada."
+   "explain_so": "Emancipation Proclamation waa ku-dhawaaqistii Lincoln ee lagu xoreeyay addoommadii gobollada Koonfureed."
   },
   {
    "n": 96,
@@ -1259,7 +1259,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Dagaalkii Sokeeye ayaa soo afjaray addoonsiga."
+   "explain_so": "Civil War ayaa soo afjaray addoonsiga."
   },
   {
    "n": 97,
@@ -1270,7 +1270,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "14th Amendment waxay sheegaysaa in qof kasta oo ku dhashay ama naturalize ku sameeyay Maraykanka uu yahay muwaadin."
+   "explain_so": "Amendment-ka 14aad wuxuu leeyahay: qof kasta oo Maraykanka ku dhasha ama jinsiyadda qaata waa muwaadin. Adigana wuu ku khuseeyaa maalinta aad dhaarato."
   },
   {
    "n": 98,
@@ -1284,7 +1284,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Ragga oo dhan waxay cod bixin karaan wixii ka dambeeyay Dagaalkii Sokeeye (15th Amendment, 1870)."
+   "explain_so": "Ragga oo dhan waxay xaqa codaynta heleen Civil War ka dib, 1870, Amendment-ka 15aad."
   },
   {
    "n": 99,
@@ -1300,7 +1300,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Waxaa ka mid ah hoggaamiyayaasha xuquuqda dumarka Susan B. Anthony."
+   "explain_so": "Hoggaamiyayaashii xuquuqda haweenka waxaa ka mid ah Susan B. Anthony iyo Harriet Tubman. Hal sheeg."
   },
   {
    "n": 100,
@@ -1315,7 +1315,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Qarnigii 1900 Maraykanku wuxuu galay dagaallo sida World War II."
+   "explain_so": "Dagaalladii qarnigii 20aad: World War I, World War II, Korea, Vietnam iyo Gulf War. Hal sheeg."
   },
   {
    "n": 101,
@@ -1328,7 +1328,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Maraykanku wuxuu galay World War I sababtoo ah Jarmalku wuxuu weeraray maraakiibta Maraykanka."
+   "explain_so": "Maraykanku wuxuu galay World War I ka dib markii Jarmalku weeraray maraakiibtiisa."
   },
   {
    "n": 102,
@@ -1341,7 +1341,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Dumarka oo dhan waxay xaq u heleen cod bixinta 1920 (19th Amendment)."
+   "explain_so": "Haweenka oo dhan waxay xaqa codaynta heleen 1920, Amendment-ka 19aad."
   },
   {
    "n": 103,
@@ -1352,7 +1352,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Great Depression waxay ahayd hoos u dhac dhaqaale oo aad u dheer."
+   "explain_so": "Great Depression waa hoos-u-dhicii dhaqaale ee ugu dheeraa taariikhda casriga ah — shaqo la'aan iyo faqri baahsan."
   },
   {
    "n": 104,
@@ -1364,7 +1364,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Great Depression waxay bilaabatay 1929 markii suuqa saamiyada uu dumay."
+   "explain_so": "Wuxuu bilaabmay 1929, markii suuqa saamiyadu burburay."
   },
   {
    "n": 105,
@@ -1375,7 +1375,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Franklin Roosevelt ayaa madaxweyne ahaa intii lagu jiray Great Depression iyo World War II."
+   "explain_so": "Franklin Roosevelt ayaa madaxweyne ahaa xilligii Great Depression iyo World War II."
   },
   {
    "n": 106,
@@ -1389,7 +1389,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Maraykanku wuxuu galay World War II ka dib weerarkii Pearl Harbor."
+   "explain_so": "Maraykanku wuxuu galay World War II ka dib markii Japan weerartay Pearl Harbor."
   },
   {
    "n": 107,
@@ -1403,7 +1403,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Eisenhower wuxuu ahaa jeneraal World War II iyo madaxweynihii 34aad."
+   "explain_so": "Dwight Eisenhower wuxuu ahaa jeneraal World War II, kadibna madaxweynihii 34aad. Hal sheeg."
   },
   {
    "n": 108,
@@ -1416,7 +1416,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Cadowga ugu weynaa Maraykanka intii Cold War wuxuu ahaa Soviet Union."
+   "explain_so": "Xilligii Cold War — dagaalkii qaboobaa — loollanka ugu weyn wuxuu la lahaa Midowgii Soofiyeeti (Soviet Union)."
   },
   {
    "n": 109,
@@ -1428,7 +1428,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Intii Cold War, waxaa laga walaacsanaa faafitaanka communism iyo dagaal nukliyeer."
+   "explain_so": "Walaaca ugu weyn wuxuu ahaa faafidda shuuciyadda (communism) iyo dagaal nukliyeer ah. Hal sheeg."
   },
   {
    "n": 110,
@@ -1439,7 +1439,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Maraykanku wuxuu galay Korean War si uu u joojiyo faafitaanka communism."
+   "explain_so": "Si loo joojiyo faafidda shuuciyadda."
   },
   {
    "n": 111,
@@ -1450,7 +1450,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Maraykanku wuxuu galay Vietnam War si uu u joojiyo faafitaanka communism."
+   "explain_so": "Sidii Korea oo kale: si loo joojiyo faafidda shuuciyadda."
   },
   {
    "n": 112,
@@ -1461,7 +1461,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Civil rights movement waxay u halgantay in la joojiyo takooridda midabka."
+   "explain_so": "Dhaqdhaqaaqii xuquuqda madaniga (civil rights movement) wuxuu u halgamay in la joojiyo takoorka midabka."
   },
   {
    "n": 113,
@@ -1474,7 +1474,7 @@
    ],
    "star65": true,
    "changes": false,
-   "explain_so": "Martin Luther King Jr. wuxuu u halgamay xuquuqda madaniga ah iyo sinnaanta dadka oo dhan."
+   "explain_so": "Martin Luther King, Jr. wuxuu si nabad ah ugu halgamay xuquuqda madaniga iyo sinnaanta dadka oo dhan."
   },
   {
    "n": 114,
@@ -1485,7 +1485,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Maraykanku wuxuu galay Persian Gulf War si uu ciidanka Ciraaq uga saaro Kuwait."
+   "explain_so": "Si ciidamadii Ciraaq looga saaro Kuwait."
   },
   {
    "n": 115,
@@ -1499,7 +1499,7 @@
    ],
    "star65": true,
    "changes": false,
-   "explain_so": "September 11, 2001 waxaa dhacay weerar argagixiso oo ka dhan ah Maraykanka."
+   "explain_so": "September 11, 2001, argagixiso ayaa weerartay Maraykanka; kumannaan qof ayaa ku dhintay."
   },
   {
    "n": 116,
@@ -1512,7 +1512,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Waxaa ka mid ah dagaallada ka dambeeyay 9/11 War in Afghanistan."
+   "explain_so": "Weeraradaas ka dib waxaa yimid dagaalladii Afghanistan iyo Ciraaq. Hal sheeg."
   },
   {
    "n": 117,
@@ -1547,7 +1547,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Waxaa ka mid ah qabiilooyinka Hindida Maraykanka Navajo."
+   "explain_so": "Qabaa'ilka dadka asaliga ah waxaa ka mid ah Cherokee, Navajo iyo Sioux. Hal sheeg."
   },
   {
    "n": 118,
@@ -1564,7 +1564,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Hal-abuur Maraykan ah waxaa ka mid ah nalalka korontada (light bulb)."
+   "explain_so": "Hal-abuurka Maraykanka waxaa ka mid ah nalka korontada (light bulb), diyaaradda iyo degitaankii dayaxa. Hal sheeg."
   },
   {
    "n": 119,
@@ -1575,7 +1575,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Caasimadda Maraykanku waa Washington, D.C."
+   "explain_so": "Caasimadda dalku waa Washington, D.C."
   },
   {
    "n": 120,
@@ -1587,7 +1587,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Taallada xorriyadda waxay ku taallaa New York Harbor iyo Liberty Island."
+   "explain_so": "Statue of Liberty — taallada xorriyadda — waxay ku taallaa dekedda New York."
   },
   {
    "n": 121,
@@ -1599,7 +1599,7 @@
    ],
    "star65": true,
    "changes": false,
-   "explain_so": "Calanku wuxuu leeyahay 13 xariiq sababtoo ah waxaa jiray 13 mustamaraad oo hore."
+   "explain_so": "Calanka 13-kiisa xariijimood waxay u taagan yihiin 13-kii gumeysi ee asalka ahaa."
   },
   {
    "n": 122,
@@ -1612,7 +1612,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Calanku wuxuu leeyahay 50 xiddig, mid kasta oo matalaya gobol."
+   "explain_so": "50-ka xiddigood waxay u taagan yihiin 50-ka gobol."
   },
   {
    "n": 123,
@@ -1623,7 +1623,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Heesta calanka Maraykanku waa The Star-Spangled Banner."
+   "explain_so": "Heesta qaranka waxaa la yiraahdaa The Star-Spangled Banner."
   },
   {
    "n": 124,
@@ -1635,7 +1635,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "E Pluribus Unum waxay la macno tahay dad badan oo mid noqday."
+   "explain_so": "“E Pluribus Unum” waa Laatiin. Macnaheedu waa: kuwa badan baa mid ka noqday — dhammaanteen hal ummad baan nahay."
   },
   {
    "n": 125,
@@ -1647,7 +1647,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Independence Day waa maalin lagu xuso xornimada Maraykanka ee Ingiriiska, 4ta Luulyo."
+   "explain_so": "Independence Day (July 4) waa maalinta xornimada — dhalashada dalka."
   },
   {
    "n": 126,
@@ -1668,7 +1668,7 @@
    ],
    "star65": true,
    "changes": false,
-   "explain_so": "Ciidaha qaranka waxaa ka mid ah New Year’s Day, Independence Day iyo Thanksgiving Day."
+   "explain_so": "Ciidaha qaranka waxaa ka mid ah New Year’s Day, Independence Day iyo Thanksgiving. Saddex sheeg."
   },
   {
    "n": 127,
@@ -1679,7 +1679,7 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Memorial Day waa maalin lagu xuso askarta ku dhimatay adeegga ciidamada."
+   "explain_so": "Memorial Day waxaa lagu xusaa askartii ku dhimatay adeegga dalka."
   },
   {
    "n": 128,
@@ -1691,7 +1691,16 @@
    ],
    "star65": false,
    "changes": false,
-   "explain_so": "Veterans Day waa maalin lagu xuso dadka ciidamada Maraykanka ka soo shaqeeyay."
+   "explain_so": "Veterans Day waxaa lagu maamuusaa dadka ciidamada Maraykanka ka soo shaqeeyay."
   }
- ]
+ ],
+ "rules": {
+  "asked": 20,
+  "pass": 12,
+  "senior": {
+   "asked": 10,
+   "pass": 6,
+   "pool": "star65"
+  }
+ }
 }

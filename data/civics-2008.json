@@ -1,0 +1,1293 @@
+{
+ "edition": "2008",
+ "source": "USCIS, Civics (History and Government) Questions for the Naturalization Test, 100 questions (rev. 01/19), uscis.gov",
+ "note": "Questions and answers extracted by script from the official USCIS PDF downloaded from uscis.gov on 2026-11-11 (not re-typed). explain_so lines are the academy's own Somali teaching notes (not official text). 'changes' marks answers that depend on current office-holders or the learner's state (check uscis.gov/citizenship/testupdates before an interview).",
+ "rules": {
+  "asked": 10,
+  "pass": 6,
+  "senior": {
+   "asked": 10,
+   "pass": 6,
+   "pool": "star65"
+  }
+ },
+ "questions": [
+  {
+   "n": 1,
+   "section": "Principles of American Democracy",
+   "q": "What is the supreme law of the land?",
+   "answers": [
+    "the Constitution"
+   ],
+   "star65": false,
+   "changes": false,
+   "explain_so": "Constitution-ku (dastuurka) waa sharciga ugu sarreeya dalka. Sharci kasta oo kale waa inuu isaga waafaqo."
+  },
+  {
+   "n": 2,
+   "section": "Principles of American Democracy",
+   "q": "What does the Constitution do?",
+   "answers": [
+    "sets up the government",
+    "defines the government",
+    "protects basic rights of Americans"
+   ],
+   "star65": false,
+   "changes": false,
+   "explain_so": "Constitution-ku wuxuu dhisaa dowladda, wuxuu qeexaa awoodaheeda, wuxuuna ilaaliyaa xuquuqda aasaasiga ah ee dadka. Hal mid sheeg."
+  },
+  {
+   "n": 3,
+   "section": "Principles of American Democracy",
+   "q": "The idea of self-government is in the first three words of the Constitution. What are these words?",
+   "answers": [
+    "We the People"
+   ],
+   "star65": false,
+   "changes": false,
+   "explain_so": "Saddexda eray ee ugu horreeya Constitution-ka waa “We the People” — annaga dadka ah. Dadka ayaa is xukuma."
+  },
+  {
+   "n": 4,
+   "section": "Principles of American Democracy",
+   "q": "What is an amendment?",
+   "answers": [
+    "a change (to the Constitution)",
+    "an addition (to the Constitution)"
+   ],
+   "star65": false,
+   "changes": false,
+   "explain_so": "Amendment waa wax-ka-beddel ama kordhin lagu sameeyo Constitution-ka."
+  },
+  {
+   "n": 5,
+   "section": "Principles of American Democracy",
+   "q": "What do we call the first ten amendments to the Constitution?",
+   "answers": [
+    "the Bill of Rights"
+   ],
+   "star65": false,
+   "changes": false,
+   "explain_so": "Tobanka amendment ee ugu horreeya waxaa la yiraahdaa Bill of Rights — xuquuqda aasaasiga ah."
+  },
+  {
+   "n": 6,
+   "section": "Principles of American Democracy",
+   "q": "What is one right or freedom from the First Amendment?",
+   "answers": [
+    "speech",
+    "religion",
+    "assembly",
+    "press",
+    "petition the government"
+   ],
+   "star65": true,
+   "changes": false,
+   "explain_so": "First Amendment wuxuu ilaaliyaa xorriyadda hadalka, diinta, isu-imaatinka, saxaafadda iyo cabashada dowladda loo gudbiyo. Hal sheeg."
+  },
+  {
+   "n": 7,
+   "section": "Principles of American Democracy",
+   "q": "How many amendments does the Constitution have?",
+   "answers": [
+    "twenty-seven (27)"
+   ],
+   "star65": false,
+   "changes": false,
+   "explain_so": "Ilaa hadda Constitution-ka 27 jeer ayaa wax laga beddelay. Tirada xusuuso: twenty-seven."
+  },
+  {
+   "n": 8,
+   "section": "Principles of American Democracy",
+   "q": "What did the Declaration of Independence do?",
+   "answers": [
+    "announced our independence (from Great Britain)",
+    "declared our independence (from Great Britain)",
+    "said that the United States is free (from Great Britain)"
+   ],
+   "star65": false,
+   "changes": false,
+   "explain_so": "Declaration of Independence waa qoraalkii lagu dhawaaqay in Maraykanku ka xoroobay Ingiriiska, in dadku siman yihiin, xuquuqna ku dhasheen."
+  },
+  {
+   "n": 9,
+   "section": "Principles of American Democracy",
+   "q": "What are two rights in the Declaration of Independence?",
+   "answers": [
+    "life",
+    "liberty",
+    "pursuit of happiness"
+   ],
+   "star65": false,
+   "changes": false,
+   "explain_so": "Declaration of Independence waxay xustay saddex xuquuq: nolol, xorriyad iyo raadinta farxadda. Laba sheeg."
+  },
+  {
+   "n": 10,
+   "section": "Principles of American Democracy",
+   "q": "What is freedom of religion?",
+   "answers": [
+    "You can practice any religion, or not practice a religion."
+   ],
+   "star65": false,
+   "changes": false,
+   "explain_so": "Xorriyadda diintu waa: diinta aad doonto ayaad ku dhaqmi kartaa, cidina kaama hor istaagi karto."
+  },
+  {
+   "n": 11,
+   "section": "Principles of American Democracy",
+   "q": "What is the economic system in the United States?",
+   "answers": [
+    "capitalist economy",
+    "market economy"
+   ],
+   "star65": true,
+   "changes": false,
+   "explain_so": "Dhaqaalaha Maraykanku waa capitalism: ganacsiga waxaa iska leh dadka iyo shirkadaha, suuquna waa xor."
+  },
+  {
+   "n": 12,
+   "section": "Principles of American Democracy",
+   "q": "What is the “rule of law”?",
+   "answers": [
+    "Everyone must follow the law.",
+    "Leaders must obey the law.",
+    "Government must obey the law.",
+    "No one is above the law."
+   ],
+   "star65": false,
+   "changes": false,
+   "explain_so": "Rule of law waxay ka dhigan tahay: qofna sharciga kama sarreeyo. Madax, dowlad iyo shacabba waa inay sharciga raacaan."
+  },
+  {
+   "n": 13,
+   "section": "System of Government",
+   "q": "Name one branch or part of the government.",
+   "answers": [
+    "Congress",
+    "legislative",
+    "President",
+    "executive",
+    "the courts",
+    "judicial"
+   ],
+   "star65": true,
+   "changes": false,
+   "explain_so": "Saddexda laamood waa Congress (legislative), President (executive) iyo maxkamadaha (judicial). Hal sheeg."
+  },
+  {
+   "n": 14,
+   "section": "System of Government",
+   "q": "What stops one branch of government from becoming too powerful?",
+   "answers": [
+    "checks and balances",
+    "separation of powers"
+   ],
+   "star65": false,
+   "changes": false,
+   "explain_so": "Dowladda waxaa loo qaybiyay saddex laamood si aan midkoodna u noqon mid awood xad-dhaaf ah leh — mid walba kuwa kale ayuu ilaaliyaa (checks and balances)."
+  },
+  {
+   "n": 15,
+   "section": "System of Government",
+   "q": "Who is in charge of the executive branch?",
+   "answers": [
+    "the President"
+   ],
+   "star65": false,
+   "changes": false,
+   "explain_so": "Madaxweynuhu wuxuu hoggaamiyaa laanta fulinta — executive branch."
+  },
+  {
+   "n": 16,
+   "section": "System of Government",
+   "q": "Who makes federal laws?",
+   "answers": [
+    "Congress",
+    "Senate and House (of Representatives)",
+    "(U.S. or national) legislature"
+   ],
+   "star65": false,
+   "changes": false,
+   "explain_so": "Sharciyada federaalka waxaa qora Congress-ka, oo ah laanta sharci-dejinta."
+  },
+  {
+   "n": 17,
+   "section": "System of Government",
+   "q": "What are the two parts of the U.S. Congress?",
+   "answers": [
+    "the Senate and House (of Representatives)"
+   ],
+   "star65": true,
+   "changes": false,
+   "explain_so": "Congress-ku wuxuu ka kooban yahay laba aqal: Senate iyo House of Representatives."
+  },
+  {
+   "n": 18,
+   "section": "System of Government",
+   "q": "How many U.S. Senators are there?",
+   "answers": [
+    "one hundred (100)"
+   ],
+   "star65": false,
+   "changes": false,
+   "explain_so": "Waxaa jira 100 senator — gobol kasta laba."
+  },
+  {
+   "n": 19,
+   "section": "System of Government",
+   "q": "We elect a U.S. Senator for how many years?",
+   "answers": [
+    "six (6)"
+   ],
+   "star65": false,
+   "changes": false,
+   "explain_so": "Senator-ka waxaa loo doortaa lix sano markiiba."
+  },
+  {
+   "n": 20,
+   "section": "System of Government",
+   "q": "Who is one of your state’s U.S. Senators now?",
+   "answers": [
+    "Answers will vary. [District of Columbia residents and residents of U.S. territories should answer that D.C. (or the territory where the applicant lives) has no U.S. Senators.]"
+   ],
+   "star65": true,
+   "changes": true,
+   "explain_so": "Jawaabtu waxay ku xiran tahay gobolka aad deggan tahay. Baro magaca mid ka mid ah labada senator ee gobolkaaga, kana hubi senate.gov ka hor wareysiga."
+  },
+  {
+   "n": 21,
+   "section": "System of Government",
+   "q": "The House of Representatives has how many voting members?",
+   "answers": [
+    "four hundred thirty-five (435)"
+   ],
+   "star65": false,
+   "changes": false,
+   "explain_so": "House of Representatives wuxuu leeyahay 435 xubnood oo cod leh."
+  },
+  {
+   "n": 22,
+   "section": "System of Government",
+   "q": "We elect a U.S. Representative for how many years?",
+   "answers": [
+    "two (2)"
+   ],
+   "star65": false,
+   "changes": false,
+   "explain_so": "Xubinta House-ka waxaa loo doortaa laba sano markiiba."
+  },
+  {
+   "n": 23,
+   "section": "System of Government",
+   "q": "Name your U.S. Representative.",
+   "answers": [
+    "Answers will vary. [Residents of territories with nonvoting Delegates or Resident Commissioners may provide the name of that Delegate or Commissioner. Also acceptable is any statement that the territory has no (voting) Representatives in Congress.]"
+   ],
+   "star65": false,
+   "changes": true,
+   "explain_so": "Jawaabtu waxay ku xiran tahay degmada (district) aad ku nooshahay. Magaca wakiilkaaga ka raadi house.gov adigoo gelinaya ZIP code-kaaga."
+  },
+  {
+   "n": 24,
+   "section": "System of Government",
+   "q": "Who does a U.S. Senator represent?",
+   "answers": [
+    "all people of the state"
+   ],
+   "star65": false,
+   "changes": false,
+   "explain_so": "Senator-ku wuxuu matalaa dhammaan dadka gobolkiisa."
+  },
+  {
+   "n": 25,
+   "section": "System of Government",
+   "q": "Why do some states have more Representatives than other states?",
+   "answers": [
+    "(because of) the state’s population",
+    "(because) they have more people",
+    "(because) some states have more people"
+   ],
+   "star65": false,
+   "changes": false,
+   "explain_so": "Gobolka dadkiisu bato ayaa hela representatives badan; tirada waxaa lagu saleeyaa tirada dadka."
+  },
+  {
+   "n": 26,
+   "section": "System of Government",
+   "q": "We elect a President for how many years?",
+   "answers": [
+    "four (4)"
+   ],
+   "star65": false,
+   "changes": false,
+   "explain_so": "Madaxweynaha waxaa loo doortaa afar sano."
+  },
+  {
+   "n": 27,
+   "section": "System of Government",
+   "q": "In what month do we vote for President?",
+   "answers": [
+    "November"
+   ],
+   "star65": true,
+   "changes": false,
+   "explain_so": "Madaxweynaha waxaa la doortaa bisha November."
+  },
+  {
+   "n": 28,
+   "section": "System of Government",
+   "q": "What is the name of the President of the United States now?",
+   "answers": [
+    "Visit uscis.gov/citizenship/testupdates for the name of the President of the United States."
+   ],
+   "star65": true,
+   "changes": true,
+   "explain_so": "Sheeg magaca madaxweynaha hadda xilka haya. Doorasho ka dib wuu is beddeli karaa — ka hubi uscis.gov/citizenship/testupdates."
+  },
+  {
+   "n": 29,
+   "section": "System of Government",
+   "q": "What is the name of the Vice President of the United States now?",
+   "answers": [
+    "Visit uscis.gov/citizenship/testupdates for the name of the Vice President of the United States."
+   ],
+   "star65": false,
+   "changes": true,
+   "explain_so": "Sheeg magaca madaxweyne-ku-xigeenka hadda xilka haya. Wuu is beddeli karaa — ka hubi uscis.gov/citizenship/testupdates."
+  },
+  {
+   "n": 30,
+   "section": "System of Government",
+   "q": "If the President can no longer serve, who becomes President?",
+   "answers": [
+    "the Vice President"
+   ],
+   "star65": false,
+   "changes": false,
+   "explain_so": "Haddii madaxweynuhu shaqada gudan kari waayo, madaxweyne-ku-xigeenka (Vice President) ayaa beddela."
+  },
+  {
+   "n": 31,
+   "section": "System of Government",
+   "q": "If both the President and the Vice President can no longer serve, who becomes President?",
+   "answers": [
+    "the Speaker of the House"
+   ],
+   "star65": false,
+   "changes": false,
+   "explain_so": "Haddii madaxweynaha iyo ku-xigeenkiisu labaduba shaqayn kari waayaan, waxaa madaxweyne noqda Speaker-ka House-ka."
+  },
+  {
+   "n": 32,
+   "section": "System of Government",
+   "q": "Who is the Commander in Chief of the military?",
+   "answers": [
+    "the President"
+   ],
+   "star65": false,
+   "changes": false,
+   "explain_so": "Commander in Chief waa taliyaha ugu sarreeya ciidamada — waa madaxweynaha."
+  },
+  {
+   "n": 33,
+   "section": "System of Government",
+   "q": "Who signs bills to become laws?",
+   "answers": [
+    "the President"
+   ],
+   "star65": false,
+   "changes": false,
+   "explain_so": "Bill waa sharci-qabyo. Marka madaxweynuhu saxiixo ayuu sharci noqdaa."
+  },
+  {
+   "n": 34,
+   "section": "System of Government",
+   "q": "Who vetoes bills?",
+   "answers": [
+    "the President"
+   ],
+   "star65": false,
+   "changes": false,
+   "explain_so": "Veto waa diidmo: madaxweynuhu wuu diidi karaa sharci-qabyo uu Congress-ku u soo gudbiyay."
+  },
+  {
+   "n": 35,
+   "section": "System of Government",
+   "q": "What does the President’s Cabinet do?",
+   "answers": [
+    "advises the President"
+   ],
+   "star65": false,
+   "changes": false,
+   "explain_so": "Cabinet-ku waa lataliyayaasha madaxweynaha — wasiirrada ayaa talo siiya."
+  },
+  {
+   "n": 36,
+   "section": "System of Government",
+   "q": "What are two Cabinet-level positions?",
+   "answers": [
+    "Secretary of Agriculture",
+    "Secretary of Commerce",
+    "Secretary of Defense",
+    "Secretary of Education",
+    "Secretary of Energy",
+    "Secretary of Health and Human Services",
+    "Secretary of Homeland Security",
+    "Secretary of Housing and Urban Development",
+    "Secretary of the Interior",
+    "Secretary of Labor",
+    "Secretary of State",
+    "Secretary of Transportation",
+    "Secretary of the Treasury",
+    "Secretary of Veterans Affairs",
+    "Attorney General",
+    "Vice President"
+   ],
+   "star65": false,
+   "changes": false,
+   "explain_so": "Cabinet-ka waxaa ku jira wasiirro sida Secretary of State iyo Secretary of Defense. Laba xil sheeg."
+  },
+  {
+   "n": 37,
+   "section": "System of Government",
+   "q": "What does the judicial branch do?",
+   "answers": [
+    "reviews laws",
+    "explains laws",
+    "resolves disputes (disagreements)",
+    "decides if a law goes against the Constitution"
+   ],
+   "star65": false,
+   "changes": false,
+   "explain_so": "Laanta garsoorku waxay dib u eegtaa oo sharxdaa sharciyada, waxayna xallisaa khilaafaadka sharciga."
+  },
+  {
+   "n": 38,
+   "section": "System of Government",
+   "q": "What is the highest court in the United States?",
+   "answers": [
+    "the Supreme Court"
+   ],
+   "star65": false,
+   "changes": false,
+   "explain_so": "Supreme Court waa maxkamadda ugu sarreysa dalka."
+  },
+  {
+   "n": 39,
+   "section": "System of Government",
+   "q": "How many justices are on the Supreme Court?",
+   "answers": [
+    "Visit uscis.gov/citizenship/testupdates for the number of justices on the Supreme Court."
+   ],
+   "star65": false,
+   "changes": true,
+   "explain_so": "Tirada garsoorayaasha Supreme Court ka hubi uscis.gov/citizenship/testupdates ka hor wareysigaaga."
+  },
+  {
+   "n": 40,
+   "section": "System of Government",
+   "q": "Who is the Chief Justice of the United States now?",
+   "answers": [
+    "Visit uscis.gov/citizenship/testupdates for the name of the Chief Justice of the United States."
+   ],
+   "star65": false,
+   "changes": true,
+   "explain_so": "Chief Justice waa garsooraha ugu sarreeya Supreme Court. Magaca hadda ka hubi uscis.gov/citizenship/testupdates."
+  },
+  {
+   "n": 41,
+   "section": "System of Government",
+   "q": "Under our Constitution, some powers belong to the federal government. What is one power of the federal government?",
+   "answers": [
+    "to print money",
+    "to declare war",
+    "to create an army",
+    "to make treaties"
+   ],
+   "star65": false,
+   "changes": false,
+   "explain_so": "Awoodaha u gaarka ah dowladda federaalka waxaa ka mid ah daabacaadda lacagta, ku-dhawaaqista dagaalka iyo heshiisyada caalamiga ah."
+  },
+  {
+   "n": 42,
+   "section": "System of Government",
+   "q": "Under our Constitution, some powers belong to the states. What is one power of the states?",
+   "answers": [
+    "provide schooling and education",
+    "provide protection (police)",
+    "provide safety (fire departments)",
+    "give a driver’s license",
+    "approve zoning and land use"
+   ],
+   "star65": false,
+   "changes": false,
+   "explain_so": "Gobolladu waxay bixiyaan waxbarashada, booliska, dab-damiska iyo liisanka darawalnimada. Hal mid sheeg."
+  },
+  {
+   "n": 43,
+   "section": "System of Government",
+   "q": "Who is the Governor of your state now?",
+   "answers": [
+    "Answers will vary. [District of Columbia residents should answer that D.C. does not have a Governor.]"
+   ],
+   "star65": false,
+   "changes": true,
+   "explain_so": "Sheeg magaca guddoomiyaha (governor) gobolka aad deggan tahay. Ka hubi bogga rasmiga ah ee gobolkaaga ka hor wareysiga."
+  },
+  {
+   "n": 44,
+   "section": "System of Government",
+   "q": "What is the capital of your state?",
+   "answers": [
+    "Answers will vary. [District of Columbia residents should answer that D.C. is not a state and does not have a capital. Residents of U.S. territories should name the capital of the territory.]"
+   ],
+   "star65": true,
+   "changes": true,
+   "explain_so": "Sheeg caasimadda gobolkaaga — tusaale, Minnesota waa Saint Paul, Ohio waa Columbus. Jawaabtu gobol walba way ku kala duwan tahay."
+  },
+  {
+   "n": 45,
+   "section": "System of Government",
+   "q": "What are the two major political parties in the United States?",
+   "answers": [
+    "Democratic and Republican"
+   ],
+   "star65": true,
+   "changes": false,
+   "explain_so": "Labada xisbi ee waaweyn waa Democratic iyo Republican."
+  },
+  {
+   "n": 46,
+   "section": "System of Government",
+   "q": "What is the political party of the President now?",
+   "answers": [
+    "Visit uscis.gov/citizenship/testupdates for the political party of the President."
+   ],
+   "star65": false,
+   "changes": true,
+   "explain_so": "Xisbiga madaxweynaha hadda xilka haya ka hubi uscis.gov/citizenship/testupdates."
+  },
+  {
+   "n": 47,
+   "section": "System of Government",
+   "q": "What is the name of the Speaker of the House of Representatives now?",
+   "answers": [
+    "Visit uscis.gov/citizenship/testupdates for the name of the Speaker of the House of Representatives."
+   ],
+   "star65": false,
+   "changes": true,
+   "explain_so": "Speaker-ku waa guddoomiyaha House of Representatives. Magacu wuu is beddeli karaa — ka hubi uscis.gov/citizenship/testupdates ka hor wareysigaaga."
+  },
+  {
+   "n": 48,
+   "section": "Rights and Responsibilities",
+   "q": "There are four amendments to the Constitution about who can vote. Describe one of them.",
+   "answers": [
+    "Citizens eighteen (18) and older (can vote).",
+    "You don’t have to pay (a poll tax) to vote.",
+    "Any citizen can vote. (Women and men can vote.)",
+    "A male citizen of any race (can vote)."
+   ],
+   "star65": false,
+   "changes": false,
+   "explain_so": "Afar amendment ayaa ballaariyay xaqa codaynta: muwaadin kasta oo 18 jir ah ama ka weyn, rag iyo dumarba, wuu codayn karaa, lacagna lagama qaado. Hal mid sharax."
+  },
+  {
+   "n": 49,
+   "section": "Rights and Responsibilities",
+   "q": "What is one responsibility that is only for United States citizens?",
+   "answers": [
+    "serve on a jury",
+    "vote in a federal election"
+   ],
+   "star65": true,
+   "changes": false,
+   "explain_so": "Laba waajib oo muwaadiniinta u gaar ah: ka-qaybgalka jury iyo codaynta doorashada federaalka. Hal sheeg."
+  },
+  {
+   "n": 50,
+   "section": "Rights and Responsibilities",
+   "q": "Name one right only for United States citizens.",
+   "answers": [
+    "vote in a federal election",
+    "run for federal office"
+   ],
+   "star65": false,
+   "changes": false,
+   "explain_so": "Laba xuquuq oo muwaadiniinta u gaar ah: codaynta doorashada federaalka iyo u-tartanka xil federaal. Hal sheeg."
+  },
+  {
+   "n": 51,
+   "section": "Rights and Responsibilities",
+   "q": "What are two rights of everyone living in the United States?",
+   "answers": [
+    "freedom of expression",
+    "freedom of speech",
+    "freedom of assembly",
+    "freedom to petition the government",
+    "freedom of religion",
+    "the right to bear arms"
+   ],
+   "star65": false,
+   "changes": false,
+   "explain_so": "Qof kasta oo Maraykanka ku nool wuxuu leeyahay xorriyadda hadalka, diinta iyo isu-imaatinka. Laba sheeg."
+  },
+  {
+   "n": 52,
+   "section": "Rights and Responsibilities",
+   "q": "What do we show loyalty to when we say the Pledge of Allegiance?",
+   "answers": [
+    "the United States",
+    "the flag"
+   ],
+   "star65": false,
+   "changes": false,
+   "explain_so": "Pledge of Allegiance waa ballanta daacadnimada: waxaan daacad u nahay Maraykanka iyo calankiisa."
+  },
+  {
+   "n": 53,
+   "section": "Rights and Responsibilities",
+   "q": "What is one promise you make when you become a United States citizen?",
+   "answers": [
+    "give up loyalty to other countries",
+    "defend the Constitution and laws of the United States",
+    "obey the laws of the United States",
+    "serve in the U.S. military (if needed)",
+    "serve (do important work for) the nation (if needed)",
+    "be loyal to the United States"
+   ],
+   "star65": false,
+   "changes": false,
+   "explain_so": "Dhaarta jinsiyadda waxaad ku ballanqaadaysaa inaad daacadnimada dal kale ka tagto, Constitution-ka difaacdo, sharcigana raacdo. Hal ballan sheeg."
+  },
+  {
+   "n": 54,
+   "section": "Rights and Responsibilities",
+   "q": "How old do citizens have to be to vote for President?",
+   "answers": [
+    "eighteen (18) and older"
+   ],
+   "star65": true,
+   "changes": false,
+   "explain_so": "Muwaadinku waa inuu 18 jir yahay ama ka weyn yahay si uu madaxweyne u doorto."
+  },
+  {
+   "n": 55,
+   "section": "Rights and Responsibilities",
+   "q": "What are two ways that Americans can participate in their democracy?",
+   "answers": [
+    "vote",
+    "join a political party",
+    "help with a campaign",
+    "join a civic group",
+    "join a community group",
+    "give an elected official your opinion on an issue",
+    "call Senators and Representatives",
+    "publicly support or oppose an issue or policy",
+    "run for office",
+    "write to a newspaper"
+   ],
+   "star65": false,
+   "changes": false,
+   "explain_so": "Ka-qaybgalka bulshada: codee, xisbi ku biir, koox bulsho ka mid noqo, ama wakiilkaaga la xiriir. Laba tusaale sheeg."
+  },
+  {
+   "n": 56,
+   "section": "Rights and Responsibilities",
+   "q": "When is the last day you can send in federal income tax forms?",
+   "answers": [
+    "April 15"
+   ],
+   "star65": true,
+   "changes": false,
+   "explain_so": "Maalinta ugu dambeysa ee foomamka canshuurta federaalka la gudbiyo waa April 15."
+  },
+  {
+   "n": 57,
+   "section": "Rights and Responsibilities",
+   "q": "When must all men register for the Selective Service?",
+   "answers": [
+    "at age eighteen (18)",
+    "between eighteen (18) and twenty-six (26)"
+   ],
+   "star65": false,
+   "changes": false,
+   "explain_so": "Ragga oo dhan waa inay iska diiwaangeliyaan Selective Service marka ay 18 jirsadaan (18 ilaa 26)."
+  },
+  {
+   "n": 58,
+   "section": "Colonial Period and Independence",
+   "q": "What is one reason colonists came to America?",
+   "answers": [
+    "freedom",
+    "political liberty",
+    "religious freedom",
+    "economic opportunity",
+    "practice their religion",
+    "escape persecution"
+   ],
+   "star65": false,
+   "changes": false,
+   "explain_so": "Dadkii ugu horreeyay ee Yurub ka yimid (colonists) waxay raadinayeen xorriyad — gaar ahaan xorriyad diimeed — iyo fursad dhaqaale. Hal sabab sheeg."
+  },
+  {
+   "n": 59,
+   "section": "Colonial Period and Independence",
+   "q": "Who lived in America before the Europeans arrived?",
+   "answers": [
+    "American Indians",
+    "Native Americans"
+   ],
+   "star65": false,
+   "changes": false,
+   "explain_so": "Yurubiyaanka ka hor, dhulkan waxaa ku noolaa American Indians, oo sidoo kale loo yaqaan Native Americans."
+  },
+  {
+   "n": 60,
+   "section": "Colonial Period and Independence",
+   "q": "What group of people was taken to America and sold as slaves?",
+   "answers": [
+    "Africans",
+    "people from Africa"
+   ],
+   "star65": false,
+   "changes": false,
+   "explain_so": "Dad Afrikaan ah ayaa xoog lagu keenay oo addoon ahaan loo iibiyay."
+  },
+  {
+   "n": 61,
+   "section": "Colonial Period and Independence",
+   "q": "Why did the colonists fight the British?",
+   "answers": [
+    "because of high taxes (taxation without representation)",
+    "because the British army stayed in their houses (boarding, quartering)",
+    "because they didn’t have self-government"
+   ],
+   "star65": false,
+   "changes": false,
+   "explain_so": "Sababaha xornimada loogu dhawaaqay waxaa ka mid ah canshuur culus oo aan wakiil laga lahayn, iyo is-xukun la'aan. Hal sheeg."
+  },
+  {
+   "n": 62,
+   "section": "Colonial Period and Independence",
+   "q": "Who wrote the Declaration of Independence?",
+   "answers": [
+    "(Thomas) Jefferson"
+   ],
+   "star65": false,
+   "changes": false,
+   "explain_so": "Thomas Jefferson ayaa qoray Declaration of Independence."
+  },
+  {
+   "n": 63,
+   "section": "Colonial Period and Independence",
+   "q": "When was the Declaration of Independence adopted?",
+   "answers": [
+    "July 4, 1776"
+   ],
+   "star65": false,
+   "changes": false,
+   "explain_so": "Waxaa la ansixiyay July 4, 1776 — maalinta dhalashada Maraykanka."
+  },
+  {
+   "n": 64,
+   "section": "Colonial Period and Independence",
+   "q": "There were 13 original states. Name three.",
+   "answers": [
+    "New Hampshire",
+    "Massachusetts",
+    "Rhode Island",
+    "Connecticut",
+    "New York",
+    "New Jersey",
+    "Pennsylvania",
+    "Delaware",
+    "Maryland",
+    "Virginia",
+    "North Carolina",
+    "South Carolina",
+    "Georgia"
+   ],
+   "star65": false,
+   "changes": false,
+   "explain_so": "Saddex iyo tobankii gobol ee ugu horreeyay waxay ku yaalleen xeebta bari. Saddex sheeg — tusaale: New York, Virginia iyo Georgia."
+  },
+  {
+   "n": 65,
+   "section": "Colonial Period and Independence",
+   "q": "What happened at the Constitutional Convention?",
+   "answers": [
+    "The Constitution was written.",
+    "The Founding Fathers wrote the Constitution."
+   ],
+   "star65": false,
+   "changes": false,
+   "explain_so": "Shirkii Constitutional Convention waxaa lagu qoray Constitution-ka."
+  },
+  {
+   "n": 66,
+   "section": "Colonial Period and Independence",
+   "q": "When was the Constitution written?",
+   "answers": [
+    "1787"
+   ],
+   "star65": false,
+   "changes": false,
+   "explain_so": "Constitution-ka waxaa la qoray 1787."
+  },
+  {
+   "n": 67,
+   "section": "Colonial Period and Independence",
+   "q": "The Federalist Papers supported the passage of the U.S. Constitution. Name one of the writers.",
+   "answers": [
+    "(James) Madison",
+    "(Alexander) Hamilton",
+    "(John) Jay",
+    "Publius"
+   ],
+   "star65": false,
+   "changes": false,
+   "explain_so": "Federalist Papers waa maqaallo taageeray Constitution-ka. Waxaa qoray Madison, Hamilton iyo Jay. Hal qoraa sheeg."
+  },
+  {
+   "n": 68,
+   "section": "Colonial Period and Independence",
+   "q": "What is one thing Benjamin Franklin is famous for?",
+   "answers": [
+    "U.S. diplomat",
+    "oldest member of the Constitutional Convention",
+    "first Postmaster General of the United States",
+    "writer of “Poor Richard’s Almanac”",
+    "started the first free libraries"
+   ],
+   "star65": false,
+   "changes": false,
+   "explain_so": "Benjamin Franklin wuxuu ahaa diblomaasi iyo hal-abuure, wuxuuna aasaasay maktabadihii bilaashka ahaa ee ugu horreeyay. Hal sheeg."
+  },
+  {
+   "n": 69,
+   "section": "Colonial Period and Independence",
+   "q": "Who is the “Father of Our Country”?",
+   "answers": [
+    "(George) Washington"
+   ],
+   "star65": false,
+   "changes": false,
+   "explain_so": "George Washington waa “Father of Our Country” — aabbaha dalka — iyo madaxweynihii ugu horreeyay."
+  },
+  {
+   "n": 70,
+   "section": "Colonial Period and Independence",
+   "q": "Who was the first President?",
+   "answers": [
+    "(George) Washington"
+   ],
+   "star65": true,
+   "changes": false,
+   "explain_so": "George Washington waa “Father of Our Country” — aabbaha dalka — iyo madaxweynihii ugu horreeyay."
+  },
+  {
+   "n": 71,
+   "section": "1800s",
+   "q": "What territory did the United States buy from France in 1803?",
+   "answers": [
+    "the Louisiana Territory",
+    "Louisiana"
+   ],
+   "star65": false,
+   "changes": false,
+   "explain_so": "Sannadkii 1803 Maraykanku wuxuu Faransiiska ka iibsaday dhulka Louisiana, taasoo dalka laba jibbaartay."
+  },
+  {
+   "n": 72,
+   "section": "1800s",
+   "q": "Name one war fought by the United States in the 1800s.",
+   "answers": [
+    "War of 1812",
+    "Mexican-American War",
+    "Civil War",
+    "Spanish-American War"
+   ],
+   "star65": false,
+   "changes": false,
+   "explain_so": "Dagaalladii qarnigii 19aad waxaa ka mid ah War of 1812 iyo Civil War. Hal sheeg."
+  },
+  {
+   "n": 73,
+   "section": "1800s",
+   "q": "Name the U.S. war between the North and the South.",
+   "answers": [
+    "the Civil War",
+    "the War between the States"
+   ],
+   "star65": false,
+   "changes": false,
+   "explain_so": "Dagaalkii sokeeye ee Waqooyi iyo Koonfur dhex maray waxaa la yiraahdaa Civil War."
+  },
+  {
+   "n": 74,
+   "section": "1800s",
+   "q": "Name one problem that led to the Civil War.",
+   "answers": [
+    "slavery",
+    "economic reasons",
+    "states’ rights"
+   ],
+   "star65": false,
+   "changes": false,
+   "explain_so": "Sababaha Civil War keenay waxaa ka mid ahaa addoonsiga, dhaqaalaha iyo xuquuqda gobollada. Hal sheeg."
+  },
+  {
+   "n": 75,
+   "section": "1800s",
+   "q": "What was one important thing that Abraham Lincoln did?",
+   "answers": [
+    "freed the slaves (Emancipation Proclamation)",
+    "saved (or preserved) the Union",
+    "led the United States during the Civil War"
+   ],
+   "star65": true,
+   "changes": false,
+   "explain_so": "Abraham Lincoln wuxuu xoreeyay addoommadii, wuxuuna midnimada dalka badbaadiyay xilligii Civil War. Hal sheeg."
+  },
+  {
+   "n": 76,
+   "section": "1800s",
+   "q": "What did the Emancipation Proclamation do?",
+   "answers": [
+    "freed the slaves",
+    "freed slaves in the Confederacy",
+    "freed slaves in the Confederate states",
+    "freed slaves in most Southern states"
+   ],
+   "star65": false,
+   "changes": false,
+   "explain_so": "Emancipation Proclamation waa ku-dhawaaqistii Lincoln ee lagu xoreeyay addoommadii gobollada Koonfureed."
+  },
+  {
+   "n": 77,
+   "section": "1800s",
+   "q": "What did Susan B. Anthony do?",
+   "answers": [
+    "fought for women’s rights",
+    "fought for civil rights"
+   ],
+   "star65": false,
+   "changes": false,
+   "explain_so": "Susan B. Anthony waxay u halgantay xuquuqda haweenka iyo xuquuqda madaniga."
+  },
+  {
+   "n": 78,
+   "section": "Recent American History and Other Important Historical Information",
+   "q": "Name one war fought by the United States in the 1900s.",
+   "answers": [
+    "World War I",
+    "World War II",
+    "Korean War",
+    "Vietnam War",
+    "(Persian) Gulf War"
+   ],
+   "star65": true,
+   "changes": false,
+   "explain_so": "Dagaalladii qarnigii 20aad: World War I, World War II, Korea, Vietnam iyo Gulf War. Hal sheeg."
+  },
+  {
+   "n": 79,
+   "section": "Recent American History and Other Important Historical Information",
+   "q": "Who was President during World War I?",
+   "answers": [
+    "(Woodrow) Wilson"
+   ],
+   "star65": false,
+   "changes": false,
+   "explain_so": "Woodrow Wilson ayaa madaxweyne ahaa xilligii World War I."
+  },
+  {
+   "n": 80,
+   "section": "Recent American History and Other Important Historical Information",
+   "q": "Who was President during the Great Depression and World War II?",
+   "answers": [
+    "(Franklin) Roosevelt"
+   ],
+   "star65": false,
+   "changes": false,
+   "explain_so": "Franklin Roosevelt ayaa madaxweyne ahaa xilligii Great Depression iyo World War II."
+  },
+  {
+   "n": 81,
+   "section": "Recent American History and Other Important Historical Information",
+   "q": "Who did the United States fight in World War II?",
+   "answers": [
+    "Japan, Germany, and Italy"
+   ],
+   "star65": false,
+   "changes": false,
+   "explain_so": "World War II Maraykanku wuxuu la dagaallamay Japan, Jarmal iyo Talyaani."
+  },
+  {
+   "n": 82,
+   "section": "Recent American History and Other Important Historical Information",
+   "q": "Before he was President, Eisenhower was a general. What war was he in?",
+   "answers": [
+    "World War II"
+   ],
+   "star65": false,
+   "changes": false,
+   "explain_so": "Eisenhower wuxuu jeneraal ka ahaa World War II ka hor intuusan madaxweyne noqon."
+  },
+  {
+   "n": 83,
+   "section": "Recent American History and Other Important Historical Information",
+   "q": "During the Cold War, what was the main concern of the United States?",
+   "answers": [
+    "Communism"
+   ],
+   "star65": false,
+   "changes": false,
+   "explain_so": "Walaaca ugu weyn wuxuu ahaa faafidda shuuciyadda (communism) iyo dagaal nukliyeer ah. Hal sheeg."
+  },
+  {
+   "n": 84,
+   "section": "Recent American History and Other Important Historical Information",
+   "q": "What movement tried to end racial discrimination?",
+   "answers": [
+    "civil rights (movement)"
+   ],
+   "star65": false,
+   "changes": false,
+   "explain_so": "Dhaqdhaqaaqii xuquuqda madaniga (civil rights movement) wuxuu u halgamay in la joojiyo takoorka midabka."
+  },
+  {
+   "n": 85,
+   "section": "Recent American History and Other Important Historical Information",
+   "q": "What did Martin Luther King, Jr. do?",
+   "answers": [
+    "fought for civil rights",
+    "worked for equality for all Americans"
+   ],
+   "star65": true,
+   "changes": false,
+   "explain_so": "Martin Luther King, Jr. wuxuu si nabad ah ugu halgamay xuquuqda madaniga iyo sinnaanta dadka oo dhan."
+  },
+  {
+   "n": 86,
+   "section": "Recent American History and Other Important Historical Information",
+   "q": "What major event happened on September 11, 2001, in the United States?",
+   "answers": [
+    "Terrorists attacked the United States."
+   ],
+   "star65": false,
+   "changes": false,
+   "explain_so": "September 11, 2001, argagixiso ayaa weerartay Maraykanka; kumannaan qof ayaa ku dhintay."
+  },
+  {
+   "n": 87,
+   "section": "Recent American History and Other Important Historical Information",
+   "q": "Name one American Indian tribe in the United States. [USCIS Officers will be supplied with a list of federally recognized American Indian tribes.]",
+   "answers": [
+    "Cherokee",
+    "Navajo",
+    "Sioux",
+    "Chippewa",
+    "Choctaw",
+    "Pueblo",
+    "Apache",
+    "Iroquois",
+    "Creek",
+    "Blackfeet",
+    "Seminole",
+    "Cheyenne",
+    "Arawak",
+    "Shawnee",
+    "Mohegan",
+    "Huron",
+    "Oneida",
+    "Lakota",
+    "Crow",
+    "Teton",
+    "Hopi",
+    "Inuit"
+   ],
+   "star65": false,
+   "changes": false,
+   "explain_so": "Qabaa'ilka dadka asaliga ah waxaa ka mid ah Cherokee, Navajo iyo Sioux. Hal sheeg."
+  },
+  {
+   "n": 88,
+   "section": "Geography",
+   "q": "Name one of the two longest rivers in the United States.",
+   "answers": [
+    "Missouri (River)",
+    "Mississippi (River)"
+   ],
+   "star65": false,
+   "changes": false,
+   "explain_so": "Labada webi ee ugu dhaadheer Maraykanka waa Missouri iyo Mississippi. Hal sheeg."
+  },
+  {
+   "n": 89,
+   "section": "Geography",
+   "q": "What ocean is on the West Coast of the United States?",
+   "answers": [
+    "Pacific (Ocean)"
+   ],
+   "star65": false,
+   "changes": false,
+   "explain_so": "Xeebta galbeed waxaa ku taal badweynta Pacific."
+  },
+  {
+   "n": 90,
+   "section": "Geography",
+   "q": "What ocean is on the East Coast of the United States?",
+   "answers": [
+    "Atlantic (Ocean)"
+   ],
+   "star65": false,
+   "changes": false,
+   "explain_so": "Xeebta bari waxaa ku taal badweynta Atlantic."
+  },
+  {
+   "n": 91,
+   "section": "Geography",
+   "q": "Name one U.S. territory.",
+   "answers": [
+    "Puerto Rico",
+    "U.S. Virgin Islands",
+    "American Samoa",
+    "Northern Mariana Islands",
+    "Guam"
+   ],
+   "star65": false,
+   "changes": false,
+   "explain_so": "Dhulalka Maraykanku maamulo (territories) waxaa ka mid ah Puerto Rico iyo Guam. Hal sheeg."
+  },
+  {
+   "n": 92,
+   "section": "Geography",
+   "q": "Name one state that borders Canada.",
+   "answers": [
+    "Maine",
+    "New Hampshire",
+    "Vermont",
+    "New York",
+    "Pennsylvania",
+    "Ohio",
+    "Michigan",
+    "Minnesota",
+    "North Dakota",
+    "Montana",
+    "Idaho",
+    "Washington",
+    "Alaska"
+   ],
+   "star65": false,
+   "changes": false,
+   "explain_so": "Gobollada Canada xuduud la leh waxaa ka mid ah Minnesota, Washington, New York iyo Maine. Hal sheeg."
+  },
+  {
+   "n": 93,
+   "section": "Geography",
+   "q": "Name one state that borders Mexico.",
+   "answers": [
+    "California",
+    "Arizona",
+    "New Mexico",
+    "Texas"
+   ],
+   "star65": false,
+   "changes": false,
+   "explain_so": "Gobollada Mexico xuduud la leh waa California, Arizona, New Mexico iyo Texas. Hal sheeg."
+  },
+  {
+   "n": 94,
+   "section": "Geography",
+   "q": "What is the capital of the United States?",
+   "answers": [
+    "Washington, D.C."
+   ],
+   "star65": true,
+   "changes": false,
+   "explain_so": "Caasimadda dalku waa Washington, D.C."
+  },
+  {
+   "n": 95,
+   "section": "Geography",
+   "q": "Where is the Statue of Liberty?",
+   "answers": [
+    "New York (Harbor)",
+    "Liberty Island [Also acceptable are New Jersey, near New York City, and on the Hudson (River).]"
+   ],
+   "star65": true,
+   "changes": false,
+   "explain_so": "Statue of Liberty — taallada xorriyadda — waxay ku taallaa dekedda New York."
+  },
+  {
+   "n": 96,
+   "section": "Symbols",
+   "q": "Why does the flag have 13 stripes?",
+   "answers": [
+    "because there were 13 original colonies",
+    "because the stripes represent the original colonies"
+   ],
+   "star65": false,
+   "changes": false,
+   "explain_so": "Calanka 13-kiisa xariijimood waxay u taagan yihiin 13-kii gumeysi ee asalka ahaa."
+  },
+  {
+   "n": 97,
+   "section": "Symbols",
+   "q": "Why does the flag have 50 stars?",
+   "answers": [
+    "because there is one star for each state",
+    "because each star represents a state",
+    "because there are 50 states"
+   ],
+   "star65": true,
+   "changes": false,
+   "explain_so": "50-ka xiddigood waxay u taagan yihiin 50-ka gobol."
+  },
+  {
+   "n": 98,
+   "section": "Symbols",
+   "q": "What is the name of the national anthem?",
+   "answers": [
+    "The Star-Spangled Banner"
+   ],
+   "star65": false,
+   "changes": false,
+   "explain_so": "Heesta qaranka waxaa la yiraahdaa The Star-Spangled Banner."
+  },
+  {
+   "n": 99,
+   "section": "Holidays",
+   "q": "When do we celebrate Independence Day?",
+   "answers": [
+    "July 4"
+   ],
+   "star65": true,
+   "changes": false,
+   "explain_so": "Independence Day waxaa la xusaa July 4."
+  },
+  {
+   "n": 100,
+   "section": "Holidays",
+   "q": "Name two national U.S. holidays.",
+   "answers": [
+    "New Year’s Day",
+    "Martin Luther King, Jr. Day",
+    "Presidents’ Day",
+    "Memorial Day",
+    "Independence Day",
+    "Labor Day",
+    "Columbus Day",
+    "Veterans Day",
+    "Thanksgiving",
+    "Christmas"
+   ],
+   "star65": false,
+   "changes": false,
+   "explain_so": "Ciidaha qaranka waxaa ka mid ah New Year’s Day, Independence Day iyo Thanksgiving. Laba sheeg."
+  }
+ ]
+}

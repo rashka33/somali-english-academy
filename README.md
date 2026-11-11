@@ -66,3 +66,11 @@ The speaking studio offers three bilingual model phrases with slow English playb
 New learners enter a 50-question placement test after the optional-name form. Five distinct questions are drawn from each curriculum tenth; no early stopping. Unknown counts as incorrect. The draft saves on each answer and can be resumed. Results use these provisional bands: 0–9% → lesson 1; 10–19% → 51; 20–29% → 101; 30–39% → 201; 40–49% → 301; 50–59% → 401; 60–69% → 501; 70–79% → 601; 80–89% → 701; 90–100% → 801. These thresholds follow the requested progression, not a validated CEFR assessment.
 
 Accepting results unlocks the recommended start and marks earlier lessons as placed for review. Later lessons require passing their predecessor. All units remain browseable. Existing earned progress is retained, and retaking cannot move a learner backward. Tests: `node --test --test-isolation=none tests/placement.test.cjs` and the browser suite.
+
+## Citizenship / Jinsiyadda
+
+- `citizenship.js` renders the section; styles live in `academy-theme.css` (sections 9–10) on the shared tokens.
+- Civics questions and answers are loaded at runtime from `data/civics-2025.json` (USCIS M-1778, 09/25, 128 questions) and `data/civics-2008.json` (USCIS 100 questions, rev. 01/19). The official text is never typed into code; `explain_so` holds the academy's own Somali teaching notes.
+- Reading and writing sentences use only words from the official USCIS vocabulary lists (rev. 08/08). N-400 questions quote Form N-400, edition 01/20/25, Part 9. Study help, not legal advice.
+- Learner state is the optional `S.citizenship` key inside the existing profile (IndexedDB `zamzam-academy` v1); older exports import unchanged.
+- Tap-a-word in lessons and Watch shares one lookup (`wordLookup` / `ctxLookup` in `index.html`, Stage M): unified dictionary, core glossary, irregular forms, stems, then two-word phrases.
