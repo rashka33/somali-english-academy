@@ -80,3 +80,10 @@ Accepting results unlocks the recommended start and marks earlier lessons as pla
 - `games.js` holds six games (Word Snake, Word Catch, The Ladder, Memory Match, Duel Dash, Word Slice), each with ten levels on one shared level law (`law()`), plus the games home and Journey Map. Styles are section 11 of `academy-theme.css`.
 - Words come only from the curriculum picture dictionary (`DICT_ENTRIES`). Missed words go to the existing review deck (`addSRS`); XP uses the existing best-score rule (`awardBestXP`).
 - Sound is synthesised with WebAudio (no audio files); the on/off choice is saved per profile in the optional `S.games` key, with levels, stars and difficulty.
+
+### Play & Learn reconciliation (docs/play-learn-brief.md)
+
+- About is no longer a static block under the app. The copy lives in `about.html` (standalone, for search engines) and the app shows the same file inside Profile → About, dedication first.
+- Duel Dash: pass-and-play, challenge by code (`?duel=CODE`; the code carries a seed, difficulty, score and a checksum, and the seed regenerates the exact questions), and the family leaderboard (profiles on this device ranked by game XP). The solo race against Geel remains as practice.
+- Daily quests (one game, one review, five new words) with a treasure stop, shown on the games home and echoed on Home.
+- Three difficulties (Xad fudud / Dhexe / Adag), Ladder lifelines, Word Catch parallax, and a seventh game, Word Road 3D.

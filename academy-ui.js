@@ -234,10 +234,10 @@
     if (ROOT && profileId !== ROOT.activeId) { profileId = ROOT.activeId; profilePage = ''; unit = null; }
     if (view === 'path') view = 'simpleLessons';
     var allowed = S && S.profile && S.profile.onboarded && !guestMode && !pickerPending && !pinGate;
-    if (allowed && ['home', 'dict', 'profile', 'simpleLessons', 'cit', 'play'].includes(view)) {
+    if (allowed && ['home', 'dict', 'profile', 'simpleLessons', 'cit', 'play', 'about'].includes(view)) {
       applyPrefs(); document.body.classList.remove('inLesson', 'view-home', 'view-profile', 'view-practice');
       var lessonNav = document.getElementById('lesNav'); if (lessonNav) lessonNav.remove(); if (typeof hCloseSheet === 'function') hCloseSheet(); app.classList.remove('wide');
-      if (view === 'home') renderHome(); else if (view === 'cit' && typeof renderCitizenship === 'function') renderCitizenship(); else if (view === 'play' && typeof renderPlay === 'function') renderPlay(); else if (view === 'dict') renderDict(); else if (view === 'simpleLessons') renderLessons(); else renderProfile();
+      if (view === 'home') renderHome(); else if (view === 'cit' && typeof renderCitizenship === 'function') renderCitizenship(); else if (view === 'play' && typeof renderPlay === 'function') renderPlay(); else if (view === 'about' && typeof renderAbout === 'function') renderAbout(); else if (view === 'dict') renderDict(); else if (view === 'simpleLessons') renderLessons(); else renderProfile();
     } else { legacyRender(); if (allowed && ['watch', 'review', 'practice', 'acad'].includes(view)) legacyBack(); }
     if (S) shell();
   };
@@ -1974,5 +1974,30 @@ window.ACADEMY_TUTOR_URL = 'https://somali-academy-tutor.rashkaa33.workers.dev';
   renderLesson=function(){l();if(typeof uiPolish==='function')uiPolish()};
   renderProfile=function(){p();if(typeof uiPolish==='function')uiPolish()};
   renderHome=function(){h();if(typeof uiPolish==='function')uiPolish()};
+  if(S&&S.profile&&S.profile.onboarded)render();
+})();
+/* About lives inside the app (Profile → About). The copy is the same file search engines read: about.html. */
+(function(){
+  var cache=null,profile=renderProfile;
+  function en(){return S&&S.profile&&S.profile.ui==='en'}
+  var DED='<div class="about-ded"><p lang="so">Waxaa loo dhisay Zamzam — iyo hooyo kasta, aabbe kasta iyo waayeel kasta oo Soomaaliyeed oo luqad cusub dib uga bilaabay.</p><p lang="en">Built for Zamzam — and for every Somali mother, father and elder who started again in a new language.</p></div>';
+  function paintAbout(body){
+    app.innerHTML='<button type="button" class="simple-back" id="aboutBack"><svg class="simple-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12H4m6-6-6 6 6 6"/></svg>'+(en()?'Profile':'Boggaaga')+'</button><h1>'+(en()?'About':'Ku saabsan')+'</h1><div class="about-page">'+body+'</div>';
+    document.getElementById('aboutBack').onclick=function(){setNav('profile');render()};
+  }
+  window.renderAbout=function(){
+    if(cache){paintAbout(cache);return}
+    paintAbout(DED+'<div class="cz-skel"></div><div class="cz-skel short"></div>');
+    fetch('about.html').then(function(r){if(!r.ok)throw 0;return r.text()}).then(function(t){
+      var d=new DOMParser().parseFromString(t,'text/html'),m=d.getElementById('aboutContent');if(!m)throw 0;
+      m.querySelectorAll('script').forEach(function(x){x.remove()});cache=m.innerHTML;if(view==='about')paintAbout(cache);
+    }).catch(function(){if(view==='about')paintAbout(DED+'<p class="simple-intro">'+(en()?'The rest of this page needs a connection the first time. Please try again when you are online.':'Boggan intiisa kale wuxuu u baahan yahay internet markii ugu horreysa. Fadlan mar kale isku day markaad internet hesho.')+'</p>')});
+  };
+  renderProfile=function(){
+    profile();var rows=app.querySelector('.simple-profile-rows');if(!rows||document.getElementById('profileAbout'))return;
+    var b=document.createElement('button');b.type='button';b.id='profileAbout';b.className='simple-row';
+    b.innerHTML='<svg class="simple-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5h.01"/></svg><span>'+(en()?'About the academy':'Ku saabsan akadeemiyadda')+'</span><svg class="simple-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg>';
+    b.onclick=function(){setNav('about');render();window.scrollTo(0,0)};rows.appendChild(b);
+  };
   if(S&&S.profile&&S.profile.onboarded)render();
 })();
