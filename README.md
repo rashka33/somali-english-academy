@@ -74,3 +74,9 @@ Accepting results unlocks the recommended start and marks earlier lessons as pla
 - Reading and writing sentences use only words from the official USCIS vocabulary lists (rev. 08/08). N-400 questions quote Form N-400, edition 01/20/25, Part 9. Study help, not legal advice.
 - Learner state is the optional `S.citizenship` key inside the existing profile (IndexedDB `zamzam-academy` v1); older exports import unchanged.
 - Tap-a-word in lessons and Watch shares one lookup (`wordLookup` / `ctxLookup` in `index.html`, Stage M): unified dictionary, core glossary, irregular forms, stems, then two-word phrases.
+
+## Play & Learn / Ciyaar oo Baro
+
+- `games.js` holds six games (Word Snake, Word Catch, The Ladder, Memory Match, Duel Dash, Word Slice), each with ten levels on one shared level law (`law()`), plus the games home and Journey Map. Styles are section 11 of `academy-theme.css`.
+- Words come only from the curriculum picture dictionary (`DICT_ENTRIES`). Missed words go to the existing review deck (`addSRS`); XP uses the existing best-score rule (`awardBestXP`).
+- Sound is synthesised with WebAudio (no audio files); the on/off choice is saved per profile in the optional `S.games` key, with levels, stars and difficulty.

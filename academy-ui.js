@@ -5,6 +5,7 @@
   var query = '', live = null, loading = false, request = null, sequence = 0, unit = null;
   var profilePage = '', profileId = null;
   var paths = {
+    game: '<rect x="2" y="7" width="20" height="11" rx="5.5"/><path d="M7.5 11v3M6 12.5h3M15.5 11.5h.01M18 13.5h.01"/>',
     flag: '<path d="M5 21V4m0 1h12l-2.5 4 2.5 4H5"/>',
     list: '<path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>',
     home: '<path d="m3 10 9-7 9 7M5 9v12h14V9M9 21v-7h6v7"/>',
@@ -53,9 +54,9 @@
     }
     var language = document.getElementById('simpleLanguage');
     language.textContent = english() ? 'EN' : 'SO'; language.setAttribute('aria-label', t('Switch to English', 'U beddel Soomaali'));
-    var parent = view === 'dict' ? 'dict' : view === 'cit' ? 'cit' : ['home', 'simpleLessons', 'path', 'lesson'].includes(view) ? 'home' : 'profile';
+    var parent = view === 'dict' ? 'dict' : view === 'cit' ? 'cit' : view === 'play' ? 'play' : ['home', 'simpleLessons', 'path', 'lesson'].includes(view) ? 'home' : 'profile';
     var nav = document.getElementById('mainNav'); nav.setAttribute('aria-label', t('Bogagga waaweyn', 'Main navigation'));
-    nav.innerHTML = [['home', t('Hoyga', 'Home'), 'home'], ['cit', t('Jinsiyad', 'Citizenship'), 'flag'], ['dict', t('Qaamuus', 'Dictionary'), 'book'], ['profile', t('Boggaaga', 'Profile'), 'user']].map(function (item) {
+    nav.innerHTML = [['home', t('Hoyga', 'Home'), 'home'], ['cit', t('Jinsiyad', 'Citizenship'), 'flag'], ['play', t('Ciyaar', 'Play'), 'game'], ['dict', t('Qaamuus', 'Dictionary'), 'book'], ['profile', t('Boggaaga', 'Profile'), 'user']].map(function (item) {
       return '<button type="button" data-view="' + item[0] + '"' + (parent === item[0] ? ' class="active" aria-current="page"' : '') + '>' + icon(item[2]) + '<span>' + item[1] + '</span></button>';
     }).join('');
     nav.dataset.ready = 'true';
@@ -233,10 +234,10 @@
     if (ROOT && profileId !== ROOT.activeId) { profileId = ROOT.activeId; profilePage = ''; unit = null; }
     if (view === 'path') view = 'simpleLessons';
     var allowed = S && S.profile && S.profile.onboarded && !guestMode && !pickerPending && !pinGate;
-    if (allowed && ['home', 'dict', 'profile', 'simpleLessons', 'cit'].includes(view)) {
+    if (allowed && ['home', 'dict', 'profile', 'simpleLessons', 'cit', 'play'].includes(view)) {
       applyPrefs(); document.body.classList.remove('inLesson', 'view-home', 'view-profile', 'view-practice');
       var lessonNav = document.getElementById('lesNav'); if (lessonNav) lessonNav.remove(); if (typeof hCloseSheet === 'function') hCloseSheet(); app.classList.remove('wide');
-      if (view === 'home') renderHome(); else if (view === 'cit' && typeof renderCitizenship === 'function') renderCitizenship(); else if (view === 'dict') renderDict(); else if (view === 'simpleLessons') renderLessons(); else renderProfile();
+      if (view === 'home') renderHome(); else if (view === 'cit' && typeof renderCitizenship === 'function') renderCitizenship(); else if (view === 'play' && typeof renderPlay === 'function') renderPlay(); else if (view === 'dict') renderDict(); else if (view === 'simpleLessons') renderLessons(); else renderProfile();
     } else { legacyRender(); if (allowed && ['watch', 'review', 'practice', 'acad'].includes(view)) legacyBack(); }
     if (S) shell();
   };

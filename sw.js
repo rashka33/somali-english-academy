@@ -1,7 +1,7 @@
 // Somali English Academy service worker — network-first with offline fallback.
 // Bump CACHE on every publish so users never get stuck on an old build.
-const CACHE = "sea-f31-citizenship";
-const CORE = ["./", "./index.html", "./academy-ui.css", "./academy-theme.css", "./dictionary-client.js", "./academy-ui.js", "./citizenship.js", "./data/civics-2025.json", "./data/civics-2008.json", "./tutor.js", "./tutor-config.js", "./manifest.json", "./icon-192.png", "./icon-512.png", "./icon-maskable-512.png", "./apple-touch-icon.png"];
+const CACHE = "sea-f32-play-and-learn";
+const CORE = ["./", "./index.html", "./academy-ui.css", "./academy-theme.css", "./dictionary-client.js", "./academy-ui.js", "./citizenship.js", "./games.js", "./data/civics-2025.json", "./data/civics-2008.json", "./tutor.js", "./tutor-config.js", "./manifest.json", "./icon-192.png", "./icon-512.png", "./icon-maskable-512.png", "./apple-touch-icon.png"];
 self.addEventListener("install", (e) => {
   e.waitUntil(caches.open(CACHE).then((c) => c.addAll(CORE)).then(() => self.skipWaiting()));
 });
