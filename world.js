@@ -65,8 +65,18 @@
     if (!gl) { stage.innerHTML = '<div class="card empty">' + ic('signal') + '<h2>' + T('Aaladdani ma taageerto adduunka 3D', 'This device cannot show the 3D world') + '</h2><p>' + T('Ciyaaraha kale si fiican ayay u shaqeeyaan.', 'The other games all work well.') + '</p></div>'; R.step = null; return; }
     stage.appendChild(cv);
     stage.insertAdjacentHTML('beforeend', '<div class="tw-labels" id="twLabels"></div><div class="tw-compass" id="twCompass"><i></i><b></b></div><div class="tw-stick" id="twStick"><i></i></div><div class="tw-acts"><button type="button" class="tw-btn" id="twTalk" hidden>' + ic('chat') + '<span>' + T('La hadal', 'Talk') + '</span></button><button type="button" class="tw-btn" id="twCar" hidden>' + ic('road') + '<span></span></button></div><div class="tw-say" id="twSay" hidden></div><div class="tw-dlg" id="twDlg" hidden></div>');
-    var W = stage.clientWidth, H = stage.clientHeight, dpr = Math.min(1.5, window.devicePixelRatio || 1);
-    cv.style.width = W + 'px'; cv.style.height = H + 'px'; cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); gl.viewport(0, 0, cv.width, cv.height);
+    var W = 0, H = 0, dpr = Math.min(1.5, window.devicePixelRatio || 1), resizeObserver = null;
+    function resize() {
+      var w = stage.clientWidth, h = stage.clientHeight;
+      if (!w || !h) return;
+      W = w; H = h; dpr = Math.min(1.5, window.devicePixelRatio || 1);
+      cv.style.width = W + 'px'; cv.style.height = H + 'px';
+      cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+      gl.viewport(0, 0, cv.width, cv.height);
+    }
+    resize();
+    if (typeof ResizeObserver === 'function') { resizeObserver = new ResizeObserver(resize); resizeObserver.observe(stage); }
+    else addEventListener('resize', resize);
     function sh(t, s) { var x = gl.createShader(t); gl.shaderSource(x, s); gl.compileShader(x); return x; }
     var pg = gl.createProgram(); gl.attachShader(pg, sh(gl.VERTEX_SHADER, 'attribute vec3 p;attribute vec3 c;uniform mat4 m;varying vec3 vc;varying float vd;void main(){gl_Position=m*vec4(p,1.0);vc=c;vd=gl_Position.w;}'));
     gl.attachShader(pg, sh(gl.FRAGMENT_SHADER, 'precision mediump float;varying vec3 vc;varying float vd;uniform vec3 fog;void main(){float f=smoothstep(55.0,170.0,vd);gl_FragColor=vec4(mix(vc,fog,f),1.0);}'));
@@ -183,7 +193,7 @@
     }
     newTask();
     R.step = function (dt) { step(dt); if (!R.over) render(); };
-    R.cleanup = function () { removeEventListener('keydown', kd); removeEventListener('keyup', ku); clearTimeout(say.t); try { var x = gl.getExtension('WEBGL_lose_context'); if (x) x.loseContext(); } catch (e) { } };
+    R.cleanup = function () { removeEventListener('keydown', kd); removeEventListener('keyup', ku); if (resizeObserver) resizeObserver.disconnect(); else removeEventListener('resize', resize); clearTimeout(say.t); try { var x = gl.getExtension('WEBGL_lose_context'); if (x) x.loseContext(); } catch (e) { } };
     window.__TW = { me: me, car: car, task: function () { return task; }, marker: function () { return marker; }, items: function () { return items; }, npcs: function () { return npcs; }, tris: town.length / 18 };
   };
 })();

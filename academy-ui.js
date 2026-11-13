@@ -1926,7 +1926,7 @@ window.ACADEMY_TUTOR_URL = 'https://somali-academy-tutor.rashkaa33.workers.dev';
     setNav('placement');app.innerHTML='<button class="simple-back" id="plBack">← '+t('Hoyga · Kaydi oo sii wad mar dambe','Home · Resume later')+'</button><h1>'+t('Imtixaanka meelaynta','Placement test')+'</h1>';
     document.getElementById('plBack').onclick=function(){setNav('home');render()};
     if(!plState.done){
-      var skip=document.createElement('button');skip.id='plSkip';skip.className='simple-row';skip.textContent='Skip for now / Ka bood hadda';
+      var skip=document.createElement('button');skip.id='plSkip';skip.className='simple-row';skip.textContent='Ka bood hadda';
       skip.onclick=function(){persist();setNav('home');render()};app.appendChild(skip);
     }
     if(plState.done){
@@ -1935,7 +1935,7 @@ window.ACADEMY_TUTOR_URL = 'https://somali-academy-tutor.rashkaa33.workers.dev';
       document.getElementById('plStartThere').onclick=async function(){this.disabled=true;plApplyPlacement(r);S.profile.placementVersion=50;delete S.placementDraft;try{localStorage.removeItem(draftKey())}catch(e){}await save();setNav('home');render()};return;
     }
     var q=plState.qs[plState.idx];
-    app.insertAdjacentHTML('beforeend','<p>'+t('Su’aasha ','Question ')+(plState.idx+1)+' / 50</p><progress max="50" value="'+plState.idx+'" style="width:100%"></progress><p>'+t('Dooro jawaabta saxda ah. Haddii aadan garanayn, dooro “Ma garanayo”. Jawaabaha lama muujinayo inta imtixaanku socdo.','Choose an answer, or select “I don’t know”. Answers are not revealed during the test.')+'</p><h2>'+esc(q.q)+'</h2>'+(q.qSo?'<p lang="so">'+esc(q.qSo)+'</p>':'')+'<div class="opts">'+q.opts.map(function(o){return '<button class="opt" data-plopt="'+esc(o)+'">'+esc(o)+'</button>'}).join('')+'</div><button class="simple-row" id="plUnknown">'+t('Ma garanayo →','I don’t know →')+'</button>');
+    app.insertAdjacentHTML('beforeend','<p>'+t('Su’aasha ','Question ')+(plState.idx+1)+' / 50</p><progress max="50" value="'+plState.idx+'" style="width:100%"></progress><p>'+t('Dooro jawaabta saxda ah. Haddii aadan garanayn, dooro “Ma garanayo”. Jawaabaha lama muujinayo inta imtixaanku socdo.','Choose an answer, or select “I don’t know”. Answers are not revealed during the test.')+'</p><h2 lang="so">'+esc(q.qSo||q.q)+'</h2><div class="opts">'+q.opts.map(function(o){return '<button class="opt" data-plopt="'+esc(o)+'">'+esc(o)+'</button>'}).join('')+'</div><button class="simple-row" id="plUnknown">'+t('Ma garanayo →','I don’t know →')+'</button>');
     function answer(opt){app.querySelectorAll('[data-plopt],#plUnknown').forEach(function(b){b.disabled=true});plAnswer(opt)}
     app.querySelectorAll('[data-plopt]').forEach(function(b){b.onclick=function(){answer(b.dataset.plopt)}});document.getElementById('plUnknown').onclick=function(){answer(null)};
     if(plState.idx>0){var back=document.createElement('button');back.className='simple-back';back.id='plPrevious';back.textContent=t('← Su’aashii hore','← Previous question');back.onclick=function(){plState.idx--;plState.done=false;persist();plScreenRender()};app.appendChild(back)}

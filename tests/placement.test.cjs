@@ -4,7 +4,7 @@ test('higher placement opens starting lesson, retains earlier review, locks next
 test('retaking placement never removes earned progress or moves learner backward',()=>{const c=setup();c.S.completed.L10={score:100};c.plApplyPlacement({startLesson:301,correct:20,asked:50});c.plApplyPlacement({startLesson:1,correct:0,asked:50});assert.equal(c.S.profile.placedLesson,301);assert.equal(c.S.completed.L10.score,100)});
 
 function placementContext(storage, persisted){
- const c={S:persisted||{profile:{ui:'en'},completed:{}},ROOT:{activeId:'p1'},window:{},localStorage:{getItem:k=>storage[k]||null,setItem:(k,v)=>storage[k]=v,removeItem:k=>delete storage[k]},renderHome:()=>{},openLesson:n=>c.opened=n,isUnlocked:()=>true,guestMode:false,render:()=>{},view:'home',norm:s=>String(s).toLowerCase(),save:()=>new Promise(()=>{}),plPickQ:n=>({q:'q'+n,ans:'a',opts:['a'],stage:0})};
+ const c={S:persisted||{profile:{ui:'en'},completed:{}},ROOT:{activeId:'p1'},window:{},localStorage:{getItem:k=>storage[k]||null,setItem:(k,v)=>storage[k]=v,removeItem:k=>delete storage[k]},renderHome:()=>{},renderLesson:()=>{},renderProfile:()=>{},openLesson:n=>c.opened=n,isUnlocked:()=>true,guestMode:false,render:()=>{},view:'home',norm:s=>String(s).toLowerCase(),save:()=>new Promise(()=>{}),plPickQ:n=>({q:'q'+n,ans:'a',opts:['a'],stage:0})};
  vm.createContext(c);const src=fs.readFileSync('academy-ui.js','utf8');vm.runInContext(src.slice(src.indexOf('/* Fifty-question placement:')),c);c.plScreenRender=()=>{c.view='placement'};return c;
 }
 test('reload resumes all three answers even before IndexedDB commit finishes',()=>{
