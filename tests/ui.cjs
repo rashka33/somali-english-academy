@@ -25,11 +25,20 @@ const server=createServer(async(req,res)=>{
   await page.route('https://static.cloudflareinsights.com/**',r=>r.fulfill({status:200,contentType:'application/javascript',body:''}));
   await page.route('**/favicon.ico',r=>r.fulfill({status:204,body:''}));
   await page.route('**/audio/index.json',r=>r.fulfill({json:{clips:{},bundles:[]}}));
-  await page.goto(process.env.ACADEMY_TEST_URL||'http://127.0.0.1:'+server.address().port+'/open.html');
-  await page.waitForFunction(()=>window.S&&window.LESSONS&&window.AcademyDictionary);
-  assert.equal(await page.locator('#simpleStart').count(),1,'First visit should offer one short start form');
-  assert.equal(await page.locator('#app input').count(),1,'First visit asks only for an optional name');
-  await page.locator('#simpleName').fill('Ayaan');await page.locator('#simpleStart').click();await page.locator('#plUnknown').waitFor();assert.equal(await page.evaluate(()=>plState.qs.length),50);
+  await page.goto(process.env.ACADEMY_TEST_URL||'http://127.0.0.1:'+server.address().port+'/');
+  await page.locator('#welcomeStart').waitFor();
+  assert.equal(await page.locator('#welcomeStart').count(),1,'First visit should have one primary start button');
+  assert.equal(await page.locator('#app input').count(),0,'First visit should not ask for a name');
+  assert.equal(await page.evaluate(()=>document.activeElement===document.body),true,'First visit should not autofocus a control');
+  assert.equal(await page.locator('.welcome-benefit').count(),6,'First visit should show six benefits');
+  assert.match(await page.locator('.welcome-benefit').first().innerText(),/1,000 cashir/,'Welcome states the true lesson count');
+  assert.equal(await page.locator('.welcome-trust-pill').count(),3,'First visit should show three trust statements');
+  assert.ok((await readFile(path.join(root,'index.html'))).byteLength<30000,'Fast welcome shell stays under 30 KB');
+  await page.locator('#welcomeStart').click();await page.waitForFunction(()=>window.S&&guestMode&&view==='lesson'&&cur&&cur.n===1);
+  assert.equal(await page.evaluate(()=>S.profile.onboarded),false,'Guest preview does not create or alter a profile');
+  await page.locator('#backPath').click();await page.waitForFunction(()=>!guestMode);
+  await page.goto('http://127.0.0.1:'+server.address().port+'/');await page.locator('#welcomePlacement').waitFor();
+  await page.locator('#welcomePlacement').click();await page.locator('#plUnknown').waitFor();assert.equal(await page.evaluate(()=>plState.qs.length),50);
   assert.equal(await page.locator('#plSkip').innerText(),'Ka bood hadda');
   const placementQuestion=await page.evaluate(()=>({english:plState.qs[plState.idx].q,somali:plState.qs[plState.idx].qSo}));
   assert.equal(await page.locator('#app h2').innerText(),placementQuestion.somali);
@@ -52,11 +61,12 @@ const server=createServer(async(req,res)=>{
   const picks=await page.evaluate(()=>{const now=Date.now;const result=[];try{for(let i=0;i<30;i++){Date.now=()=>now()+i*86400000;setNav('home');render();const text=Array.from(document.querySelectorAll('p')).find(p=>p.textContent.startsWith('Word of the day: ')).textContent.slice(17);result.push(text)}}finally{Date.now=now}return result});
   for(const pick of picks){const [word,gloss]=pick.split(' — ');assert.match(word,/^[A-Za-z]+(?:[-’'][A-Za-z]+)*$/);assert(await page.evaluate(({word,gloss})=>LESSONS.some(l=>l.vocab.some(v=>v.en===word&&v.so===gloss)),{word,gloss}))}
   await page.evaluate(()=>plBegin('profile'));
-  for(let i=3;i<50;i++){await page.locator('#plUnknown').click();await page.waitForFunction(n=>plState.idx===n,i+1)}await page.locator('#plStartThere').click();await page.locator('#academyContinue').waitFor();assert.equal(await page.evaluate(()=>S.profile.placedLesson),1);assert.equal(await page.evaluate(()=>S.profile.name),'Ayaan');
+  for(let i=3;i<50;i++){await page.locator('#plUnknown').click();await page.waitForFunction(n=>plState.idx===n,i+1)}await page.locator('#plStartThere').click();await page.locator('#academyContinue').waitFor();assert.equal(await page.evaluate(()=>S.profile.placedLesson),1);assert.equal(await page.evaluate(()=>S.profile.name),'');
   await page.evaluate(()=>{S.profile.onboarded=true;S.profile.name='Ayaan';S.profile.theme='light';S.profile.ui='en';save();setNav('home');render()});
   assert.equal(await page.title(),'Somali English Academy — Baro Ingiriisi');
   assert.deepEqual(await page.locator('#mainNav button').allTextContents(),['Home','Citizenship','Play','Dictionary','Profile']);
-  await page.evaluate(()=>{window.__GM.P.game='run';window.__GM.P.route='levels';setNav('play');render()});
+  await page.locator('#mainNav [data-view="play"]').click();await page.waitForFunction(()=>window.__GM&&typeof window.renderPlay==='function');
+  await page.evaluate(()=>{setNav('play');render()});await page.waitForFunction(()=>window.__GM&&window.__GM.P);await page.evaluate(()=>{window.__GM.P.game='run';window.__GM.P.route='levels';render()});
   assert.equal((await page.locator('.gmh .hero-eyebrow').innerText()).toLowerCase(),'word town 3d');
   await page.locator('[data-l="1"]').click();await page.locator('.gm-town canvas').waitFor();
   const townBefore=await page.locator('.gm-town canvas').evaluate(c=>({width:c.width,height:c.height}));
@@ -102,7 +112,7 @@ const server=createServer(async(req,res)=>{
   assert.match(await page.locator('.dictionary-attribution').first().innerText(),/CC BY-SA 3.0/);
   await page.locator('.live-entry').first().locator('[data-save-word]').click();assert.equal(await page.locator('.live-entry').first().locator('[data-save-word]').getAttribute('aria-pressed'),'true');
   await page.screenshot({path:'/tmp/minimal-dictionary-mobile.png',fullPage:false});
-  await page.locator('#mainNav [data-view="profile"]').click();assert.equal(await page.locator('.simple-profile-rows>.simple-row').count(),13);await page.screenshot({path:'/tmp/minimal-profile-mobile.png',fullPage:false});
+  await page.locator('#mainNav [data-view="profile"]').click();assert.equal(await page.locator('.simple-profile-rows>.simple-row').count(),13);await page.locator('#simpleEditName').click();await page.locator('#simpleCurrentName').fill('Ayaan Cabdi');await page.locator('#simpleNameForm button[type="submit"]').click();await page.locator('.simple-person h2').getByText('Ayaan Cabdi',{exact:true}).waitFor();assert.equal(await page.evaluate(()=>S.profile.name),'Ayaan Cabdi');await page.reload();await page.waitForFunction(()=>S&&S.profile.name==='Ayaan Cabdi');await page.locator('#mainNav [data-view="profile"]').click();assert.equal(await page.locator('.simple-person h2').innerText(),'Ayaan Cabdi');await page.screenshot({path:'/tmp/minimal-profile-mobile.png',fullPage:false});
   await page.locator('#simpleSaved').click();await page.locator('[data-define="hello"]').click();await page.getByText('Used as a greeting.',{exact:true}).waitFor();assert.equal(await page.locator('#dictionaryQuery').inputValue(),'hello');
   await page.reload();await page.waitForFunction(()=>window.S&&S.profile.onboarded);await page.locator('#mainNav [data-view="profile"]').click();await page.locator('#simpleSaved').click();assert.match(await page.locator('#app').innerText(),/hello/);
   await page.locator('#mainNav [data-view="dict"]').click();mode='offline';await page.locator('#dictionaryQuery').fill('hello');await page.locator('#dictionaryForm button').click();await page.getByText('Saved definition · offline',{exact:true}).waitFor();
@@ -119,7 +129,7 @@ const server=createServer(async(req,res)=>{
   await page.evaluate(()=>{S.profile.largeText=false;S.profile.theme='light';render()});
   await page.locator('#simpleTools').click();await page.locator('#simplePractice').click();await page.waitForFunction(()=>view==='practice');await page.locator('#simpleLegacyBack').click();await page.locator('#simpleReview').click();await page.waitForFunction(()=>view==='review');await page.locator('#simpleLegacyBack').click();await page.locator('#simpleVideos').click();await page.waitForFunction(()=>view==='watch');await page.locator('#simpleLegacyBack').click();
   await page.locator('#mainNav [data-view="profile"]').click();await page.locator('#simpleMore').click();await page.locator('#fRowSave').click();assert.ok((await page.locator('#app').innerText()).length>100);await page.locator('#simpleBack').click();
-  await page.evaluate(()=>{S.completed.L1={score:100};save();setNav('home');render()});await page.locator('#academyContinue').click();await page.waitForFunction(()=>cur.n===2);await page.locator('#backPath').click();
+  await page.evaluate(()=>{S.completed.L1={score:100};save();setNav('home');render()});await page.locator('#academyContinue').click();await page.waitForFunction(()=>cur&&cur.n===2);await page.locator('#backPath').click();
   await page.setViewportSize({width:1440,height:1000});await page.locator('#mainNav [data-view="home"]').click();await page.screenshot({path:'/tmp/minimal-home-desktop.png',fullPage:false});
   await page.locator('#mainNav [data-view="profile"]').click();await page.screenshot({path:'/tmp/minimal-profile-desktop.png',fullPage:false});
   await page.locator('#mainNav [data-view="dict"]').click();await page.locator('#dictionaryQuery').fill('hello');await page.locator('#dictionaryForm button').click();await page.getByText('Used as a greeting.',{exact:true}).waitFor();await page.screenshot({path:'/tmp/minimal-dictionary-desktop.png',fullPage:false});

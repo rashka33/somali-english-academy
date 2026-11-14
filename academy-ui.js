@@ -36,9 +36,30 @@
     return '<button type="button" class="simple-icon-button dict-save' + (selected ? ' selected' : '') + '" data-save-word="' + esc(word) + '" aria-pressed="' + selected + '" aria-label="' + esc(t(selected ? 'Ka saar kaydka' : 'Kaydi erayga', selected ? 'Unsave word' : 'Save word')) + '">' + icon('bookmark') + '</button>';
   }
   function listenButton(word) { return '<button type="button" class="simple-icon-button" data-speak="' + esc(word) + '" aria-label="' + t('Dhegeyso', 'Listen') + '">' + icon('speaker') + '</button>'; }
+  var featureLoads = {};
+  function loadScript(src) {
+    if (featureLoads[src]) return featureLoads[src];
+    featureLoads[src] = new Promise(function (resolve, reject) {
+      var script = document.createElement('script'); script.src = src; script.defer = true;
+      script.onload = resolve; script.onerror = function () { reject(new Error('Could not load ' + src)); };
+      document.head.appendChild(script);
+    });
+    return featureLoads[src];
+  }
+  function ensureFeature(destination) {
+    if (destination === 'cit' && typeof renderCitizenship !== 'function') return loadScript('citizenship.js');
+    if (destination === 'play' && typeof renderPlay !== 'function') return loadScript('world.js').then(function () { return loadScript('games.js'); });
+    return Promise.resolve();
+  }
   function go(destination, panel) {
     if (destination === 'profile') profilePage = panel || '';
-    setNav(destination); render();
+    setNav(destination);
+    if ((destination === 'cit' && typeof renderCitizenship !== 'function') || (destination === 'play' && typeof renderPlay !== 'function')) {
+      app.innerHTML = '<p class="simple-intro" role="status">' + t('Qaybta waa la soo rarayaa…', 'Loading this section…') + '</p>'; shell();
+      ensureFeature(destination).then(function () { if (view === destination) render(); }).catch(function () { if (view === destination) app.innerHTML = '<p class="feedback bad">' + t('Qaybtan lama soo rari karin. Mar kale isku day.', 'This section could not load. Please try again.') + '</p>'; });
+      return;
+    }
+    render();
     var heading = app.querySelector('h1'); if (heading) { heading.tabIndex = -1; heading.focus({ preventScroll: true }); }
   }
   function backButton(label) { return '<button type="button" class="simple-back" id="simpleBack">' + icon('back') + esc(label || t('Boggaaga', 'Profile')) + '</button>'; }
@@ -175,11 +196,27 @@
   };
   function setPreference(key, value) { S.profile[key] = value; save(); applyPrefs(); render(); }
   renderOnboarding = function () {
-    app.innerHTML = '<div class="simple-welcome"><h1>' + t('Baro Ingiriisi, tallaabo tallaabo.', 'Learn English, one step at a time.') + '</h1><p class="simple-intro">' + t('Casharro fudud oo leh sharaxaad Soomaali ah.', 'Simple lessons with Somali guidance.') + '</p><form id="simpleStartForm"><label class="simple-label" for="simpleName">' + t('Magacaaga (ikhtiyaari)', 'Your name (optional)') + '</label><input type="text" id="simpleName" maxlength="50" autocomplete="given-name" value="' + esc(S.profile.name || '') + '"><button type="submit" class="simple-primary" id="simpleStart">' + t('Bilow imtixaanka meelaynta · 50 su’aalood', 'Start placement · 50 questions') + icon('arrow') + '</button></form><p class="simple-device-note">' + t('Akoon looma baahna. Horumarku wuxuu ku kaydsan yahay aaladdan.', 'No account needed. Progress stays on this device.') + '</p></div>';
-    document.getElementById('simpleStartForm').onsubmit = function (event) {
-      event.preventDefault(); S.profile.name = document.getElementById('simpleName').value.trim(); S.profile.onboarded = true;
-      var destination = pendingView || 'home'; pendingView = null;
-      document.getElementById('simpleStart').disabled = true;
+    document.body.classList.add('welcome-entry');
+    var benefits = [
+      ['book', 'Casharro', '1,000 cashir oo Soomaali lagu sharaxay, bilow ilaa heer sare'],
+      ['flag', 'Jinsiyadda', 'U diyaargarow imtixaanka jinsiyadda Maraykanka'],
+      ['game', 'Ciyaar', 'Ciyaaro waxbarasho iyo magaalada Word Town 3D'],
+      ['language', 'Qaamuus', 'Ingiriisi ↔ Soomaali, erayo cod leh'],
+      ['settings', 'Foomamka', 'Tababar foomamka nolosha dhabta ah'],
+      ['progress', 'GED', 'U diyaargarow imtixaanka GED, afar maado']
+    ];
+    app.innerHTML = '<main class="simple-welcome" aria-labelledby="welcomeTitle">'
+      + '<header class="welcome-brand"><img src="icon-192.png" alt="" width="52" height="52"><div><strong>Somali English Academy</strong><span>Ingiriisi, Af-Soomaali ku baro</span></div></header>'
+      + '<section class="welcome-hero"><h1 id="welcomeTitle"><span>Baro Ingiriisi,</span><span>tallaabo tallaabo.</span></h1><p>Ku soo dhawoow iskuulkaaga. Fiiri waxa gudaha ku jira — ka dibna bilow markaad diyaar tahay.</p></section>'
+      + '<section class="welcome-benefits" aria-label="Waxa aad baran karto">' + benefits.map(function (item) { return '<article class="welcome-benefit"><span class="welcome-icon">' + icon(item[0]) + '</span><div><h2>' + item[1] + '</h2><p>' + item[2] + '</p></div></article>'; }).join('') + '</section>'
+      + '<div class="welcome-actions"><button type="button" class="welcome-primary" id="welcomeStart">Bilow barashada' + icon('arrow') + '</button><button type="button" class="welcome-placement" id="welcomePlacement">Hore u baratay Ingiriisi? <span>Ogaaw heerkaaga — imtixaan gaaban</span></button></div>'
+      + '<footer class="welcome-trust" aria-label="Macluumaad muhiim ah"><span class="welcome-trust-pill">✓ Bilaash</span><span class="welcome-trust-pill">✓ Akoon looma baahna</span><span class="welcome-trust-pill">✓ Horumarku aaladdaada ayuu ku kaydsan yahay</span></footer></main>';
+    document.getElementById('welcomeStart').onclick = function () {
+      document.body.classList.remove('welcome-entry');
+      guestMode = true; guestBackup = JSON.parse(JSON.stringify(S)); openLesson(1);
+    };
+    document.getElementById('welcomePlacement').onclick = function () {
+      document.body.classList.remove('welcome-entry'); S.profile.onboarded = true;
       save().then(function () { plBegin('profile'); });
     };
   };
@@ -188,7 +225,14 @@
     if (profilePage === 'advanced') { legacyProfile(); app.insertAdjacentHTML('afterbegin', backButton()); document.getElementById('simpleBack').onclick = function () { fProfScreen = null; profilePage = ''; render(); }; return; }
     if (profilePage) {
       app.innerHTML = backButton(); document.getElementById('simpleBack').onclick = function () { profilePage = ''; render(); };
-      if (profilePage === 'saved') {
+      if (profilePage === 'name') {
+        app.insertAdjacentHTML('beforeend', '<h1>' + t('Magacaaga', 'Your name') + '</h1><form id="simpleNameForm"><label class="simple-label" for="simpleCurrentName">' + t('Magaca qofka hadda baranaya', 'Current learner name') + '</label><input type="text" id="simpleCurrentName" maxlength="50" autocomplete="name" required value="' + esc(S.profile.name || '') + '"><p class="feedback bad hidden" id="simpleNameError">' + t('Fadlan magac qor.', 'Please enter a name.') + '</p><button type="submit" class="simple-primary">' + t('Kaydi magaca', 'Save name') + '</button></form>');
+        document.getElementById('simpleNameForm').onsubmit = function (event) {
+          event.preventDefault(); var input = document.getElementById('simpleCurrentName'); var name = input.value.trim();
+          if (!name) { document.getElementById('simpleNameError').classList.remove('hidden'); input.focus(); return; }
+          S.profile.name = name; save().then(function () { profilePage = ''; render(); });
+        };
+      } else if (profilePage === 'saved') {
         app.insertAdjacentHTML('beforeend', '<h1>' + t('Erayada kaydsan', 'Saved words') + '</h1><p id="dictionarySaveStatus" class="sr-only" role="status"></p>' + (saved().length ? '<div class="saved-word-list">' + saved().map(function (e) {
           return '<article class="saved-word"><div class="dictionary-entry-head"><button type="button" class="dictionary-course-word" data-define="' + esc(e.en) + '"><strong>' + esc(e.en) + '</strong><span>' + esc(e.so || '') + '</span></button>' + saveButton(e.en) + '</div>' + (e.definition ? '<details class="simple-details"><summary>' + t('Macnaha', 'Definition') + '</summary>' + definitionHTML(e.definition) + '</details>' : '') + '</article>';
         }).join('') + '</div>' : '<p class="simple-intro">' + t('Taabo calaamadda kaydinta ee erayga qaamuuska.', 'Tap the bookmark beside a dictionary word to keep it here.') + '</p>')); wireWords(app);
@@ -208,9 +252,9 @@
       return;
     }
     app.innerHTML = '<h1>' + t('Boggaaga', 'Profile') + '</h1><div class="simple-person"><span class="simple-avatar">' + esc(name.charAt(0).toUpperCase()) + '</span><div><h2>' + esc(name) + '</h2><p>' + t('Wax ku baro xawaarahaaga.', 'Your learning, your pace.') + '</p></div></div><div class="simple-profile-rows">'
-      + row('simpleProgress', t('Horumarkaaga', 'Your progress'), 'progress') + row('simpleSaved', t('Erayada kaydsan', 'Saved words'), 'bookmark') + row('simpleTools', t('Tababar iyo muuqaal', 'Practice & videos'), 'play') + row('simpleLanguageRow', t('Luqadda', 'Language'), 'language', english() ? 'English' : 'Soomaali')
+      + row('simpleEditName', t('Magacaaga', 'Your name'), 'user', S.profile.name || t('Weli lama qorin', 'Not set')) + row('simpleProgress', t('Horumarkaaga', 'Your progress'), 'progress') + row('simpleSaved', t('Erayada kaydsan', 'Saved words'), 'bookmark') + row('simpleTools', t('Tababar iyo muuqaal', 'Practice & videos'), 'play') + row('simpleLanguageRow', t('Luqadda', 'Language'), 'language', english() ? 'English' : 'Soomaali')
       + row('simpleAppearance', t('Muuqaalka', 'Appearance'), 'moon', { light: t('Iftiin', 'Light'), dark: t('Mugdi', 'Dark'), system: t('Aalad', 'Device') }[S.profile.theme || 'system']) + row('simpleMore', t('Dejimo kale', 'More settings'), 'settings') + '</div><p class="simple-device-note">' + t('Horumarku wuxuu ku kaydsan yahay aaladdan.', 'Progress is stored on this device.') + '</p>';
-    [['simpleProgress', 'progress'], ['simpleSaved', 'saved'], ['simpleTools', 'tools'], ['simpleLanguageRow', 'language'], ['simpleAppearance', 'appearance'], ['simpleMore', 'advanced']].forEach(function (r) { document.getElementById(r[0]).onclick = function () { if (r[1] === 'advanced') fProfScreen = null; profilePage = r[1]; render(); }; });
+    [['simpleEditName', 'name'], ['simpleProgress', 'progress'], ['simpleSaved', 'saved'], ['simpleTools', 'tools'], ['simpleLanguageRow', 'language'], ['simpleAppearance', 'appearance'], ['simpleMore', 'advanced']].forEach(function (r) { document.getElementById(r[0]).onclick = function () { if (r[1] === 'advanced') fProfScreen = null; profilePage = r[1]; render(); }; });
   };
   function legacyBack() {
     if (!document.getElementById('simpleLegacyBack')) { app.insertAdjacentHTML('afterbegin', '<button type="button" class="simple-back" id="simpleLegacyBack">' + icon('back') + t('Tababar iyo muuqaal', 'Practice & videos') + '</button>'); document.getElementById('simpleLegacyBack').onclick = function () { go('profile', 'tools'); }; }
