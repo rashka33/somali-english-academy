@@ -56,7 +56,7 @@
     language.textContent = english() ? 'EN' : 'SO'; language.setAttribute('aria-label', t('Switch to English', 'U beddel Soomaali'));
     var parent = view === 'dict' ? 'dict' : view === 'cit' ? 'cit' : view === 'play' ? 'play' : ['home', 'simpleLessons', 'path', 'lesson'].includes(view) ? 'home' : 'profile';
     var nav = document.getElementById('mainNav'); nav.setAttribute('aria-label', t('Bogagga waaweyn', 'Main navigation'));
-    nav.innerHTML = [['home', t('Hoyga', 'Home'), 'home'], ['cit', t('Jinsiyad', 'Citizenship'), 'flag'], ['play', t('Ciyaar', 'Play'), 'game'], ['dict', t('Qaamuus', 'Dictionary'), 'book'], ['profile', t('Boggaaga', 'Profile'), 'user']].map(function (item) {
+    nav.innerHTML = [['home', t('Hoyga', 'Home'), 'home'], ['cit', t('Jinsiyadda', 'Citizenship'), 'flag'], ['play', t('Ciyaar', 'Play'), 'game'], ['dict', t('Qaamuus', 'Dictionary'), 'book'], ['profile', t('Boggaaga', 'Profile'), 'user']].map(function (item) {
       return '<button type="button" data-view="' + item[0] + '"' + (parent === item[0] ? ' class="active" aria-current="page"' : '') + '>' + icon(item[2]) + '<span>' + item[1] + '</span></button>';
     }).join('');
     nav.dataset.ready = 'true';
