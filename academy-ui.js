@@ -24,6 +24,7 @@
     language: '<circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><path d="M3 12h18"/>',
     moon: '<path d="M21 13A9 9 0 0 1 11 3a9 9 0 1 0 10 10z"/>',
     settings: '<path d="m9 3 6 0 1 3 3 1 2 5-2 5-3 1-1 3H9l-1-3-3-1-2-5 2-5 3-1z"/><circle cx="12" cy="12" r="3"/>'
+    ,ai: '<path d="M12 3v3m0 12v3M3 12h3m12 0h3M5.6 5.6l2.1 2.1m8.6 8.6 2.1 2.1m0-12.8-2.1 2.1M7.7 16.3l-2.1 2.1"/><circle cx="12" cy="12" r="4"/>'
   };
   function icon(name) { return '<svg class="simple-icon" viewBox="0 0 24 24" aria-hidden="true">' + paths[name] + '</svg>'; }
   function english() { return S && S.profile && S.profile.ui === 'en'; }
@@ -48,13 +49,14 @@
   }
   function ensureFeature(destination) {
     if (destination === 'cit' && typeof renderCitizenship !== 'function') return loadScript('citizenship.js');
+    if (destination === 'ai' && typeof renderBaroAI !== 'function') return loadScript('baro-ai.js');
     if (destination === 'play' && typeof renderPlay !== 'function') return loadScript('world.js').then(function () { return loadScript('games.js'); });
     return Promise.resolve();
   }
   function go(destination, panel) {
     if (destination === 'profile') profilePage = panel || '';
     setNav(destination);
-    if ((destination === 'cit' && typeof renderCitizenship !== 'function') || (destination === 'play' && typeof renderPlay !== 'function')) {
+    if ((destination === 'cit' && typeof renderCitizenship !== 'function') || (destination === 'ai' && typeof renderBaroAI !== 'function') || (destination === 'play' && typeof renderPlay !== 'function')) {
       app.innerHTML = '<p class="simple-intro" role="status">' + t('Qaybta waa la soo rarayaa…', 'Loading this section…') + '</p>'; shell();
       ensureFeature(destination).then(function () { if (view === destination) render(); }).catch(function () { if (view === destination) app.innerHTML = '<p class="feedback bad">' + t('Qaybtan lama soo rari karin. Mar kale isku day.', 'This section could not load. Please try again.') + '</p>'; });
       return;
@@ -75,9 +77,9 @@
     }
     var language = document.getElementById('simpleLanguage');
     language.textContent = english() ? 'EN' : 'SO'; language.setAttribute('aria-label', t('Switch to English', 'U beddel Soomaali'));
-    var parent = view === 'dict' ? 'dict' : view === 'cit' ? 'cit' : view === 'play' ? 'play' : ['home', 'simpleLessons', 'path', 'lesson'].includes(view) ? 'home' : 'profile';
+    var parent = view === 'dict' ? 'dict' : view === 'cit' ? 'cit' : view === 'ai' ? 'ai' : view === 'play' ? 'play' : ['home', 'simpleLessons', 'path', 'lesson'].includes(view) ? 'home' : 'profile';
     var nav = document.getElementById('mainNav'); nav.setAttribute('aria-label', t('Bogagga waaweyn', 'Main navigation'));
-    nav.innerHTML = [['home', t('Hoyga', 'Home'), 'home'], ['cit', t('Jinsiyadda', 'Citizenship'), 'flag'], ['play', t('Ciyaar', 'Play'), 'game'], ['dict', t('Qaamuus', 'Dictionary'), 'book'], ['profile', t('Boggaaga', 'Profile'), 'user']].map(function (item) {
+    nav.innerHTML = [['home', t('Hoyga', 'Home'), 'home'], ['cit', t('Jinsiyadda', 'Citizenship'), 'flag'], ['ai', 'Baro AI', 'ai'], ['play', t('Ciyaar', 'Play'), 'game'], ['dict', t('Qaamuus', 'Dictionary'), 'book'], ['profile', t('Boggaaga', 'Profile'), 'user']].map(function (item) {
       return '<button type="button" data-view="' + item[0] + '"' + (parent === item[0] ? ' class="active" aria-current="page"' : '') + '>' + icon(item[2]) + '<span>' + item[1] + '</span></button>';
     }).join('');
     nav.dataset.ready = 'true';
@@ -278,10 +280,10 @@
     if (ROOT && profileId !== ROOT.activeId) { profileId = ROOT.activeId; profilePage = ''; unit = null; }
     if (view === 'path') view = 'simpleLessons';
     var allowed = S && S.profile && S.profile.onboarded && !guestMode && !pickerPending && !pinGate;
-    if (allowed && ['home', 'dict', 'profile', 'simpleLessons', 'cit', 'play', 'about'].includes(view)) {
+    if (allowed && ['home', 'dict', 'profile', 'simpleLessons', 'cit', 'ai', 'play', 'about'].includes(view)) {
       applyPrefs(); document.body.classList.remove('inLesson', 'view-home', 'view-profile', 'view-practice');
       var lessonNav = document.getElementById('lesNav'); if (lessonNav) lessonNav.remove(); if (typeof hCloseSheet === 'function') hCloseSheet(); app.classList.remove('wide');
-      if (view === 'home') renderHome(); else if (view === 'cit' && typeof renderCitizenship === 'function') renderCitizenship(); else if (view === 'play' && typeof renderPlay === 'function') renderPlay(); else if (view === 'about' && typeof renderAbout === 'function') renderAbout(); else if (view === 'dict') renderDict(); else if (view === 'simpleLessons') renderLessons(); else renderProfile();
+      if (view === 'home') renderHome(); else if (view === 'cit' && typeof renderCitizenship === 'function') renderCitizenship(); else if (view === 'ai' && typeof renderBaroAI === 'function') renderBaroAI(); else if (view === 'play' && typeof renderPlay === 'function') renderPlay(); else if (view === 'about' && typeof renderAbout === 'function') renderAbout(); else if (view === 'dict') renderDict(); else if (view === 'simpleLessons') renderLessons(); else renderProfile();
     } else { legacyRender(); if (allowed && ['watch', 'review', 'practice', 'acad'].includes(view)) legacyBack(); }
     if (S) shell();
   };

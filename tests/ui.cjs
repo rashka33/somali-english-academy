@@ -38,7 +38,7 @@ const server=createServer(async(req,res)=>{
   assert.equal(await page.evaluate(()=>S.profile.onboarded),false,'Guest preview does not create or alter a profile');
   await page.locator('#backPath').click();await page.waitForFunction(()=>!guestMode);
   await page.goto('http://127.0.0.1:'+server.address().port+'/');await page.locator('#welcomePlacement').waitFor();
-  await page.locator('#welcomePlacement').click();await page.locator('#plUnknown').waitFor();assert.equal(await page.evaluate(()=>plState.qs.length),50);
+  await page.locator('#welcomePlacement').click();await page.waitForURL(/academy\.html/);await page.locator('#plUnknown').waitFor();assert.equal(await page.evaluate(()=>plState.qs.length),50);
   assert.equal(await page.locator('#plSkip').innerText(),'Ka bood hadda');
   const placementQuestion=await page.evaluate(()=>({english:plState.qs[plState.idx].q,somali:plState.qs[plState.idx].qSo}));
   assert.equal(await page.locator('#app h2').innerText(),placementQuestion.somali);
@@ -64,7 +64,22 @@ const server=createServer(async(req,res)=>{
   for(let i=3;i<50;i++){await page.locator('#plUnknown').click();await page.waitForFunction(n=>plState.idx===n,i+1)}await page.locator('#plStartThere').click();await page.locator('#academyContinue').waitFor();assert.equal(await page.evaluate(()=>S.profile.placedLesson),1);assert.equal(await page.evaluate(()=>S.profile.name),'');
   await page.evaluate(()=>{S.profile.onboarded=true;S.profile.name='Ayaan';S.profile.theme='light';S.profile.ui='en';save();setNav('home');render()});
   assert.equal(await page.title(),'Somali English Academy — Baro Ingiriisi');
-  assert.deepEqual(await page.locator('#mainNav button').allTextContents(),['Home','Citizenship','Play','Dictionary','Profile']);
+  assert.deepEqual(await page.locator('#mainNav button').allTextContents(),['Home','Citizenship','Baro AI','Play','Dictionary','Profile']);
+  assert.equal(await page.evaluate(()=>typeof window.renderBaroAI),'undefined','Baro AI stays out of the first-load bundle');
+  await page.locator('#mainNav [data-view="ai"]').click();await page.waitForFunction(()=>typeof window.renderBaroAI==='function');
+  assert.equal(await page.locator('.ai-stage').count(),6,'Baro AI shows all six roadmap stages');
+  assert.equal(await page.locator('.ai-stage.is-coming').count(),5,'Only Stage 1 is available in round one');
+  assert.match(await page.locator('#app').innerText(),/Bilow — Waa maxay AI\?/);
+  assert.match(await page.locator('#app').innerText(),/Daah-fur — dhis oo daabac website-kaagii ugu horreeyay \+ shahaado/);
+  await page.locator('#aiStage1').click();assert.match(await page.locator('h1').innerText(),/Waa maxay AI/);
+  for(let lesson=0;lesson<5;lesson++){await page.locator('#aiContinue').click()}
+  await page.locator('[data-ai-answer="wrong"]').first().click();await page.locator('#aiCheck').click();
+  assert.ok(await page.evaluate(()=>S.mistakes.some(m=>m.key==='baro-ai:ai-meaning')),'A missed Baro AI check enters the existing mistake queue');
+  assert.ok(await page.evaluate(()=>S.srs.some(c=>c.en==='artificial intelligence')),'A missed Baro AI term enters spaced review');
+  await page.locator('[data-ai-answer="right"]').click();await page.locator('#aiCheck').click();await page.locator('#aiFinish').click();await page.getByText('Marxaladda 1 waa dhammaatay',{exact:true}).waitFor();
+  assert.equal(await page.evaluate(()=>S.baroAI.stage1Complete),true,'Stage 1 completion persists on the active profile');
+  assert.match(await page.locator('#app').innerText(),/Marxaladda 1 waa dhammaatay/);
+  await page.locator('#aiBackRoadmap').click();assert.match(await page.locator('#aiStage1').innerText(),/Dhammaatay/);
   await page.locator('#mainNav [data-view="play"]').click();await page.waitForFunction(()=>window.__GM&&typeof window.renderPlay==='function');
   await page.evaluate(()=>{setNav('play');render()});await page.waitForFunction(()=>window.__GM&&window.__GM.P);await page.evaluate(()=>{window.__GM.P.game='run';window.__GM.P.route='levels';render()});
   assert.equal((await page.locator('.gmh .hero-eyebrow').innerText()).toLowerCase(),'word town 3d');
@@ -112,7 +127,7 @@ const server=createServer(async(req,res)=>{
   assert.match(await page.locator('.dictionary-attribution').first().innerText(),/CC BY-SA 3.0/);
   await page.locator('.live-entry').first().locator('[data-save-word]').click();assert.equal(await page.locator('.live-entry').first().locator('[data-save-word]').getAttribute('aria-pressed'),'true');
   await page.screenshot({path:'/tmp/minimal-dictionary-mobile.png',fullPage:false});
-  await page.locator('#mainNav [data-view="profile"]').click();assert.equal(await page.locator('.simple-profile-rows>.simple-row').count(),13);await page.locator('#simpleEditName').click();await page.locator('#simpleCurrentName').fill('Ayaan Cabdi');await page.locator('#simpleNameForm button[type="submit"]').click();await page.locator('.simple-person h2').getByText('Ayaan Cabdi',{exact:true}).waitFor();assert.equal(await page.evaluate(()=>S.profile.name),'Ayaan Cabdi');await page.reload();await page.waitForFunction(()=>S&&S.profile.name==='Ayaan Cabdi');await page.locator('#mainNav [data-view="profile"]').click();assert.equal(await page.locator('.simple-person h2').innerText(),'Ayaan Cabdi');await page.screenshot({path:'/tmp/minimal-profile-mobile.png',fullPage:false});
+  await page.locator('#mainNav [data-view="profile"]').click();assert.equal(await page.locator('.simple-profile-rows>.simple-row').count(),14);await page.locator('#simpleEditName').click();await page.locator('#simpleCurrentName').fill('Ayaan Cabdi');await page.locator('#simpleNameForm button[type="submit"]').click();await page.locator('.simple-person h2').getByText('Ayaan Cabdi',{exact:true}).waitFor();assert.equal(await page.evaluate(()=>S.profile.name),'Ayaan Cabdi');await page.reload();await page.waitForFunction(()=>S&&S.profile.name==='Ayaan Cabdi');await page.locator('#mainNav [data-view="profile"]').click();assert.equal(await page.locator('.simple-person h2').innerText(),'Ayaan Cabdi');await page.screenshot({path:'/tmp/minimal-profile-mobile.png',fullPage:false});
   await page.locator('#simpleSaved').click();await page.locator('[data-define="hello"]').click();await page.getByText('Used as a greeting.',{exact:true}).waitFor();assert.equal(await page.locator('#dictionaryQuery').inputValue(),'hello');
   await page.reload();await page.waitForFunction(()=>window.S&&S.profile.onboarded);await page.locator('#mainNav [data-view="profile"]').click();await page.locator('#simpleSaved').click();assert.match(await page.locator('#app').innerText(),/hello/);
   await page.locator('#mainNav [data-view="dict"]').click();mode='offline';await page.locator('#dictionaryQuery').fill('hello');await page.locator('#dictionaryForm button').click();await page.getByText('Saved definition · offline',{exact:true}).waitFor();
@@ -120,11 +135,11 @@ const server=createServer(async(req,res)=>{
   mode='missing';await page.locator('#dictionaryQuery').fill('unfindableword');await page.locator('#dictionaryForm button').click();await page.getByText('Word not found. Check the spelling.',{exact:true}).waitFor();
   await page.locator('#dictionaryQuery').fill('tufaax');assert.ok(await page.locator('.dictionary-course-row').count()>0);
   mode='success';await page.locator('#dictionaryQuery').fill('biyo');await page.locator('#dictionaryForm button').click();await page.getByText('Soomaali → English',{exact:true}).waitFor();assert.match(await page.locator('.live-entry').first().innerText(),/water/);
-  await page.locator('#mainNav [data-view="profile"]').click();await page.locator('#simpleLanguageRow').click();await page.locator('[data-language="so"]').click();assert.equal(await page.locator('h1').innerText(),'Luqadda');assert.deepEqual(await page.locator('#mainNav button').allTextContents(),['Hoyga','Jinsiyadda','Ciyaar','Qaamuus','Boggaaga']);
+  await page.locator('#mainNav [data-view="profile"]').click();await page.locator('#simpleLanguageRow').click();await page.locator('[data-language="so"]').click();assert.equal(await page.locator('h1').innerText(),'Luqadda');assert.deepEqual(await page.locator('#mainNav button').allTextContents(),['Hoyga','Jinsiyadda','Baro AI','Ciyaar','Qaamuus','Boggaaga']);
   await page.locator('#mainNav [data-view="home"]').click();assert.doesNotMatch(await page.locator('#app').innerText(),/Continue learning|Browse lessons|Lesson 1/);await page.screenshot({path:'/tmp/minimal-home-somali.png',fullPage:false});
   await page.locator('#simpleLanguage').click();assert.equal(await page.locator('#academyContinue').innerText(),'Continue learning');
   await page.locator('#mainNav [data-view="profile"]').click();await page.locator('#simpleAppearance').click();await page.locator('[data-theme-option="dark"]').click();assert.equal(await page.locator('html').getAttribute('data-theme'),'dark');await page.locator('#simpleLargeText').check();assert.equal(await page.locator('html').getAttribute('class').then(x=>x.includes('largetext')),true);
-  await page.setViewportSize({width:320,height:740});for(const destination of ['home','cit','play','dict','profile']){await page.locator('#mainNav [data-view="'+destination+'"]').click();assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true)}
+  await page.setViewportSize({width:320,height:740});for(const destination of ['home','cit','ai','play','dict','profile']){await page.locator('#mainNav [data-view="'+destination+'"]').click();assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true)}
   await page.screenshot({path:'/tmp/minimal-profile-dark-small.png',fullPage:false});
   await page.evaluate(()=>{S.profile.largeText=false;S.profile.theme='light';render()});
   await page.locator('#simpleTools').click();await page.locator('#simplePractice').click();await page.waitForFunction(()=>view==='practice');await page.locator('#simpleLegacyBack').click();await page.locator('#simpleReview').click();await page.waitForFunction(()=>view==='review');await page.locator('#simpleLegacyBack').click();await page.locator('#simpleVideos').click();await page.waitForFunction(()=>view==='watch');await page.locator('#simpleLegacyBack').click();
