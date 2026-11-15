@@ -2898,15 +2898,19 @@ function gedRunPassage(run){var data=GED[run.subj];return run.kind==="diag"?data
 function renderGedRun(h,tabs){
  var run=S.stageE.run;if(!run){gedView="home";renderGedAcad();return}
  gedSubj=run.subj;var s=GED_SUBJECTS.filter(function(x){return x.id===run.subj})[0];var qs=gedRunQs(run);var q=qs[run.idx];var passage=gedRunPassage(run);
+ if(run.seed==null)run.seed=(Date.now()%90000)+11;
+ if(!run.ord||typeof run.ord!=="object")run.ord={};
+ if(!run.ord[run.idx])run.ord[run.idx]=shuffle(q.o.map(function(_,oi){return oi}),run.seed*31+run.idx*7+q.o.length);
+ var ord=run.ord[run.idx];
  if(run.kind==="exam"&&run.endAt&&Date.now()>=run.endAt){finishGedRun(true);return}
  h+='<button class="btn ghost" id="gedExit">← Dugsiga GED / GED Academy</button><div class="card"><h2>'+(run.kind==="exam"?"⏱️ Imtixaan tababar / Timed practice exam":"🔎 Hubinta bilowga / Diagnostic")+' — '+esc(s.en)+'</h2><p><span class="tlight a">⚠️ '+esc(UNOFFICIAL_SO)+' / '+esc(UNOFFICIAL_EN)+'</span> <span class="pill">Su\'aal / Question '+(run.idx+1)+' / '+qs.length+'</span>'+(run.kind==="exam"?'<span class="pill" id="gedTimer">⏱️ —</span>':"")+'</p><div class="progress"><i style="width:'+Math.round(run.idx/qs.length*100)+'%"></i></div>';
  if(passage&&(run.subj==="rla"))h+='<details '+(run.idx<5?"open":"")+' style="margin:12px 0"><summary>📖 Tudaca akhriska / Reading passage</summary><p style="font-size:17px">'+esc(passage.en)+'</p><p class="muted">'+esc(passage.so)+'</p></details>';
  h+='<p style="font-size:18px;margin-top:12px"><strong>'+esc(q.q)+'</strong></p>'+(q.qSo?'<p class="muted">'+esc(q.qSo)+'</p>':"");
- h+='<div class="opts">'+q.o.map(function(o,oi){return '<button class="opt '+(run.ans[run.idx]===oi?"sel":"")+'" data-gans="'+oi+'" style="'+(run.ans[run.idx]===oi?"border-color:var(--teal);background:var(--soft)":"")+'">'+esc(o)+'</button>'}).join("")+'</div>';
+ h+='<div class="opts">'+ord.map(function(oi,di){return '<button class="opt '+(run.ans[run.idx]===oi?"sel":"")+'" data-gans="'+di+'" style="'+(run.ans[run.idx]===oi?"border-color:var(--teal);background:var(--soft)":"")+'">'+esc(q.o[oi])+'</button>'}).join("")+'</div>';
  h+='<div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap">'+(run.idx>0?'<button class="btn secondary" id="gedPrev">← Dib / Back</button>':"")+(run.idx<qs.length-1?'<button class="btn" id="gedNext">Su\'aasha xigta / Next question →</button>':'<button class="btn amber" id="gedFinish">Dhammee oo arag natiijada / Finish and see results</button>')+'</div><p class="small muted">Jawaabahaagu way kaydsamaan markaad socoto — waad bixi kartaa oo waad soo noqon kartaa, saacadduna way socotaa. / Your answers are saved as you go — you can leave and come back, and the timer keeps running.</p></div>';
  app.innerHTML=h;tabs();
  document.getElementById("gedExit").addEventListener("click",function(){gedView="home";gedSubj=null;renderAcad()});
- app.querySelectorAll("[data-gans]").forEach(function(b){b.addEventListener("click",function(){run.ans[run.idx]=+b.dataset.gans;save();renderAcad()})});
+ app.querySelectorAll("[data-gans]").forEach(function(b){b.addEventListener("click",function(){run.ans[run.idx]=ord[+b.dataset.gans];save();renderAcad()})});
  var pv=document.getElementById("gedPrev");if(pv)pv.addEventListener("click",function(){run.idx--;save();renderAcad()});
  var nx=document.getElementById("gedNext");if(nx)nx.addEventListener("click",function(){run.idx++;save();renderAcad()});
  var fn=document.getElementById("gedFinish");if(fn)fn.addEventListener("click",function(){finishGedRun(false)});
