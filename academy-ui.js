@@ -3,7 +3,7 @@
   'use strict';
   var legacyRender = render, legacyProfile = renderProfile, legacyLesson = renderLesson, legacyWatch = renderWatch;
   var query = '', live = null, loading = false, request = null, sequence = 0, unit = null;
-  var profilePage = '', profileId = null;
+  var profilePage = '', profileId = null, guestSection = false;
   var paths = {
     game: '<rect x="2" y="7" width="20" height="11" rx="5.5"/><path d="M7.5 11v3M6 12.5h3M15.5 11.5h.01M18 13.5h.01"/>',
     flag: '<path d="M5 21V4m0 1h12l-2.5 4 2.5 4H5"/>',
@@ -64,6 +64,14 @@
     render();
     var heading = app.querySelector('h1'); if (heading) { heading.tabIndex = -1; heading.focus({ preventScroll: true }); }
   }
+  window.enterGuestSection = function (destination) {
+    var routes = { home: 'home', cit: 'cit', play: 'play', dict: 'dict', forms: 'acad', ged: 'acad', ai: 'ai' };
+    if (!routes[destination]) destination = 'home';
+    document.body.classList.remove('welcome-entry');
+    guestMode = true; guestSection = true; guestBackup = JSON.parse(JSON.stringify(S));
+    if (destination === 'forms' || destination === 'ged') acadTab = destination;
+    go(routes[destination]);
+  };
   function backButton(label) { return '<button type="button" class="simple-back" id="simpleBack">' + icon('back') + esc(label || t('Boggaaga', 'Profile')) + '</button>'; }
   function row(id, label, glyph, value) {
     return '<button type="button" class="simple-row" id="' + id + '">' + (glyph ? icon(glyph) : '') + '<span>' + esc(label) + '</span>' + (value ? '<small>' + esc(value) + '</small>' : '') + icon('chevron') + '</button>';
@@ -200,23 +208,25 @@
   renderOnboarding = function () {
     document.body.classList.add('welcome-entry');
     var benefits = [
-      ['book', 'Casharro', '1,000 cashir oo Soomaali lagu sharaxay, bilow ilaa heer sare'],
-      ['flag', 'Jinsiyadda', 'U diyaargarow imtixaanka jinsiyadda Maraykanka'],
-      ['game', 'Ciyaar', 'Ciyaaro waxbarasho iyo magaalada Word Town 3D'],
-      ['language', 'Qaamuus', 'Ingiriisi ↔ Soomaali, erayo cod leh'],
-      ['settings', 'Foomamka', 'Tababar foomamka nolosha dhabta ah'],
-      ['progress', 'GED', 'U diyaargarow imtixaanka GED, afar maado']
+      ['book', 'Casharro', '1,000 cashir oo Soomaali lagu sharaxay, bilow ilaa heer sare', 'home'],
+      ['flag', 'Jinsiyadda', 'U diyaargarow imtixaanka jinsiyadda Maraykanka', 'cit'],
+      ['game', 'Ciyaar', 'Ciyaaro waxbarasho iyo magaalada Word Town 3D', 'play'],
+      ['language', 'Qaamuus', 'Ingiriisi ↔ Soomaali, erayo cod leh', 'dict'],
+      ['settings', 'Foomamka', 'Tababar foomamka nolosha dhabta ah', 'forms'],
+      ['progress', 'GED', 'U diyaargarow imtixaanka GED, afar maado', 'ged'],
+      ['ai', 'Baro AI', 'AI ku baro Af-Soomaali — bilow ilaa dhisidda website-kaaga', 'ai']
     ];
     app.innerHTML = '<main class="simple-welcome" aria-labelledby="welcomeTitle">'
       + '<header class="welcome-brand"><img src="icon-192.png" alt="" width="52" height="52"><div><strong>Somali English Academy</strong><span>Ingiriisi, Af-Soomaali ku baro</span></div></header>'
       + '<section class="welcome-hero"><h1 id="welcomeTitle"><span>Baro Ingiriisi,</span><span>tallaabo tallaabo.</span></h1><p>Ku soo dhawoow iskuulkaaga. Fiiri waxa gudaha ku jira — ka dibna bilow markaad diyaar tahay.</p></section>'
-      + '<section class="welcome-benefits" aria-label="Waxa aad baran karto">' + benefits.map(function (item) { return '<article class="welcome-benefit"><span class="welcome-icon">' + icon(item[0]) + '</span><div><h2>' + item[1] + '</h2><p>' + item[2] + '</p></div></article>'; }).join('') + '</section>'
+      + '<section class="welcome-benefits" aria-label="Waxa aad baran karto">' + benefits.map(function (item) { return '<button type="button" class="welcome-benefit" data-go="' + item[3] + '"><span class="welcome-icon">' + icon(item[0]) + '</span><span><h2>' + item[1] + '</h2><p>' + item[2] + '</p></span></button>'; }).join('') + '</section>'
       + '<div class="welcome-actions"><button type="button" class="welcome-primary" id="welcomeStart">Bilow barashada' + icon('arrow') + '</button><button type="button" class="welcome-placement" id="welcomePlacement">Hore u baratay Ingiriisi? <span>Ogaaw heerkaaga — imtixaan gaaban</span></button></div>'
       + '<footer class="welcome-trust" aria-label="Macluumaad muhiim ah"><span class="welcome-trust-pill">✓ Bilaash</span><span class="welcome-trust-pill">✓ Akoon looma baahna</span><span class="welcome-trust-pill">✓ Horumarku aaladdaada ayuu ku kaydsan yahay</span></footer></main>';
     document.getElementById('welcomeStart').onclick = function () {
       document.body.classList.remove('welcome-entry');
       guestMode = true; guestBackup = JSON.parse(JSON.stringify(S)); openLesson(1);
     };
+    app.querySelectorAll('[data-go]').forEach(function (card) { card.onclick = function () { window.enterGuestSection(card.dataset.go); }; });
     document.getElementById('welcomePlacement').onclick = function () {
       document.body.classList.remove('welcome-entry'); S.profile.onboarded = true;
       save().then(function () { plBegin('profile'); });
@@ -279,11 +289,11 @@
     if (view !== 'dict') { sequence++; if (request) request.abort(); loading = false; }
     if (ROOT && profileId !== ROOT.activeId) { profileId = ROOT.activeId; profilePage = ''; unit = null; }
     if (view === 'path') view = 'simpleLessons';
-    var allowed = S && S.profile && S.profile.onboarded && !guestMode && !pickerPending && !pinGate;
-    if (allowed && ['home', 'dict', 'profile', 'simpleLessons', 'cit', 'ai', 'play', 'about'].includes(view)) {
+    var allowed = S && S.profile && (S.profile.onboarded || guestSection) && !pickerPending && !pinGate;
+    if (allowed && ['home', 'dict', 'profile', 'simpleLessons', 'cit', 'ai', 'play', 'about', 'acad'].includes(view)) {
       applyPrefs(); document.body.classList.remove('inLesson', 'view-home', 'view-profile', 'view-practice');
       var lessonNav = document.getElementById('lesNav'); if (lessonNav) lessonNav.remove(); if (typeof hCloseSheet === 'function') hCloseSheet(); app.classList.remove('wide');
-      if (view === 'home') renderHome(); else if (view === 'cit' && typeof renderCitizenship === 'function') renderCitizenship(); else if (view === 'ai' && typeof renderBaroAI === 'function') renderBaroAI(); else if (view === 'play' && typeof renderPlay === 'function') renderPlay(); else if (view === 'about' && typeof renderAbout === 'function') renderAbout(); else if (view === 'dict') renderDict(); else if (view === 'simpleLessons') renderLessons(); else renderProfile();
+      if (view === 'home') renderHome(); else if (view === 'cit' && typeof renderCitizenship === 'function') renderCitizenship(); else if (view === 'ai' && typeof renderBaroAI === 'function') renderBaroAI(); else if (view === 'play' && typeof renderPlay === 'function') renderPlay(); else if (view === 'about' && typeof renderAbout === 'function') renderAbout(); else if (view === 'dict') renderDict(); else if (view === 'simpleLessons') renderLessons(); else if (view === 'acad') renderAcad(); else renderProfile();
     } else { legacyRender(); if (allowed && ['watch', 'review', 'practice', 'acad'].includes(view)) legacyBack(); }
     if (S) shell();
   };
