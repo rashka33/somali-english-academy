@@ -80,12 +80,12 @@
     document.documentElement.dataset.uiLanguage = english() ? 'en' : 'so';
     var header = document.querySelector('.topbar');
     if (!document.getElementById('simpleLanguage')) {
-      header.innerHTML = '<div class="brand">Somali Academy</div><span id="xpPill" hidden></span><button type="button" class="simple-language" id="simpleLanguage"></button>';
+      header.innerHTML = '<div class="brand">Somali English Academy</div><span id="xpPill" hidden></span><button type="button" class="simple-language" id="simpleLanguage"></button>';
       document.getElementById('simpleLanguage').onclick = function () { if (!S) return; S.profile.ui = english() ? 'so' : 'en'; save(); if (view === 'lesson') renderLesson(); else render(); };
     }
     var language = document.getElementById('simpleLanguage');
     language.textContent = english() ? 'EN' : 'SO'; language.setAttribute('aria-label', t('Switch to English', 'U beddel Soomaali'));
-    var parent = view === 'dict' ? 'dict' : view === 'cit' ? 'cit' : view === 'ai' ? 'ai' : view === 'play' ? 'play' : ['home', 'simpleLessons', 'path', 'lesson'].includes(view) ? 'home' : 'profile';
+    var parent = view === 'dict' ? 'dict' : view === 'cit' ? 'cit' : view === 'ai' ? 'ai' : view === 'play' ? 'play' : view === 'profile' ? 'profile' : 'home';
     var nav = document.getElementById('mainNav'); nav.setAttribute('aria-label', t('Bogagga waaweyn', 'Main navigation'));
     nav.innerHTML = [['home', t('Hoyga', 'Home'), 'home'], ['cit', t('Jinsiyadda', 'Citizenship'), 'flag'], ['ai', 'Baro AI', 'ai'], ['play', t('Ciyaar', 'Play'), 'game'], ['dict', t('Qaamuus', 'Dictionary'), 'book'], ['profile', t('Boggaaga', 'Profile'), 'user']].map(function (item) {
       return '<button type="button" data-view="' + item[0] + '"' + (parent === item[0] ? ' class="active" aria-current="page"' : '') + '>' + icon(item[2]) + '<span>' + item[1] + '</span></button>';
@@ -224,7 +224,7 @@
       + '<footer class="welcome-trust" aria-label="Macluumaad muhiim ah"><span class="welcome-trust-pill">✓ Bilaash</span><span class="welcome-trust-pill">✓ Akoon looma baahna</span><span class="welcome-trust-pill">✓ Horumarku aaladdaada ayuu ku kaydsan yahay</span></footer></main>';
     document.getElementById('welcomeStart').onclick = function () {
       document.body.classList.remove('welcome-entry');
-      guestMode = true; guestBackup = JSON.parse(JSON.stringify(S)); openLesson(1);
+      guestMode = true; guestBackup = JSON.parse(JSON.stringify(S)); openLesson(window.__pendingLesson || 1); window.__pendingLesson = null;
     };
     app.querySelectorAll('[data-go]').forEach(function (card) { card.onclick = function () { window.enterGuestSection(card.dataset.go); }; });
     document.getElementById('welcomePlacement').onclick = function () {
@@ -296,6 +296,7 @@
       if (view === 'home') renderHome(); else if (view === 'cit' && typeof renderCitizenship === 'function') renderCitizenship(); else if (view === 'ai' && typeof renderBaroAI === 'function') renderBaroAI(); else if (view === 'play' && typeof renderPlay === 'function') renderPlay(); else if (view === 'about' && typeof renderAbout === 'function') renderAbout(); else if (view === 'dict') renderDict(); else if (view === 'simpleLessons') renderLessons(); else if (view === 'acad') renderAcad(); else renderProfile();
     } else { legacyRender(); if (allowed && ['watch', 'review', 'practice', 'acad'].includes(view)) legacyBack(); }
     if (S) shell();
+    if (render._lv !== view) { render._lv = view; window.scrollTo(0, 0); }
   };
   document.getElementById('mainNav').addEventListener('click', function (event) {
     var button = event.target.closest('[data-view]'); if (!button) return;
