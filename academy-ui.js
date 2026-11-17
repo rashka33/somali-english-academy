@@ -2058,3 +2058,48 @@ window.ACADEMY_TUTOR_URL = 'https://somali-academy-tutor.rashkaa33.workers.dev';
   };
   if(S&&S.profile&&S.profile.onboarded)render();
 })();
+
+/* Stage 2B/2C (2026-11-17): living-progress strip on Home (streak, XP, level —
+   these already existed in the legacy dashboard but the simple shell never
+   showed them) + a quiet trust footer on Home and Profile. Display only:
+   no state, grading, streak or XP rules are touched. */
+(function () {
+  function en() { return !!(S && S.profile && S.profile.ui === 'en'); }
+  function escT(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  var FLAME = '<svg class="simple-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.07-2.14-.22-4.05 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.15.43-2.29 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>';
+  var STAR = '<svg class="simple-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.95 5.98 6.6.96-4.78 4.66 1.13 6.58L12 17.57l-5.9 3.1 1.13-6.57L2.45 9.44l6.6-.96L12 2.5z"/></svg>';
+  function vitals() {
+    if (!S) return null;
+    var streak = Number(S.streak) || 0, xp = Number(S.xp) || 0, lvl = null;
+    try { if (typeof hLevel === 'function') lvl = hLevel(); } catch (e) { }
+    var parts = [];
+    if (streak > 0) parts.push('<span class="vital"><span class="vital-ic flame">' + FLAME + '</span><b>' + streak + '</b> ' + (en() ? 'day streak' : 'maalmood xiriir') + '</span>');
+    parts.push('<span class="vital"><span class="vital-ic star">' + STAR + '</span><b>' + xp + '</b> XP</span>');
+    if (lvl) parts.push('<span class="vital">' + escT(en() ? lvl[2] : lvl[1]) + '</span>');
+    var d = document.createElement('div');
+    d.className = 'simple-vitals'; d.id = 'simpleVitals';
+    d.innerHTML = parts.join('<span class="vital-dot" aria-hidden="true">·</span>');
+    return d;
+  }
+  function footer() {
+    var f = document.createElement('footer');
+    f.className = 'simple-foot'; f.id = 'simpleFoot';
+    f.innerHTML = '<p class="foot-name">Somali English Academy</p>'
+      + '<p>' + (en() ? 'Free, with no ads. Made for Somali learners, everywhere.' : 'Bilaash, xayaysiis la\u2019aan. Waxaa loo sameeyay dadka Soomaalida ee Ingiriisiga baranaya, meel kasta.') + '</p>'
+      + '<p>' + (en() ? 'Progress stays on this device.' : 'Horumarkaagu wuxuu ku kaydsan yahay aaladdan.') + '</p>';
+    return f;
+  }
+  var home = renderHome, profile = renderProfile;
+  renderHome = function () {
+    home();
+    var card = app.querySelector('.simple-next'), host = app.querySelector('.simple-home-content');
+    var v = vitals();
+    if (v && card && !document.getElementById('simpleVitals')) card.appendChild(v);
+    if (host && !document.getElementById('simpleFoot')) host.appendChild(footer());
+  };
+  renderProfile = function () {
+    profile();
+    var host = app.querySelector('.simple-profile-rows') || app;
+    if (host && !document.getElementById('simpleFoot')) host.appendChild(footer());
+  };
+})();
