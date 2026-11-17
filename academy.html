@@ -143,7 +143,7 @@ html.largetext input[type=text],html.largetext textarea,html.largetext select{fo
  .nav button{flex:0 0 auto;justify-content:flex-start;text-align:left;font-size:1rem;min-height:52px;padding:10px 12px}
  .wrap{max-width:720px;width:100%;margin:0 auto;padding:24px}
  .wrap.wide{max-width:1080px}
- .lessonfoot{bottom:12px}
+ .lessonfoot{bottom:calc(96px + env(safe-area-inset-bottom))}
 }
 @media (max-height:480px) and (max-width:1023px){
  .topbar{padding-top:4px;padding-bottom:4px}
@@ -4117,13 +4117,13 @@ body.view-profile .wrap,body.view-practice .wrap{padding-top:12px}
 .lesnav .navind span{color:#9DB2C3}
 .lesnav .btn{background:#2DD4BF;border-color:#2DD4BF;color:#05242B;box-shadow:none}
 .lesnav .btn.secondary{background:transparent;border-color:#1E3A52;color:#F3F8FB;box-shadow:none}
-body.inLesson .lesnav{bottom:calc(10px + env(safe-area-inset-bottom))}
+body.inLesson .lesnav{bottom:calc(96px + env(safe-area-inset-bottom))}
 @media(max-width:1023px){
  body.inLesson .nav{display:none}
  body.inLesson{padding-bottom:calc(100px + env(safe-area-inset-bottom))}
  body.inLesson .wrap{padding-bottom:110px}
 }
-@media(min-width:1024px){body.inLesson .lesnav{bottom:12px}}
+@media(min-width:1024px){body.inLesson .lesnav{bottom:calc(96px + env(safe-area-inset-bottom))}}
 @media print{#fSheetWrap{display:none!important}}
 </style>
 <script>

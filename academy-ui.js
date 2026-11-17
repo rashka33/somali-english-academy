@@ -2085,8 +2085,7 @@ window.ACADEMY_TUTOR_URL = 'https://somali-academy-tutor.rashkaa33.workers.dev';
     var f = document.createElement('footer');
     f.className = 'simple-foot'; f.id = 'simpleFoot';
     f.innerHTML = '<p class="foot-name">Somali English Academy</p>'
-      + '<p>' + (en() ? 'Free, with no ads. Made for Somali learners, everywhere.' : 'Bilaash, xayaysiis la\u2019aan. Waxaa loo sameeyay dadka Soomaalida ee Ingiriisiga baranaya, meel kasta.') + '</p>'
-      + '<p>' + (en() ? 'Progress stays on this device.' : 'Horumarkaagu wuxuu ku kaydsan yahay aaladdan.') + '</p>';
+      + '<p>' + (en() ? 'Free, with no ads. Made for Somali learners, everywhere.' : 'Bilaash, xayaysiis la\u2019aan. Waxaa loo sameeyay dadka Soomaalida ee Ingiriisiga baranaya, meel kasta.') + '</p>';
     return f;
   }
   var home = renderHome, profile = renderProfile;
