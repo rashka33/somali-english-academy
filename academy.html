@@ -44,7 +44,7 @@ a{color:var(--teal)}button,input,textarea,select{font:inherit}
 label{font-weight:700;display:block;margin:12px 0 6px}input[type=text],textarea,select{width:100%;padding:13px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);min-height:52px}
 .chipbtn{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:10px 14px;min-height:48px;cursor:pointer;font-weight:700}.chipbtn.sel{background:var(--teal);color:#fff;border-color:var(--teal)}
 .opts{display:grid;gap:10px;margin-top:10px}.opt{text-align:left;min-height:52px;padding:13px 14px;border-radius:14px;border:1.5px solid var(--line);background:var(--card);cursor:pointer;font-weight:600}.opt.correct{border-color:var(--good);background:#dcfce7;color:#14532d}.opt.wrong{border-color:var(--bad);background:#fee2e2;color:#7f1d1d}
-.feedback{border-radius:14px;padding:14px;margin-top:12px}.feedback.good{background:#dcfce7;color:#14532d}.feedback.bad{background:#fef3c7;color:#78350f}
+.feedback{border-radius:14px;padding:14px;margin-top:12px}.feedback.good{background:#dcfce7;color:#14532d}.feedback.bad{background:#fef3c7;color:#78350f}.feedback.hint{background:var(--soft);color:var(--ink);border:1.5px solid var(--teal)}#exHintBtn{margin-top:12px}
 .vocab{display:grid;gap:10px}@media(min-width:700px){.vocab{grid-template-columns:1fr 1fr}}
 .vitem{border:1px solid var(--line);border-radius:14px;padding:13px;display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.vitem b{font-size:17px}
 .lessonrow{display:flex;gap:12px;align-items:center;padding:13px;border:1px solid var(--line);border-radius:14px;background:var(--card);width:100%;text-align:left;cursor:pointer;min-height:64px}.lessonrow:disabled{opacity:.55;cursor:not-allowed}
@@ -1410,22 +1410,43 @@ function quizList(les){
 function quizTotal(les){return les&&(les.n===250||les.n===400||les.n===600||les.n===800||les.n===1000)?20:5}
 
 
+/* Hint Level-1 builder (Build Brief 01): assembles a pre-answer nudge ONLY
+   from fields that already ship live, then applies the mandatory leak guard —
+   if the normalized answer appears in the hint as a whole token it is blanked
+   (single-word answers) or the hint is dropped (multi-word answers). Returns
+   null when there is nothing safe to show; the player falls back to hintFor. */
+function mkHint(frame,text,ans){
+ if(text==null)text="";
+ text=String(text).trim();
+ if(!text)return null;
+ var h=frame+text;
+ var na=norm(ans||"");
+ if(na){
+  if((" "+norm(h)+" ").indexOf(" "+na+" ")>=0){
+   if(na.indexOf(" ")>=0)return null;
+   h=h.split(" ").map(function(w){return norm(w)===na?"_____":w}).join(" ");
+   if((" "+norm(h)+" ").indexOf(" "+na+" ")>=0)return null;
+  }
+  if(!h.slice(frame.length).replace(/_____/g,"").trim())return null;
+ }
+ return h;
+}
 function exercisesFor(les,quizMode,offset){
   var v=les.vocab;var ex=[];var base=offset||0;
   function V(i){return v[(i+base)%v.length]}
-  ex.push({type:"mcq",q:"What does “"+V(0).en+"” mean in Somali?",qSo:"Maxay “"+V(0).en+"” ka dhigantahay Soomaali ahaan?",opts:shuffle([V(0).so,V(1).so,V(2).so,V(3).so],les.n),ans:V(0).so,why:"“"+V(0).en+"” = "+V(0).so+". Tusaale: "+V(0).exEn});
-  ex.push({type:"mcq",q:"Choose the English word for: "+V(1).so,qSo:"Dooro erayga Ingiriisiga ah ee: "+V(1).so,opts:shuffle([V(1).en,V(2).en,V(3).en,V(0).en],les.n+3),ans:V(1).en,why:V(1).so+" = "+V(1).en});
+  ex.push({type:"mcq",q:"What does “"+V(0).en+"” mean in Somali?",qSo:"Maxay “"+V(0).en+"” ka dhigantahay Soomaali ahaan?",opts:shuffle([V(0).so,V(1).so,V(2).so,V(3).so],les.n),ans:V(0).so,hint1:mkHint("Tusaale / Example: ",V(0).exEn,V(0).so),why:"“"+V(0).en+"” = "+V(0).so+". Tusaale: "+V(0).exEn});
+  ex.push({type:"mcq",q:"Choose the English word for: "+V(1).so,qSo:"Dooro erayga Ingiriisiga ah ee: "+V(1).so,opts:shuffle([V(1).en,V(2).en,V(3).en,V(0).en],les.n+3),ans:V(1).en,hint1:mkHint("Tusaale / Example: ",V(1).exSo,V(1).en),why:V(1).so+" = "+V(1).en});
   var sen=V(2).exEn;var blank=sen.replace(new RegExp(V(2).en.replace(/[.*+?^${}()|[\]\\]/g,"\\$&"),"i"),"_____");
   if(blank===sen)blank=sen+" _____";
-  ex.push({type:"fill",q:"Fill the blank: "+blank,qSo:"Buuxi meesha bannaan",ans:V(2).en,accept:[V(2).en.toLowerCase()],why:"Jawaabtu waa “"+V(2).en+"”. "+sen});
+  ex.push({type:"fill",q:"Fill the blank: "+blank,qSo:"Buuxi meesha bannaan",ans:V(2).en,accept:[V(2).en.toLowerCase()],hint1:mkHint("Macnaha / Meaning: ",V(2).so,V(2).en),why:"Jawaabtu waa “"+V(2).en+"”. "+sen});
   var words=V(3).exEn.replace(/[.!?]/g,"").split(" ").filter(Boolean);
-  ex.push({type:"order",q:"Put the words in order",qSo:"Erayada kala hagaaji si ay jumlo sax ah u noqoto",words:shuffle(words,les.n+9),ans:words.join(" "),why:"Sida saxda ah: "+V(3).exEn});
-  ex.push({type:"match",q:"Match: "+V(4).en+" — ?",qSo:"Is waafaji: "+V(4).en+" macnaheedu waa maxay?",opts:shuffle([V(4).so,V(5).so,V(6).so,V(0).so],les.n+5),ans:V(4).so,why:V(4).en+" = "+V(4).so});
-  ex.push({type:"translate",q:"Type in Somali: "+V(5).en,qSo:"Af-Soomaali ku qor eraygan: "+V(5).en,ans:V(5).so,accept:[norm(V(5).so),norm(V(5).so.split("/")[0]),norm(V(5).so.split("(")[0])],why:V(5).en+" = "+V(5).so,wordEn:V(5).en,targetEn:V(5).en});
-  ex.push({type:"dictation",q:"Listen and type what you hear",qSo:"Dhegeyso oo qor waxaad maqasho",speak:V(6).exEn,ans:norm(V(6).exEn),accept:[norm(V(6).exEn)],why:"Waxaad maqashay: "+V(6).exEn,wordEn:V(6).en});
-  ex.push({type:"translate2",q:"Type in English: "+V(0).so,qSo:"Ingiriisi ku qor: "+V(0).so,ans:V(0).en,accept:[norm(V(0).en)],why:V(0).so+" = "+V(0).en,wordEn:V(0).en,targetSo:V(0).so});
-  if(quizMode){ex.push({type:"mcq",q:"Grammar: "+les.grammar.example.split("—")[0]+" — choose the best lesson word: "+V(1).en,qSo:"Naxwe: dooro erayga cashirka ugu habboon: "+V(1).en,opts:shuffle([V(1).en,V(3).en,V(5).en,V(6).en],les.n+11),ans:V(1).en,why:les.grammar.point+". "+les.grammar.explainSo+" Tusaale / Example: "+les.grammar.example+" — "+les.grammar.exampleSo});ex.push({type:"fill",q:"Complete from the dialogue: "+(les.dialogue[0]?les.dialogue[0][1].split(" ").slice(0,3).join(" "):"")+" _____",qSo:"Ka buuxi wadahadalka cashirkan: erayga maqan qor",ans:(les.dialogue[0]?les.dialogue[0][1].split(" ")[3]||V(0).en:V(0).en),accept:[norm(les.dialogue[0]?les.dialogue[0][1].split(" ")[3]||"":"")],why:"Wadahadalka / Dialogue: "+(les.dialogue[0]?les.dialogue[0][1]:"")+" — "+(les.dialogue[0]?les.dialogue[0][2]:"")})}
-  if(les.n<=250){try{if(visualFor(V(0).en)){ex[0]={type:"piclisten",q:"Listen to the word and tap the correct picture",qSo:"Dhegeyso erayga oo taabo sawirka saxda ah",speak:V(0).en,opts:shuffle([V(0).en,V(1).en,V(2).en],les.n+21),ans:V(0).en,why:V(0).en+" = "+V(0).so+". Tusaale: "+V(0).exEn,wordEn:V(0).en}}if(visualFor(V(4).en)){ex[4]={type:"picword",q:"Look at the picture. What is this in English?",qSo:"Sawirka eeg. Kani waa maxay Ingiriisi ahaan?",picFor:V(4).en,opts:shuffle([V(4).en,V(5).en,V(6).en],les.n+23),ans:V(4).en,why:V(4).en+" = "+V(4).so,wordEn:V(4).en}}}catch(e){}}
+  ex.push({type:"order",q:"Put the words in order",qSo:"Erayada kala hagaaji si ay jumlo sax ah u noqoto",words:shuffle(words,les.n+9),ans:words.join(" "),hint1:mkHint("Macnaha / Meaning: ",V(3).exSo,words.join(" ")),why:"Sida saxda ah: "+V(3).exEn});
+  ex.push({type:"match",q:"Match: "+V(4).en+" — ?",qSo:"Is waafaji: "+V(4).en+" macnaheedu waa maxay?",opts:shuffle([V(4).so,V(5).so,V(6).so,V(0).so],les.n+5),ans:V(4).so,hint1:mkHint("Tusaale / Example: ",V(4).exEn,V(4).so),why:V(4).en+" = "+V(4).so});
+  ex.push({type:"translate",q:"Type in Somali: "+V(5).en,qSo:"Af-Soomaali ku qor eraygan: "+V(5).en,ans:V(5).so,accept:[norm(V(5).so),norm(V(5).so.split("/")[0]),norm(V(5).so.split("(")[0])],hint1:mkHint("Tusaale / Example: ",V(5).exEn,V(5).so),why:V(5).en+" = "+V(5).so,wordEn:V(5).en,targetEn:V(5).en});
+  ex.push({type:"dictation",q:"Listen and type what you hear",qSo:"Dhegeyso oo qor waxaad maqasho",speak:V(6).exEn,ans:norm(V(6).exEn),accept:[norm(V(6).exEn)],hint1:mkHint("Macnaha / Meaning: ",V(6).exSo,V(6).exEn),why:"Waxaad maqashay: "+V(6).exEn,wordEn:V(6).en});
+  ex.push({type:"translate2",q:"Type in English: "+V(0).so,qSo:"Ingiriisi ku qor: "+V(0).so,ans:V(0).en,accept:[norm(V(0).en)],hint1:mkHint("Tusaale / Example: ",V(0).exSo,V(0).en),why:V(0).so+" = "+V(0).en,wordEn:V(0).en,targetSo:V(0).so});
+  if(quizMode){ex.push({type:"mcq",q:"Grammar: "+les.grammar.example.split("—")[0]+" — choose the best lesson word: "+V(1).en,qSo:"Naxwe: dooro erayga cashirka ugu habboon: "+V(1).en,opts:shuffle([V(1).en,V(3).en,V(5).en,V(6).en],les.n+11),ans:V(1).en,hint1:mkHint("",(les.grammar.pointSo||"")+(les.grammar.explainSo?" — "+les.grammar.explainSo:""),V(1).en),why:les.grammar.point+". "+les.grammar.explainSo+" Tusaale / Example: "+les.grammar.example+" — "+les.grammar.exampleSo});ex.push({type:"fill",q:"Complete from the dialogue: "+(les.dialogue[0]?les.dialogue[0][1].split(" ").slice(0,3).join(" "):"")+" _____",qSo:"Ka buuxi wadahadalka cashirkan: erayga maqan qor",ans:(les.dialogue[0]?les.dialogue[0][1].split(" ")[3]||V(0).en:V(0).en),accept:[norm(les.dialogue[0]?les.dialogue[0][1].split(" ")[3]||"":"")],hint1:mkHint("Macnaha / Meaning: ",les.dialogue[0]?les.dialogue[0][2]:"",(les.dialogue[0]?les.dialogue[0][1].split(" ")[3]||V(0).en:V(0).en)),why:"Wadahadalka / Dialogue: "+(les.dialogue[0]?les.dialogue[0][1]:"")+" — "+(les.dialogue[0]?les.dialogue[0][2]:"")})}
+  if(les.n<=250){try{if(visualFor(V(0).en)){ex[0]={type:"piclisten",q:"Listen to the word and tap the correct picture",qSo:"Dhegeyso erayga oo taabo sawirka saxda ah",speak:V(0).en,opts:shuffle([V(0).en,V(1).en,V(2).en],les.n+21),ans:V(0).en,hint1:mkHint("Macnaha / Meaning: ",V(0).so,V(0).en),why:V(0).en+" = "+V(0).so+". Tusaale: "+V(0).exEn,wordEn:V(0).en}}if(visualFor(V(4).en)){ex[4]={type:"picword",q:"Look at the picture. What is this in English?",qSo:"Sawirka eeg. Kani waa maxay Ingiriisi ahaan?",picFor:V(4).en,opts:shuffle([V(4).en,V(5).en,V(6).en],les.n+23),ans:V(4).en,hint1:mkHint("Macnaha / Meaning: ",V(4).so,V(4).en),why:V(4).en+" = "+V(4).so,wordEn:V(4).en}}}catch(e){}}
   return quizMode?ex.slice(0,5).concat(ex.slice(5,7)).slice(0,5):ex;
 }
 
@@ -1695,8 +1716,15 @@ function renderPath(){
 }
 /* ============ LESSON PLAYER ============ */
 var cur=null,step=0,exIdx=0,exCorrect=0,qIdx=0,qCorrect=0,phase="ex";var guidedPending=false,guidedShown=false;var drill=null;var certSel=null;
+/* Build Brief 01 — hint button state. hintQueue/hintServed/repeatMode are
+   per-lesson (reset in openLesson); hintLevel/hintUsed are per-item (reset in
+   bindExercise). HINTS_UP_TO is the whole L11+ rollout gate: raise it only
+   after the harness check passes on the next lesson band. */
+var HINTS_UP_TO=10;
+var hintQueue=[],hintServed=0,repeatMode=false,hintLevel=0,hintUsed=false;
+function resetHints(){hintQueue=[];hintServed=0;repeatMode=false}
 var STEPS=["Objective / Hadafka","Intro / Hordhac","Vocab / Erayo","Listening / Dhegeysi","Speaking / Hadal","Reading / Akhris","Writing / Qoraal","Grammar / Naxwe","Exercises / Layliyo","Quiz / Hubin","Result / Natiijo"];
-function openLesson(n){cur=LESSONS[n-1];step=0;exIdx=0;exCorrect=0;qIdx=0;qCorrect=0;phase="ex";guidedPending=!guestMode&&!!(S.quizFails&&S.quizFails[n]>=2);guidedShown=false;setNav("lesson");renderLesson()}
+function openLesson(n){cur=LESSONS[n-1];step=0;exIdx=0;exCorrect=0;qIdx=0;qCorrect=0;phase="ex";resetHints();guidedPending=!guestMode&&!!(S.quizFails&&S.quizFails[n]>=2);guidedShown=false;setNav("lesson");renderLesson()}
 function stepBar(){return '<div class="stepbar">'+STEPS.map(function(s,i){return '<span class="'+(i===step?"on":"")+'">'+(i+1)+". "+s+"</span>"}).join("")+"</div>"}
 function speakBtn(text,slow){return '<button class="iconbtn" data-speak="'+esc(text)+'" data-slow="'+(slow?1:0)+'" aria-label="Dhegeyso / Listen">🔊</button>'}
 function bindSpeak(root){root.querySelectorAll("[data-speak]").forEach(function(b){b.addEventListener("click",function(){speak(b.dataset.speak,b.dataset.slow==="1",b)})})}
@@ -1710,9 +1738,9 @@ function renderLesson(){
  else if(step===5){h+='<h2>💬 Akhris: Wadahadal / Reading dialogue</h2><p><strong>'+esc(l.reading.en)+'</strong> '+speakBtn(l.reading.en)+'<br><span class="muted">'+esc(l.reading.so)+'</span></p><div class="dialogue">'+l.dialogue.map(function(d){return '<p><strong>'+esc(d[0])+':</strong> '+esc(d[1])+' '+speakBtn(d[1])+(S.profile.immersion?"":'<br><span class="muted">'+esc(d[2])+'</span>')+'</p>'}).join("")+'</div>'}
  else if(step===6){h+='<h2>✍️ Qoraal / Writing</h2><p>'+esc(l.writingPrompt.en)+'</p>'+(S.profile.immersion?"":'<p>'+esc(l.writingPrompt.so)+'</p>')+'<p>Qor jumlo run ah adoo isticmaalaya eraygan: <strong>'+esc(l.vocab[1].en)+'</strong> ('+(S.profile.immersion?"":esc(l.vocab[1].so))+') — Write a true sentence using this word.</p><textarea id="lessonWrite" rows="3" placeholder="I ..."></textarea><button class="btn secondary" id="lwCheck" style="margin-top:8px">Hubi qoraalkayga / Check my writing</button><div id="lwOut"></div>'}
  else if(step===7){h+='<h2>🧩 Naxwe / Grammar in context</h2><p style="font-size:18px"><strong>'+esc(l.grammar.point)+'</strong></p>'+(S.profile.immersion?"":'<p><strong>'+esc(l.grammar.pointSo)+'</strong></p>')+(S.profile.immersion?"":'<p>'+esc(l.grammar.explainSo)+'</p>')+'<p><em>'+esc(l.grammar.example)+'</em> '+speakBtn(l.grammar.example)+'</p>'+(S.profile.immersion?"":'<p class="muted">'+esc(l.grammar.exampleSo)+'</p>')+'<p><em>'+esc(l.grammar.example2)+'</em> '+speakBtn(l.grammar.example2)+'</p>'+(S.profile.immersion?"":'<p class="muted">'+esc(l.grammar.example2So)+'</p>');if(l.n<=250){h+='<hr>'+timelineHTML(tenseOf(l))+'<div id="lesBuilder">'+builderHTML("lesb",l.grammar.example.split(".")[0])+'</div>';if(l.n<=100)h+=wordOrderHTML()}}
- else if(step===8){h+=exerciseHTML(exercisesFor(l,false,0)[exIdx],exIdx,8,"ex")}
+ else if(step===8){h+=exerciseHTML(repeatMode?hintQueue[hintServed]:exercisesFor(l,false,0)[exIdx],exIdx,8,"ex")}
   else if(step===9&&guidedPending&&!guidedShown){h+='<h2>🧭 Dib-u-eegis hagitaan leh / Guided review</h2><p>Waxaad hubinta cashirkan isku dayday laba jeer adigoon gudbin — marka hore aan si wadajir ah u eegno erayada iyo naxwaha muhiimka ah, kadib hubintu way bilaabmaysaa. Heerka gudbintu (80%) isma beddelo. / You tried this lesson\'s quiz twice without passing — first let\'s review the key words and grammar together, then the quiz starts. The 80% pass bar does not change.</p><h3>📚 Erayada muhiimka ah / Key words</h3><div class="vocab">'+l.vocab.map(function(v){return '<div class="vitem"><div><b>'+esc(v.en)+'</b><br>'+esc(v.so)+'<br><span class="small">'+esc(v.exEn)+'</span></div>'+speakBtn(v.en)+'</div>'}).join("")+'</div><h3>🧩 Naxwaha / Grammar recap</h3><p><strong>'+esc(l.grammar.point)+'</strong></p><p>'+esc(l.grammar.explainSo)+'</p><p><em>'+esc(l.grammar.example)+'</em><br><span class="muted">'+esc(l.grammar.exampleSo)+'</span></p><button class="btn" id="guidedGo">Bilow hubinta / Start the quiz →</button>'}
-  else if(step===9){h+=exerciseHTML(quizList(l)[qIdx],qIdx,quizTotal(l),"quiz")}
+  else if(step===9){h+=exerciseHTML(repeatMode?hintQueue[hintServed]:quizList(l)[qIdx],qIdx,quizTotal(l),"quiz")}
  else if(step===10){var qT=quizTotal(l);var score=Math.round((exCorrect/8)*0.3*100+(qCorrect/qT)*0.7*100);var mastered=qCorrect/qT>=0.8&&exCorrect/8>=0.7;h+='<h2>'+(mastered?"🎉 Waad gudubtay! You passed!":"💪 Ku dhawaaday! Almost there")+'</h2><p>Layliyada: <strong>'+exCorrect+' / 8</strong> · Hubinta: <strong>'+qCorrect+' / '+qT+'</strong></p><p>'+(mastered?"Cashirkan waa la furay kan xiga. Erayadii aad khaladay waxay aadeen dib-u-eegistaada.":"Si aad u gudubto waxaad u baahantahay hubin 80%+ iyo layli 70%+. Eeg erayada mar kale oo isku day mar kale — wax ciqaab ah ma jirto.")+'</p><p class="pill">+'+(mastered?10+ qCorrect*2:5)+' XP</p>'+(l.n===1000&&mastered?'<div class="feedback good" style="font-size:18px"><strong>🎓🎉 QALIN-JABIN! GRADUATION!</strong><br>Hambalyo, '+esc(S.profile.name)+'! Waxaad dhamaystirtay dhammaan 1,000 cashir ee Somali English Academy — Aasaaska ilaa C1–C2. Abaalmarinta <strong>Academy Graduate — Qalin-jabiyihii Akadeemiyadda</strong> waa taada. Bandhiggaagii hadalka iyo maqaalkaagii qalin-jabinta waa caddaynta safarkaaga: cod dheer ugu faan, qoyskaagana tus.<br><span lang="en">Congratulations! You completed all 1,000 lessons — Foundation to C1–C2. The Academy Graduate badge is yours. Your graduation presentation and essay are the proof of your journey.</span></div>':"")}
  h+='</div><div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap">'+(step>0&&step<8?'<button class="btn secondary" id="prevStep">← Dib</button>':"")+(step<8?'<button class="btn" id="nextStep">Xiga → Next</button>':"")+(step===10?'<button class="btn" id="finishBtn">'+(guestMode?"Ka bax qaabka martida / Exit guest mode":"Dhammee &amp; tag Hoyga ✓")+'</button><button class="btn secondary" id="retryBtn">Mar kale isku day</button>':"")+'</div>';
  app.innerHTML=h;bindSpeak(app);
@@ -1734,8 +1762,8 @@ function listenBtnsHTML(text,slowLabel){
 }
 function exerciseHTML(ex,idx,total,kind){
  if(!ex)return '<h2>Dhammaatay</h2>';
- var segs="";for(var si=0;si<total;si++)segs+='<i class="'+(si<idx?"on":"")+'"></i>';
- var h='<h2>'+(kind==="quiz"?"📝 Hubin / Quiz":"🏋️ Layliyada / Exercises")+'</h2><p style="margin:.2em 0"><span class="pill">'+(kind==="quiz"?"Hubin 1 / Quiz 1":"Layli 1 / Exercise 1")+' · Su\'aal / Question '+(idx+1)+' / '+total+'</span></p><div class="segprog" aria-hidden="true">'+segs+'</div><p style="font-size:18px">'+esc(ex.q)+'</p>'+(ex.qSo&&!S.profile.immersion?'<p class="muted">'+esc(ex.qSo)+'</p>':"");
+ var rep=(typeof repeatMode!=="undefined"&&repeatMode);var segs="";for(var si=0;si<total;si++)segs+='<i class="'+(rep||si<idx?"on":"")+'"></i>';
+ var h='<h2>'+(kind==="quiz"?"📝 Hubin / Quiz":"🏋️ Layliyada / Exercises")+'</h2><p style="margin:.2em 0"><span class="pill">'+(kind==="quiz"?"Hubin 1 / Quiz 1":"Layli 1 / Exercise 1")+' · Su\'aal / Question '+(rep?total:idx+1)+' / '+total+'</span>'+(rep?' <span class="pill">🔁 Mar kale / Once more</span>':"")+'</p><div class="segprog" aria-hidden="true">'+segs+'</div><p style="font-size:18px">'+esc(ex.q)+'</p>'+(ex.qSo&&!S.profile.immersion?'<p class="muted">'+esc(ex.qSo)+'</p>':"");
  if(ex.type==="translate"&&ex.targetEn)h+='<div class="picprompt"><p class="small muted" style="margin:0 0 6px">Eraygan Af-Soomaali ku qor / Write this word in Somali:</p><div style="display:flex;gap:10px;align-items:center;justify-content:center;flex-wrap:wrap"><span style="font-size:30px;font-weight:900" lang="en">'+esc(ex.targetEn)+'</span>'+speakBtn(ex.targetEn)+visHTML(ex.targetEn)+'</div></div>';
  if(ex.type==="translate2"&&ex.targetSo)h+='<div class="picprompt"><p class="small muted" style="margin:0 0 6px">Eraygan Ingiriisi ku qor / Write this in English:</p><div style="font-size:28px;font-weight:900" lang="so">'+esc(ex.targetSo)+'</div></div>';
  if(ex.type==="dictation")h+=listenBtnsHTML(ex.speak);
@@ -1746,17 +1774,38 @@ function exerciseHTML(ex,idx,total,kind){
  else if(ex.opts&&ex.type==="picword"){h+='<div class="opts">'+ex.opts.map(function(o){return '<div class="optrow"><button class="opt" data-opt="'+esc(o)+'">'+esc(o)+'</button>'+speakBtn(o)+'</div>'}).join("")+'</div>'}
  else if(ex.opts){h+='<div class="opts">'+ex.opts.map(function(o){return '<button class="opt" data-opt="'+esc(o)+'">'+esc(o)+'</button>'}).join("")+'</div>'}
  else{h+='<input type="text" id="exInput" autocomplete="off" placeholder="Halkan ku qor / Type here"><button class="btn" id="checkEx" style="margin-top:10px">Hubi / Check</button>'}
- h+='<div id="exFb"></div>';return h;
+ if(cur&&cur.n<=HINTS_UP_TO&&(ex.hint1||hintFor(ex)))h+='<button class="btn secondary" id="exHintBtn">💡 Tilmaan / Hint</button><div id="exHint"></div>';h+='<div id="exFb"></div>';return h;
 }
 var builtWords=[];
 var exAttempts=0,exDone=false;
 function bindExercise(){
- exAttempts=0;exDone=false;
+ exAttempts=0;exDone=false;hintLevel=0;hintUsed=false;
  builtWords=[];var built=document.getElementById("built");
  app.querySelectorAll("[data-chip]").forEach(function(b){b.addEventListener("click",function(){builtWords.push(b.dataset.chip);b.disabled=true;if(built)built.textContent=builtWords.join(" ")})});
  var cl=document.getElementById("clearBuilt");if(cl)cl.addEventListener("click",function(){builtWords=[];if(built)built.textContent="";app.querySelectorAll("[data-chip]").forEach(function(b){b.disabled=false})});
  app.querySelectorAll("[data-opt]").forEach(function(b){b.addEventListener("click",function(){gradeCurrent(b.dataset.opt,b)})});
  var ck=document.getElementById("checkEx");if(ck)ck.addEventListener("click",function(){var val="";var inp=document.getElementById("exInput");if(inp)val=inp.value;else val=builtWords.join(" ");gradeCurrent(val,null)});
+ bindHint();
+}
+/* Build Brief 01 — on-demand hint button. Tap 1 shows the Level-1 content
+   nudge (ex.hint1, assembled from shipped fields by mkHint); Tap 2 shows the
+   existing mechanical hintFor. No state writes of any kind (§2.3 contract):
+   a hint never touches exAttempts, scores, XP, SRS or logs. */
+function bindHint(){
+ var b=document.getElementById("exHintBtn");if(!b)return;
+ b.addEventListener("click",function(){
+  if(hintLevel>=2)return;
+  var ex=currentEx();if(!ex)return;
+  var txt=null;
+  if(hintLevel===0&&ex.hint1){txt=ex.hint1;hintLevel=1}
+  else{txt=hintFor(ex);hintLevel=2}
+  if(!txt)return;
+  hintUsed=true;
+  var box=document.getElementById("exHint");
+  if(box)box.innerHTML='<div class="feedback hint">'+esc(txt)+'</div>';
+  if(hintLevel>=2){b.disabled=true}
+  else{b.innerHTML="💡 Tilmaan kale / More hint"}
+ });
 }
 
 function explainWrong(ex,chosen){
@@ -1774,7 +1823,7 @@ function explainWrong(ex,chosen){
 }
 function itemKey(lesN,ex){return "L"+lesN+"|"+(ex.type||"mcq")+"|"+norm(ex.ans).slice(0,40)}
 function skillForType(t){return{dictation:"listening",mcq:"vocab",match:"vocab",translate:"vocab",translate2:"vocab",fill:"reading",order:"writing",speaking:"speaking",piclisten:"listening",picword:"vocab"}[t]||"vocab"}
-function currentEx(){return step===8?exercisesFor(cur,false,0)[exIdx]:quizList(cur)[qIdx]}
+function currentEx(){if(repeatMode)return hintQueue[hintServed];return step===8?exercisesFor(cur,false,0)[exIdx]:quizList(cur)[qIdx]}
 function hintFor(ex){
  /* A hint that helps WITHOUT giving the answer away: first letter + length
     for typed answers, a re-listen / re-read nudge for the rest. */
@@ -1799,20 +1848,35 @@ function gradeCurrent(val,btn){
  function finish(okFinal,revealed){
   exDone=true;
   /* sea-f13: record this question's outcome for the per-set result panel
-     (first-try / second-try / missed) — display only, grading unchanged. */
-  try{if(typeof setLog!=="undefined")setLog.push({kind:step===8?"ex":"quiz",first:!!(okFinal&&exAttempts===0),second:!!(okFinal&&exAttempts>0),ok:!!okFinal,q:ex.q,ans:ex.ans,why:ex.why||""})}catch(e){}
+     (first-try / second-try / missed) — display only, grading unchanged.
+     Build Brief 01: repeats are practice-only — never written to setLog. */
+  try{if(!repeatMode&&typeof setLog!=="undefined")setLog.push({kind:step===8?"ex":"quiz",first:!!(okFinal&&exAttempts===0),second:!!(okFinal&&exAttempts>0),ok:!!okFinal,q:ex.q,ans:ex.ans,why:ex.why||""})}catch(e){}
+  /* Build Brief 01: a hinted item answered correctly is silently re-queued
+     once, at the end of its set (§2.4). Wrong/revealed finishes never queue —
+     those already flow to mistakes/SRS/Review as before. */
+  if(hintUsed&&okFinal&&!repeatMode&&cur&&cur.n<=HINTS_UP_TO)hintQueue.push(ex);
   if(btn){app.querySelectorAll("[data-opt]").forEach(function(b){if(norm(b.dataset.opt)===norm(ex.ans))b.classList.add("correct")})}
   if(okFinal){fb.innerHTML='<div class="feedback good"><strong>✅ Sax! Correct!</strong>'+(exAttempts>0?'<br><span>Waad saxday isku-dayga '+(exAttempts+1)+'-aad — sidaas ayaa wax loo bartaa! / You got it on try '+(exAttempts+1)+' — that is how learning works!</span>':"")+'<br>'+esc(ex.why||"")+picFb+'<br><button class="btn" id="exNext" style="margin-top:10px">Sii wad / Continue →</button></div>'}
   else{var ew=explainWrong(ex,val);fb.innerHTML='<div class="feedback bad"><strong>✗ Ma saxna. Not quite.</strong><br><strong>Jawaabta saxda ah / Correct answer:</strong> '+esc(ex.ans)+picFb+'<br><strong>Sababta / Why (Soomaali):</strong> '+esc(ew.so)+'<br><strong>'+esc(ew.en)+'</strong><br><span class="small">Jawaabtan dib ayaad ugu soo noqon doontaa Dib-u-eegistaada. / You will meet this answer again in your Review.</span><br><button class="btn" id="exNext" style="margin-top:10px">Waan fahmay, sii wad / I understand, continue →</button></div>'}
-  if(okFinal){if(step===8)exCorrect++;else qCorrect++;if(!guestMode){if(isPic){/* Picture recognition is practice only: recorded in S.visual.picRecog, NEVER recDay — it must not count toward two-day mastery by itself. */picRecogAdd(wv.en,"correct")}else if(exAttempts===0){recDay(S,key,todayStr());recDay(S,"sk:"+sk+"|"+key,todayStr());mistakeCorrect(S,key,todayStr())}else{/* Correct after a retry is real learning, but mastery still needs a clean first-try correct on another day. */mistakeCorrect(S,key,todayStr())}}}
+  if(!repeatMode){if(okFinal){if(step===8)exCorrect++;else qCorrect++;if(!guestMode){if(isPic){/* Picture recognition is practice only: recorded in S.visual.picRecog, NEVER recDay — it must not count toward two-day mastery by itself. */picRecogAdd(wv.en,"correct")}else if(exAttempts===0){recDay(S,key,todayStr());recDay(S,"sk:"+sk+"|"+key,todayStr());mistakeCorrect(S,key,todayStr())}else{/* Correct after a retry is real learning, but mastery still needs a clean first-try correct on another day. */mistakeCorrect(S,key,todayStr())}}}
   else{if(!guestMode){if(isPic)picRecogAdd(wv.en,null);S.weak.push({lesson:cur.n,q:ex.q,date:todayStr()});addSRS(wv.en,wv.so);mistakeAdd(S,{key:key,q:ex.q,qSo:ex.qSo||"",opts:ex.opts||null,ans:ex.ans,accept:ex.accept||null,why:ex.why||"",type:ex.type,lesson:cur.n,wordEn:wv.en,wordSo:wv.so})}}
-  var skMap={dictation:"listening",mcq:"vocab",match:"vocab",translate:"vocab",translate2:"vocab",fill:"reading",order:"writing",piclisten:"listening",picword:"vocab"};if(!Array.isArray(S.skillLog))S.skillLog=[];S.skillLog.push({skill:skMap[ex.type]||"vocab",ok:okFinal?1:0,date:todayStr()});
+  var skMap={dictation:"listening",mcq:"vocab",match:"vocab",translate:"vocab",translate2:"vocab",fill:"reading",order:"writing",piclisten:"listening",picword:"vocab"};if(!Array.isArray(S.skillLog))S.skillLog=[];S.skillLog.push({skill:skMap[ex.type]||"vocab",ok:okFinal?1:0,date:todayStr()});}
   document.getElementById("exNext").addEventListener("click",function(){
-   /* sea-f13: finishing a set shows its result panel before moving on. */
-   if(step===8){exIdx++;if(exIdx>=8){if(typeof showSetResult==="function"){showSetResult("ex");return}step=9;renderLesson()}else renderLesson()}
-   else{qIdx++;if(qIdx>=quizTotal(cur)){if(typeof showSetResult==="function"){showSetResult("quiz");return}step=10;renderLesson()}else renderLesson()}
+   /* sea-f13: finishing a set shows its result panel before moving on.
+      Build Brief 01: queued hint repeats are served once, before the result
+      panel; finishing the last repeat falls through to the panel as usual. */
+   if(repeatMode){
+    hintServed++;
+    if(hintServed<hintQueue.length){renderLesson();return}
+    repeatMode=false;
+    if(step===8){if(typeof showSetResult==="function"){showSetResult("ex");return}step=9;renderLesson()}
+    else{if(typeof showSetResult==="function"){showSetResult("quiz");return}step=10;renderLesson()}
+    return;
+   }
+   if(step===8){exIdx++;if(exIdx>=8){if(hintQueue.length>hintServed){repeatMode=true;renderLesson();return}if(typeof showSetResult==="function"){showSetResult("ex");return}step=9;renderLesson()}else renderLesson()}
+   else{qIdx++;if(qIdx>=quizTotal(cur)){if(hintQueue.length>hintServed){repeatMode=true;renderLesson();return}if(typeof showSetResult==="function"){showSetResult("quiz");return}step=10;renderLesson()}else renderLesson()}
   });
-  save();
+  if(!repeatMode)save();
   /* Let the Stage H sheet wrapper pick up the FINAL feedback only. */
   fb.dataset.final="1";
  }
@@ -3978,6 +4042,7 @@ function lesNavAfter(){
  var showNext=true,nextLabel="Sii wad / Next →";
  if(step===8&&exIdx<8)showNext=false;
  if(step===9&&!(guidedPending&&!guidedShown)&&qIdx<quizTotal(cur))showNext=false;
+ if(typeof repeatMode!=="undefined"&&repeatMode)showNext=false;
  if(step===10)nextLabel="Dhammee / Finish ✓";
  var bar=document.createElement("div");bar.id="lesNav";bar.className="lesnav";
  bar.innerHTML='<div class="lesnav-in"><button class="btn secondary navback" id="lesBack" style="min-height:56px">← Dib / Back</button><span class="navind">Qayb '+(step+1)+' / '+STEPS.length+'<br><span lang="en">Section '+(step+1)+' of '+STEPS.length+'</span></span>'+(showNext?'<button class="btn navnext" id="lesNext" style="min-height:56px">'+nextLabel+'</button>':"")+'</div>';
@@ -3985,6 +4050,7 @@ function lesNavAfter(){
  document.getElementById("lesBack").addEventListener("click",function(){
   /* Back INTO a finished set restarts that set cleanly: the renderer cannot
      show an index past the set end, and counters/result log stay exact. */
+  if(typeof repeatMode!=="undefined"&&repeatMode){repeatMode=false;hintQueue=[];hintServed=0}
   if(step===10){step=9;qIdx=0;qCorrect=0;setLog=setLog.filter(function(e){return e.kind!=="quiz"});renderLesson();window.scrollTo(0,0);return}
   if(step===9&&qIdx>=quizTotal(cur)){qIdx=0;qCorrect=0;setLog=setLog.filter(function(e){return e.kind!=="quiz"});renderLesson();window.scrollTo(0,0);return}
   if(step===9){step=8;exIdx=0;exCorrect=0;setLog=setLog.filter(function(e){return e.kind!=="ex"});renderLesson();window.scrollTo(0,0);return}
