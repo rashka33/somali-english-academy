@@ -1721,6 +1721,13 @@ var cur=null,step=0,exIdx=0,exCorrect=0,qIdx=0,qCorrect=0,phase="ex";var guidedP
    bindExercise). HINTS_UP_TO is the whole L11+ rollout gate: raise it only
    after the harness check passes on the next lesson band. */
 var HINTS_UP_TO=10;
+/* Slice D voice (sea-f49) — recorded Somali instruction clips (Azure
+   Ubax) are registered in audio/index.json for the L1-10 exercise
+   instructions (ex.qSo). INSTR_UP_TO gates the speaker button next to
+   the Somali instruction line: lessons above it keep the exact sea-f48
+   rendering and never route Somali text to the device voice. Raise it
+   only when the next lesson band's instruction clips are registered. */
+var INSTR_UP_TO=10;
 var hintQueue=[],hintServed=0,repeatMode=false,hintLevel=0,hintUsed=false;
 function resetHints(){hintQueue=[];hintServed=0;repeatMode=false}
 var STEPS=["Objective / Hadafka","Intro / Hordhac","Vocab / Erayo","Listening / Dhegeysi","Speaking / Hadal","Reading / Akhris","Writing / Qoraal","Grammar / Naxwe","Exercises / Layliyo","Quiz / Hubin","Result / Natiijo"];
@@ -1763,7 +1770,7 @@ function listenBtnsHTML(text,slowLabel){
 function exerciseHTML(ex,idx,total,kind){
  if(!ex)return '<h2>Dhammaatay</h2>';
  var rep=(typeof repeatMode!=="undefined"&&repeatMode);var segs="";for(var si=0;si<total;si++)segs+='<i class="'+(rep||si<idx?"on":"")+'"></i>';
- var h='<h2>'+(kind==="quiz"?"📝 Hubin / Quiz":"🏋️ Layliyada / Exercises")+'</h2><p style="margin:.2em 0"><span class="pill">'+(kind==="quiz"?"Hubin 1 / Quiz 1":"Layli 1 / Exercise 1")+' · Su\'aal / Question '+(rep?total:idx+1)+' / '+total+'</span>'+(rep?' <span class="pill">🔁 Mar kale / Once more</span>':"")+'</p><div class="segprog" aria-hidden="true">'+segs+'</div><p style="font-size:18px">'+esc(ex.q)+'</p>'+(ex.qSo&&!S.profile.immersion?'<p class="muted">'+esc(ex.qSo)+'</p>':"");
+ var h='<h2>'+(kind==="quiz"?"📝 Hubin / Quiz":"🏋️ Layliyada / Exercises")+'</h2><p style="margin:.2em 0"><span class="pill">'+(kind==="quiz"?"Hubin 1 / Quiz 1":"Layli 1 / Exercise 1")+' · Su\'aal / Question '+(rep?total:idx+1)+' / '+total+'</span>'+(rep?' <span class="pill">🔁 Mar kale / Once more</span>':"")+'</p><div class="segprog" aria-hidden="true">'+segs+'</div><p style="font-size:18px">'+esc(ex.q)+'</p>'+(ex.qSo&&!S.profile.immersion?'<p class="muted">'+esc(ex.qSo)+(cur&&cur.n<=INSTR_UP_TO?' '+speakBtn(ex.qSo):'')+'</p>':"");
  if(ex.type==="translate"&&ex.targetEn)h+='<div class="picprompt"><p class="small muted" style="margin:0 0 6px">Eraygan Af-Soomaali ku qor / Write this word in Somali:</p><div style="display:flex;gap:10px;align-items:center;justify-content:center;flex-wrap:wrap"><span style="font-size:30px;font-weight:900" lang="en">'+esc(ex.targetEn)+'</span>'+speakBtn(ex.targetEn)+visHTML(ex.targetEn)+'</div></div>';
  if(ex.type==="translate2"&&ex.targetSo)h+='<div class="picprompt"><p class="small muted" style="margin:0 0 6px">Eraygan Ingiriisi ku qor / Write this in English:</p><div style="font-size:28px;font-weight:900" lang="so">'+esc(ex.targetSo)+'</div></div>';
  if(ex.type==="dictation")h+=listenBtnsHTML(ex.speak);
