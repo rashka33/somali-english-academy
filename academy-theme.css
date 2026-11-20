@@ -18,7 +18,7 @@
   /* shadow: one soft level (+ none) */
   --sh-0:none;--sh-1:0 1px 2px rgba(27,26,23,.06),0 6px 20px -8px rgba(27,26,23,.14);
   /* palette: warm paper, deep ink, one vivid accent */
-  --paper:#faf7f1;--surface:#ffffff;--ink:#1b1a17;--ink-2:#605c54;--ink-3:#8b867c;
+  --paper:#faf5ec;--surface:#ffffff;--ink:#1b1a17;--ink-2:#605c54;--ink-3:#8b867c;
   --line:#e6e0d5;--line-2:#d6cfc2;--soft:#f2ede4;
   --accent:#0e7c66;--accent-ink:#ffffff;--accent-hover:#0a6352;--accent-soft:#e1f1ec;--gold:#e9b44c;--gold-soft:#fbf1d9;--gold-ink:#7a5606;
   --ok:#1f7a4d;--ok-soft:#e3f3ea;--warn:#8a5a00;--warn-soft:#fbf1dc;--bad:#b3261e;--bad-soft:#fbe4e2;
@@ -33,7 +33,7 @@
   --good:var(--ok);--radius:var(--r-lg);--shadow:var(--sh-1);
   --l-bg:var(--paper);--l-surface:var(--surface);--l-border:var(--line);--l-text:var(--ink);--l-muted:var(--ink-2);--l-teal:var(--accent);--l-blue:var(--accent);--l-gold:var(--warn);
 }
-:root[data-theme="light"]{--paper:#faf7f1;--surface:#ffffff;--ink:#1b1a17;--ink-2:#605c54;--ink-3:#8b867c;--line:#e6e0d5;--line-2:#d6cfc2;--soft:#f2ede4;--accent:#0e7c66;--accent-hover:#0a6352;--accent-soft:#e1f1ec;--gold:#e9b44c;--gold-soft:#fbf1d9;--gold-ink:#7a5606;--teal:var(--accent);--teal2:var(--accent-hover);--muted:var(--ink-2);--bg:var(--paper);--card:var(--surface);--tint:var(--soft);--simple-neutral:var(--soft)}
+:root[data-theme="light"]{--paper:#faf5ec;--surface:#ffffff;--ink:#1b1a17;--ink-2:#605c54;--ink-3:#8b867c;--line:#e6e0d5;--line-2:#d6cfc2;--soft:#f2ede4;--accent:#0e7c66;--accent-hover:#0a6352;--accent-soft:#e1f1ec;--gold:#e9b44c;--gold-soft:#fbf1d9;--gold-ink:#7a5606;--teal:var(--accent);--teal2:var(--accent-hover);--muted:var(--ink-2);--bg:var(--paper);--card:var(--surface);--tint:var(--soft);--simple-neutral:var(--soft)}
 :root[data-theme="dark"]{
   --paper:#161511;--surface:#201e19;--ink:#f3efe7;--ink-2:#b5afa3;--ink-3:#8e887c;--line:#35322b;--line-2:#45413a;--soft:#292721;
   --accent:#5fcdb2;--accent-ink:#0c1f1b;--accent-hover:#7fdcc4;--accent-soft:#17332d;--gold:#f0c366;--gold-soft:#3a2f14;--gold-ink:#f6d995;
@@ -647,3 +647,191 @@ body.gm-playing{overscroll-behavior:none}
 .tw-line{font-family:var(--font-display);font-weight:700;font-size:var(--t-lg);line-height:var(--lh-snug);margin:0;flex:1}.tw-dlg .tw-so{margin:0 0 var(--s-3)}.tw-dlg .cz-qrow{margin:0 0 var(--s-1)}
 .tw-dlg .opt{min-height:52px;font-size:var(--t-md);text-align:left}.tw-why{font-size:var(--t-sm);color:var(--ink-2);min-height:1.5em;margin:var(--s-2) 0 0}
 .gm-town.tw-hurt{outline:3px solid var(--bad);outline-offset:-3px}
+
+/* ---------- 12. START-FIRST WELCOME (round 1, 2026-11-20) ----------
+   The first screen leads with the action: headline, Bilow, placement and the
+   trust line all sit in the first phone viewport; the seven areas follow as a
+   list. Every colour is a token so the screen is correct in dark mode. */
+body.welcome-entry{background:var(--paper);color:var(--ink)}
+.simple-welcome{color:var(--ink);padding:20px 20px 40px;max-width:1080px}
+.welcome-brand{margin-bottom:clamp(28px,7vh,56px)}
+.welcome-brand strong{color:var(--ink);font-family:var(--font-display);font-weight:700}
+.welcome-brand span{color:var(--ink-2)}
+.welcome-lead{display:flex;flex-direction:column;gap:22px;margin-bottom:44px}
+.welcome-hero{margin:0}
+.simple-welcome .welcome-hero h1{font-family:var(--font-display);font-size:clamp(2.75rem,11.5vw,5.25rem);font-weight:800;line-height:.95;letter-spacing:-.045em;color:var(--ink);margin:0 0 16px;text-wrap:balance}
+.welcome-hero h1 span:last-child{color:var(--brand-line,#0e7c66)}
+.welcome-hero p{color:var(--ink-2);font-size:1.06rem;max-width:34ch}
+.welcome-actions{max-width:none;margin:0;text-align:left;display:flex;flex-direction:column;align-items:stretch;gap:6px}
+.welcome-primary{background:#0e7c66;color:#fff;min-height:60px;font-size:1.1rem;box-shadow:0 4px 0 #0a5c4c;justify-content:space-between;padding:16px 22px}
+.welcome-primary:hover{background:#0c6e5b}
+.welcome-placement{margin:0;padding:12px 4px;min-height:48px;text-align:left;color:var(--ink-2);font-size:.95rem}
+.welcome-placement span{color:var(--accent);font-weight:600}
+.welcome-trust{justify-content:flex-start;margin:0;gap:8px 14px;color:var(--ink-2);font-size:.85rem}
+.welcome-trust-pill{display:inline-flex;align-items:center;gap:6px}
+.welcome-trust-pill .simple-icon{width:16px;height:16px;color:var(--accent);stroke-width:2.4}
+.welcome-benefits{display:block;margin:0;border-top:1px solid var(--line)}
+.welcome-inside{font-family:var(--font-display);font-size:var(--t-xl);font-weight:700;letter-spacing:-.02em;color:var(--ink);margin:28px 0 8px}
+.welcome-benefit{display:flex;align-items:center;gap:14px;min-height:72px;padding:14px 2px;background:transparent;border:0;border-bottom:1px solid var(--line);border-radius:0;color:var(--ink)}
+.welcome-benefit:hover{background:transparent}.welcome-benefit:hover h2{color:var(--accent)}
+.welcome-icon{flex:0 0 44px;width:44px;height:44px;margin:0;border-radius:12px;background:var(--accent-soft);color:var(--accent)}
+.welcome-benefits .welcome-benefit .welcome-icon{background:var(--accent-soft);color:var(--accent)}
+.welcome-benefits .welcome-benefit:nth-of-type(2n) .welcome-icon,.welcome-benefits .welcome-benefit:nth-of-type(5) .welcome-icon{background:var(--gold-soft);color:var(--gold-ink)}
+.welcome-copy{flex:1;min-width:0}
+.simple-welcome .welcome-benefit h2{margin:0 0 2px;font-size:1.02rem;font-weight:700;letter-spacing:-.01em;color:var(--ink);font-family:var(--font-text)}
+.welcome-benefit p{margin:0;color:var(--ink-2);font-size:.9rem;line-height:1.4}
+.welcome-benefit>.simple-icon{flex:0 0 18px;width:18px;height:18px;color:var(--ink-3)}
+:root[data-theme="dark"] .welcome-hero h1 span:last-child{--brand-line:#5fcdb2}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .welcome-hero h1 span:last-child{--brand-line:#5fcdb2}}
+@media (min-width:860px){
+  .simple-welcome{padding:32px 40px 56px}
+  .welcome-lead{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(320px,.9fr);grid-template-rows:auto auto;column-gap:56px;align-items:end;margin-bottom:56px}
+  .welcome-hero{grid-row:1/3}
+  .welcome-hero p{max-width:44ch}
+  .simple-welcome .welcome-hero h1{font-size:clamp(3.5rem,5.6vw,4.75rem)}
+  .welcome-benefits{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:40px;border-top:0}
+  .welcome-inside{grid-column:1/-1;border-bottom:1px solid var(--line);margin:0;padding-bottom:12px}
+}
+
+/* ---------- 13. FIVE-TAB BAR + DESKTOP RAIL (round 2, 2026-11-20) ----------
+   Five destinations (Baro AI lives on Home, Profile and the welcome list).
+   Labels never break mid-word; the active tab gets a pill behind its icon.
+   At 1024px+ the bar becomes a left rail so desktop stops using a phone bar. */
+#mainNav.nav{display:flex;justify-content:space-around;gap:2px;padding:6px 6px calc(6px + env(safe-area-inset-bottom))}
+#mainNav.nav button{flex:1 1 0;min-width:0;max-width:120px;min-height:60px;padding:6px 0 4px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;background:transparent;border-radius:var(--r-md);color:var(--ink-2)}
+#mainNav.nav button span{overflow-wrap:normal;word-break:keep-all;white-space:nowrap;font-size:.75rem;line-height:1.1;font-weight:500}
+#mainNav.nav button .simple-icon{width:52px;height:30px;padding:4px 14px;border-radius:var(--r-full);box-sizing:border-box;transition:background-color var(--dur-2) var(--ease)}
+#mainNav.nav button.active{color:var(--accent);background:transparent}
+#mainNav.nav button.active span{font-weight:700}
+#mainNav.nav button.active .simple-icon{background:var(--accent-soft);stroke-width:2.1}
+#mainNav.nav button:hover{background:transparent}#mainNav.nav button:hover .simple-icon{background:var(--soft)}#mainNav.nav button.active:hover .simple-icon{background:var(--accent-soft)}
+@media (min-width:1024px){
+  body:not(.inLesson):not(.welcome-entry):not(.gm-playing){padding-left:248px}
+  body:not(.inLesson):not(.welcome-entry):not(.gm-playing) .topbar,body:not(.inLesson):not(.welcome-entry):not(.gm-playing).view-home .topbar{max-width:640px;margin:0 auto;padding-left:var(--s-5);padding-right:var(--s-5)}
+  body:not(.inLesson):not(.welcome-entry):not(.gm-playing) #mainNav.nav{position:fixed;top:0;bottom:0;left:0;right:auto;width:248px;height:auto;flex-direction:column;justify-content:flex-start;align-items:stretch;gap:4px;padding:88px 16px 24px;border-top:0;border-right:1px solid var(--line);box-shadow:none;background:var(--paper)}
+  body:not(.inLesson):not(.welcome-entry):not(.gm-playing) #mainNav.nav::before{content:"";position:absolute;top:22px;left:22px;width:44px;height:44px;border-radius:12px;background:url(icon-192.png) center/cover}
+  body:not(.inLesson):not(.welcome-entry):not(.gm-playing) #mainNav.nav button{flex:0 0 auto;max-width:none;width:100%;min-height:48px;flex-direction:row;justify-content:flex-start;gap:12px;padding:0 12px;border-radius:var(--r-md)}
+  body:not(.inLesson):not(.welcome-entry):not(.gm-playing) #mainNav.nav button .simple-icon{width:24px;height:24px;padding:0;background:transparent}
+  body:not(.inLesson):not(.welcome-entry):not(.gm-playing) #mainNav.nav button span{font-size:var(--t-md)}
+  body:not(.inLesson):not(.welcome-entry):not(.gm-playing) #mainNav.nav button.active{background:var(--accent-soft)}
+  body:not(.inLesson):not(.welcome-entry):not(.gm-playing) #mainNav.nav button:hover{background:var(--soft)}
+  body:not(.inLesson):not(.welcome-entry):not(.gm-playing) #mainNav.nav button.active:hover{background:var(--accent-soft)}
+}
+
+/* ---------- 14. HOME SHAPE (round 3, 2026-11-20) ----------
+   Stage colour moves from a side stripe into a soft wash at the top of the
+   hero; shortcuts sit in one grouped list; the journey folds. */
+.simple-next{background:linear-gradient(180deg,color-mix(in srgb,var(--stage,var(--accent)) 11%,var(--surface)) 0,var(--surface) 62%)}
+.home-group{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;margin:0 0 var(--s-6)}
+.home-group>.simple-row,.home-group>.cz-home{margin:0;min-height:60px;padding:var(--s-3) var(--s-4);border:0;border-radius:0;border-bottom:1px solid var(--line);background:transparent}
+.home-group>:last-child{border-bottom:0}
+.home-group>.simple-row:hover{background:var(--soft)}
+.home-group>.simple-row>.simple-icon:first-child{width:34px;height:34px;padding:7px;border-radius:10px;background:var(--accent-soft);color:var(--accent);box-sizing:border-box;flex:0 0 34px}
+.journey-toggle{display:flex;align-items:center;gap:var(--s-3);width:100%;min-height:48px;padding:0;background:none;border:0;color:inherit;font:inherit;text-align:left;cursor:pointer}
+.journey-toggle h2{flex:1;margin:0}
+.journey-toggle>span{color:var(--ink-2);font-variant-numeric:tabular-nums}
+.journey-chev{width:22px;height:22px;flex:0 0 22px;color:var(--ink-2);transition:transform var(--dur-2) var(--ease)}
+.journey-toggle[aria-expanded="true"] .journey-chev{transform:rotate(180deg)}
+.journey.is-folded li.jy-more{display:none}
+.journey-head:has(.journey-toggle){display:block}
+
+/* ---------- 15. LESSON TRACK (round 5, 2026-11-20) ---------- */
+body.inLesson #mainNav.nav{display:none}
+html body.inLesson .lesnav,html body.inLesson .lessonfoot{bottom:calc(12px + env(safe-area-inset-bottom))}
+.les-track{display:flex;align-items:center;gap:var(--s-3);margin:var(--s-3) 0 var(--s-4)}
+.les-segs{flex:1;display:grid;grid-template-columns:repeat(11,1fr);gap:4px}
+.les-segs span{height:8px;border-radius:var(--r-full);background:var(--line)}
+.les-segs span.done{background:var(--accent)}
+.les-segs span.on{background:color-mix(in srgb,var(--accent) 45%,var(--line));box-shadow:inset 0 0 0 2px var(--accent)}
+.les-track b{font-size:var(--t-sm);font-weight:700;color:var(--ink-2);font-variant-numeric:tabular-nums;min-width:3ch;text-align:right}
+.les-fold{position:relative;cursor:pointer;border-radius:var(--r-sm);padding-right:28px}
+.les-fold[aria-expanded="false"]{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.les-fold::after{content:"";position:absolute;right:4px;top:4px;width:9px;height:9px;border-right:2px solid var(--ink-2);border-bottom:2px solid var(--ink-2);transform:rotate(45deg);transition:transform var(--dur-2) var(--ease)}
+.les-fold[aria-expanded="true"]::after{transform:rotate(225deg);top:9px}
+.wword{position:relative}
+.wword::after{content:"";position:absolute;inset:-6px -2px}
+@media (prefers-reduced-motion:reduce){.les-fold::after{transition:none}}
+
+/* ---------- 16. WOVEN BAND (round 6, 2026-11-20) ----------
+   The academy's own mark: a woven chevron-and-diamond band in the brand
+   greens and gold, after the patterns on Somali woven mats and baskets.
+   Used in three places only: the top of the welcome screen, the top of the
+   landing page (index.html carries its own copy) and the Home hero card. */
+:root{--weave:url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="28" height="14" viewBox="0 0 28 14"%3E%3Crect width="28" height="14" fill="%23FAF5EC"/%3E%3Cpath d="M0 14 7 3l7 11z" fill="%230E7C66"/%3E%3Cpath d="M14 0l7 11 7-11z" fill="%23E9B44C"/%3E%3Cpath d="M7 9.2 8.6 11.6 7 14 5.4 11.6z" fill="%23FAF5EC"/%3E%3Cpath d="M21 0 22.6 2.4 21 4.8 19.4 2.4z" fill="%23FAF5EC"/%3E%3Cpath d="M14 5.5l1.8 1.5L14 8.5 12.2 7z" fill="%230A5C4C"/%3E%3Cpath d="M0 5.5l1.8 1.5L0 8.5zM28 5.5 26.2 7 28 8.5z" fill="%230A5C4C"/%3E%3C/svg%3E')}
+:root[data-theme="dark"]{--weave:url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="28" height="14" viewBox="0 0 28 14"%3E%3Crect width="28" height="14" fill="%23161511"/%3E%3Cpath d="M0 14 7 3l7 11z" fill="%235fcdb2"/%3E%3Cpath d="M14 0l7 11 7-11z" fill="%23f0c366"/%3E%3Cpath d="M7 9.2 8.6 11.6 7 14 5.4 11.6z" fill="%23161511"/%3E%3Cpath d="M21 0 22.6 2.4 21 4.8 19.4 2.4z" fill="%23161511"/%3E%3Cpath d="M14 5.5l1.8 1.5L14 8.5 12.2 7z" fill="%232b8a74"/%3E%3Cpath d="M0 5.5l1.8 1.5L0 8.5zM28 5.5 26.2 7 28 8.5z" fill="%232b8a74"/%3E%3C/svg%3E')}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--weave:url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="28" height="14" viewBox="0 0 28 14"%3E%3Crect width="28" height="14" fill="%23161511"/%3E%3Cpath d="M0 14 7 3l7 11z" fill="%235fcdb2"/%3E%3Cpath d="M14 0l7 11 7-11z" fill="%23f0c366"/%3E%3Cpath d="M7 9.2 8.6 11.6 7 14 5.4 11.6z" fill="%23161511"/%3E%3Cpath d="M21 0 22.6 2.4 21 4.8 19.4 2.4z" fill="%23161511"/%3E%3Cpath d="M14 5.5l1.8 1.5L14 8.5 12.2 7z" fill="%232b8a74"/%3E%3Cpath d="M0 5.5l1.8 1.5L0 8.5zM28 5.5 26.2 7 28 8.5z" fill="%232b8a74"/%3E%3C/svg%3E')}}
+body.welcome-entry::before{content:"";display:block;height:14px;background:var(--weave) 0 0/28px 14px repeat-x}
+.simple-next{padding-top:calc(var(--s-5) + 10px)}
+.simple-next::before{content:"";position:absolute;left:0;right:0;top:0;bottom:auto;width:auto;height:10px;background:var(--weave) 0 0/20px 10px repeat-x}
+@media print{body.welcome-entry::before,.simple-next::before{display:none}}
+
+/* ---------- 17. DICTIONARY DISCOVER (round 7, 2026-11-20) ---------- */
+.dict-discover{margin:var(--s-6) 0 0}
+.dict-discover-head{display:flex;align-items:baseline;justify-content:space-between;gap:var(--s-3);margin:0 0 var(--s-3)}
+.dict-discover-head h2{margin:0;font-size:var(--t-lg)}
+.dict-discover-head span{color:var(--ink-2);font-size:var(--t-sm);text-align:right;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dict-tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--s-2)}
+.dict-tile{position:relative;display:flex;align-items:stretch;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);transition:border-color var(--dur-1) var(--ease)}
+.dict-tile:hover{border-color:var(--accent)}
+.dict-tile-word{flex:1;min-width:0;display:flex;flex-direction:column;align-items:flex-start;gap:2px;min-height:76px;padding:var(--s-3) 0 var(--s-3) var(--s-4);background:none;border:0;color:var(--ink);font:inherit;text-align:left;cursor:pointer}
+.dict-tile-word strong{font-family:var(--font-display);font-size:var(--t-xl);font-weight:700;letter-spacing:-.02em;line-height:1.1;max-width:100%;overflow-wrap:anywhere}
+.dict-tile-word span{color:var(--ink-2);font-size:var(--t-sm)}
+.dict-tile .simple-icon-button{align-self:center;margin-right:var(--s-1);flex:0 0 44px}
+@media (min-width:600px){.dict-tiles{grid-template-columns:repeat(4,minmax(0,1fr))}}
+
+/* ---------- 18. PASS MOMENT (round 8, 2026-11-20) ---------- */
+.les-track.les-won .les-segs span{background:var(--gold);box-shadow:none}
+.les-track.les-won b{color:var(--gold-ink)}
+.card.les-won{overflow:hidden;padding-top:calc(var(--s-5) + 12px)}
+.card.les-won::before{content:"";position:absolute;left:0;right:0;top:0;height:12px;background:var(--weave) 0 0/24px 12px repeat-x}
+.card.les-won .lesson-done-mark{background:var(--gold-soft);color:var(--gold-ink)}
+@keyframes lesSweep{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes lesPop{0%{transform:scale(.6);opacity:0}60%{transform:scale(1.08);opacity:1}100%{transform:scale(1)}}
+@keyframes lesRise{from{transform:translateY(10px);opacity:0}to{transform:none;opacity:1}}
+@keyframes lesBand{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
+@media (prefers-reduced-motion:no-preference){
+  .les-celebrate .les-track.les-won .les-segs span{transform-origin:left center;animation:lesSweep 420ms cubic-bezier(.16,1,.3,1) both}
+  .les-celebrate .les-track.les-won .les-segs span:nth-child(2){animation-delay:40ms}.les-celebrate .les-track.les-won .les-segs span:nth-child(3){animation-delay:80ms}.les-celebrate .les-track.les-won .les-segs span:nth-child(4){animation-delay:120ms}.les-celebrate .les-track.les-won .les-segs span:nth-child(5){animation-delay:160ms}.les-celebrate .les-track.les-won .les-segs span:nth-child(6){animation-delay:200ms}.les-celebrate .les-track.les-won .les-segs span:nth-child(7){animation-delay:240ms}.les-celebrate .les-track.les-won .les-segs span:nth-child(8){animation-delay:280ms}.les-celebrate .les-track.les-won .les-segs span:nth-child(9){animation-delay:320ms}.les-celebrate .les-track.les-won .les-segs span:nth-child(10){animation-delay:360ms}.les-celebrate .les-track.les-won .les-segs span:nth-child(11){animation-delay:400ms}
+  .les-celebrate .card.les-won::before{animation:lesBand 700ms cubic-bezier(.16,1,.3,1) 380ms both}
+  .les-celebrate .card.les-won .goldRing,.les-celebrate .card.les-won .lesson-done-mark{animation:lesPop 560ms cubic-bezier(.16,1,.3,1) 520ms both}
+  .les-celebrate .card.les-won .badge{animation:lesRise 420ms cubic-bezier(.16,1,.3,1) both;animation-delay:820ms}
+  .les-celebrate .card.les-won .badge:nth-child(2){animation-delay:880ms}.les-celebrate .card.les-won .badge:nth-child(3){animation-delay:940ms}.les-celebrate .card.les-won .badge:nth-child(4){animation-delay:1000ms}.les-celebrate .card.les-won .badge:nth-child(5){animation-delay:1060ms}.les-celebrate .card.les-won .badge:nth-child(n+6){animation-delay:1120ms}
+}
+
+/* ---------- 19. WATCH AS A LIST (round 9, 2026-11-20) ----------
+   On phones each episode card is a compact row: thumbnail left; episode,
+   title, English title and the Watch button right; the description folds to
+   two lines underneath. Nothing is removed. */
+@media (max-width:699px){
+  #app .card:has(>button[data-ep]:first-child){display:grid;grid-template-columns:132px minmax(0,1fr);column-gap:var(--s-3);row-gap:2px;align-items:start;padding:var(--s-3)}
+  #app .card:has(>button[data-ep]:first-child)>button[data-ep]:first-child{grid-column:1;grid-row:1/span 4;align-self:start}
+  #app .card:has(>button[data-ep]:first-child)>button[data-ep]:first-child .wplay svg{width:18px;height:18px}
+  #app .card:has(>button[data-ep]:first-child)>p:first-of-type{grid-column:2;margin:0!important;font-size:var(--t-xs)}
+  #app .card:has(>button[data-ep]:first-child)>p:first-of-type .pill{font-size:var(--t-xs);padding:2px 8px}
+  #app .card:has(>button[data-ep]:first-child)>h2{grid-column:2;margin:2px 0 0!important;font-size:var(--t-md);line-height:1.25}
+  #app .card:has(>button[data-ep]:first-child)>h2+p.muted{grid-column:2;margin:0!important;font-size:var(--t-sm);line-height:1.3}
+  #app .card:has(>button[data-ep]:first-child)>.btn[data-ep]{grid-column:2;justify-self:start;min-height:44px;padding:6px 14px;margin-top:6px;font-size:var(--t-sm)}
+  #app .card:has(>button[data-ep]:first-child)>p[lang="so"]{grid-column:1/-1;grid-row:5;margin:var(--s-3) 0 0!important;font-size:var(--t-sm);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  #app .card:has(>button[data-ep]:first-child)>p.small{grid-column:1/-1;grid-row:6;margin:var(--s-1) 0 0!important}
+  #app .card:has(>button[data-ep]:first-child){margin:0 0 var(--s-3)}
+  #app .card:has(>button[data-ep]:first-child) .wplay>span{width:38px;height:38px;min-width:38px}
+}
+
+/* ---------- 20. PLACEMENT FOCUS MODE (round 10, 2026-11-20) ---------- */
+body.inPlacement #mainNav.nav{display:none}
+body.inPlacement #app{display:flex;flex-direction:column;padding-bottom:calc(var(--s-6) + env(safe-area-inset-bottom))}
+body.inPlacement #app>*{order:5}
+body.inPlacement #plBack{order:0;align-self:flex-start}
+body.inPlacement #app>h1{order:1;font-size:var(--t-xl);margin:var(--s-3) 0 var(--s-4)}
+body.inPlacement #app>.pl-count{order:2;margin:0 0 var(--s-2);font-size:var(--t-sm);font-weight:700;color:var(--ink-2);font-variant-numeric:tabular-nums}
+body.inPlacement #app>progress{order:3;-webkit-appearance:none;appearance:none;width:100%;height:8px;border:0;border-radius:var(--r-full);background:var(--line);overflow:hidden;margin:0 0 var(--s-5)}
+body.inPlacement #app>progress::-webkit-progress-bar{background:var(--line);border-radius:var(--r-full)}
+body.inPlacement #app>progress::-webkit-progress-value{background:var(--accent);border-radius:var(--r-full);transition:width var(--dur-2) var(--ease)}
+body.inPlacement #app>progress::-moz-progress-bar{background:var(--accent);border-radius:var(--r-full)}
+body.inPlacement #app>h2{order:4;font-size:var(--t-2xl);line-height:var(--lh-snug);margin:0 0 var(--s-4);text-wrap:balance}
+body.inPlacement #app>.opts{order:5;display:grid;gap:var(--s-2);margin:0}
+body.inPlacement #app>.opts .opt{min-height:56px;font-size:var(--t-lg);text-align:left;padding:var(--s-3) var(--s-4)}
+body.inPlacement #plUnknown{order:6;justify-content:center;margin:var(--s-3) 0 0;min-height:52px;border:1.5px dashed var(--line-2);border-radius:var(--r-md);background:transparent;color:var(--ink-2)}
+body.inPlacement #plPrevious{order:7;align-self:flex-start;margin-top:var(--s-3)}
+body.inPlacement #app>.pl-info{order:8;margin:var(--s-6) 0 0;font-size:var(--t-sm);color:var(--ink-2)}
+body.inPlacement #plSkip{order:9;justify-content:center;margin:var(--s-4) 0 0;min-height:48px;border:1px solid var(--line-2);border-radius:var(--r-md);background:var(--surface);color:var(--ink);font-weight:600}

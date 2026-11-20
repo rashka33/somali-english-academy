@@ -53,6 +53,7 @@
     if (destination === 'play' && typeof renderPlay !== 'function') return loadScript('world.js').then(function () { return loadScript('games.js'); });
     return Promise.resolve();
   }
+  window.__seaGo = go;
   function go(destination, panel) {
     if (destination === 'profile') profilePage = panel || '';
     setNav(destination);
@@ -85,9 +86,9 @@
     }
     var language = document.getElementById('simpleLanguage');
     language.textContent = english() ? 'EN' : 'SO'; language.setAttribute('aria-label', t('Switch to English', 'U beddel Soomaali'));
-    var parent = view === 'dict' ? 'dict' : view === 'cit' ? 'cit' : view === 'ai' ? 'ai' : view === 'play' ? 'play' : view === 'profile' ? 'profile' : 'home';
+    var parent = view === 'dict' ? 'dict' : view === 'cit' ? 'cit' : view === 'play' ? 'play' : view === 'profile' ? 'profile' : 'home';
     var nav = document.getElementById('mainNav'); nav.setAttribute('aria-label', t('Bogagga waaweyn', 'Main navigation'));
-    nav.innerHTML = [['home', t('Hoyga', 'Home'), 'home'], ['cit', t('Jinsiyadda', 'Citizenship'), 'flag'], ['ai', 'Baro AI', 'ai'], ['play', t('Ciyaar', 'Play'), 'game'], ['dict', t('Qaamuus', 'Dictionary'), 'book'], ['profile', t('Boggaaga', 'Profile'), 'user']].map(function (item) {
+    nav.innerHTML = [['home', t('Hoyga', 'Home'), 'home'], ['cit', t('Jinsiyadda', 'Citizenship'), 'flag'], ['play', t('Ciyaar', 'Play'), 'game'], ['dict', t('Qaamuus', 'Dictionary'), 'book'], ['profile', t('Boggaaga', 'Profile'), 'user']].map(function (item) {
       return '<button type="button" data-view="' + item[0] + '"' + (parent === item[0] ? ' class="active" aria-current="page"' : '') + '>' + icon(item[2]) + '<span>' + item[1] + '</span></button>';
     }).join('');
     nav.dataset.ready = 'true';
@@ -155,10 +156,23 @@
       return '<div class="dictionary-course-row"><button type="button" class="dictionary-course-word" data-define="' + esc(e.en) + '"><strong lang="en">' + esc(e.en) + '</strong><span lang="so">' + esc(e.so) + '</span></button>' + listenButton(e.en) + saveButton(e.en) + '</div>';
     }).join('') + '</div>';
   }
+  /* Round 7 (2026-11-20): an empty Dictionary is a starting point, not a blank
+     page. It shows the next lesson's words as tap-to-look-up tiles (with
+     listening) and the learner's saved words; all labels are existing strings. */
+  function discoverHTML() {
+    if (!S || !Array.isArray(LESSONS)) return '';
+    var lesson = nextLesson(), words = (lesson && lesson.vocab || []).filter(function (v) { return v && v.en; }).slice(0, 8);
+    var html = '';
+    if (words.length) html += '<section class="dict-discover" aria-labelledby="dictLessonWords"><div class="dict-discover-head"><h2 id="dictLessonWords">' + t('Erayada casharrada', 'Course matches') + '</h2><span>' + esc(title(lesson)) + '</span></div><div class="dict-tiles">'
+      + words.map(function (v) { return '<div class="dict-tile"><button type="button" class="dict-tile-word" data-define="' + esc(v.en) + '"><strong lang="en">' + esc(v.en) + '</strong><span lang="so">' + esc(v.so || '') + '</span></button>' + listenButton(v.en) + '</div>'; }).join('') + '</div></section>';
+    var mine = saved().slice(-6).reverse();
+    if (mine.length) html += '<section class="dict-discover" aria-labelledby="dictSavedWords"><div class="dict-discover-head"><h2 id="dictSavedWords">' + t('Erayada kaydsan', 'Saved words') + '</h2></div>' + courseHTML(mine) + '</section>';
+    return html;
+  }
   function paintDictionary() {
     var box = document.getElementById('dictionaryResults'); if (!box) return;
     var hits = localHits();
-    if (!norm(query)) box.innerHTML = '';
+    if (!norm(query)) box.innerHTML = discoverHTML();
     else if (loading) box.innerHTML = '<p class="dictionary-status" role="status">' + t('Raadin…', 'Looking up…') + '</p>';
     else if (live && live.status === 'success') {
       var primary = live.entries.find(function (e) { return e.language === 'so' && norm(e.word) === norm(query); }) || live.entries[0];
@@ -216,15 +230,19 @@
       ['progress', 'GED', 'U diyaargarow imtixaanka GED, afar maado', 'ged'],
       ['ai', 'Baro AI', 'AI ku baro Af-Soomaali — bilow ilaa dhisidda website-kaaga', 'ai']
     ];
-    app.innerHTML = '<main class="simple-welcome" aria-labelledby="welcomeTitle">'
+    app.innerHTML = '<section class="simple-welcome" aria-labelledby="welcomeTitle">'
       + '<header class="welcome-brand"><img src="icon-192.png" alt="" width="52" height="52"><div><strong>Somali English Academy</strong><span>Ingiriisi, Af-Soomaali ku baro</span></div></header>'
-      + '<section class="welcome-hero"><h1 id="welcomeTitle"><span>Baro Ingiriisi,</span><span>tallaabo tallaabo.</span></h1><p>Ku soo dhawoow iskuulkaaga. Fiiri waxa gudaha ku jira — ka dibna bilow markaad diyaar tahay.</p></section>'
-      + '<section class="welcome-benefits" aria-label="Waxa aad baran karto">' + benefits.map(function (item) { return '<button type="button" class="welcome-benefit" data-go="' + item[3] + '"><span class="welcome-icon">' + icon(item[0]) + '</span><span><h2>' + item[1] + '</h2><p>' + item[2] + '</p></span></button>'; }).join('') + '</section>'
+      + '<div class="welcome-lead"><section class="welcome-hero"><h1 id="welcomeTitle"><span>Baro Ingiriisi,</span><span>tallaabo tallaabo.</span></h1><p>Ku soo dhawoow iskuulkaaga. Fiiri waxa gudaha ku jira — ka dibna bilow markaad diyaar tahay.</p></section>'
       + '<div class="welcome-actions"><button type="button" class="welcome-primary" id="welcomeStart">Bilow barashada' + icon('arrow') + '</button><button type="button" class="welcome-placement" id="welcomePlacement">Hore u baratay Ingiriisi? <span>Ogaaw heerkaaga — imtixaan gaaban</span></button></div>'
-      + '<footer class="welcome-trust" aria-label="Macluumaad muhiim ah"><span class="welcome-trust-pill">✓ Bilaash</span><span class="welcome-trust-pill">✓ Akoon looma baahna</span><span class="welcome-trust-pill">✓ Horumarku aaladdaada ayuu ku kaydsan yahay</span></footer></main>';
+      + '<footer class="welcome-trust" aria-label="Macluumaad muhiim ah"><span class="welcome-trust-pill">' + icon('check') + 'Bilaash</span><span class="welcome-trust-pill">' + icon('check') + 'Akoon looma baahna</span><span class="welcome-trust-pill">' + icon('check') + 'Horumarku aaladdaada ayuu ku kaydsan yahay</span></footer></div>'
+      + '<section class="welcome-benefits" aria-labelledby="welcomeInside"><h2 id="welcomeInside" class="welcome-inside">Waxa aad baran karto</h2>' + benefits.map(function (item) { return '<button type="button" class="welcome-benefit" data-go="' + item[3] + '"><span class="welcome-icon">' + icon(item[0]) + '</span><span class="welcome-copy"><h2>' + item[1] + '</h2><p>' + item[2] + '</p></span>' + icon('chevron') + '</button>'; }).join('') + '</section></section>';
     document.getElementById('welcomeStart').onclick = function () {
       document.body.classList.remove('welcome-entry');
-      guestMode = true; guestBackup = JSON.parse(JSON.stringify(S)); openLesson(window.__pendingLesson || 1); window.__pendingLesson = null;
+      /* Round 4: Bilow saves from the first tap. The learner is registered and
+         Lesson 1 opens for real; placement stays available from Profile. */
+      var first = window.__pendingLesson || 1; window.__pendingLesson = null;
+      S.profile.onboarded = true; S.profile.placementSkipped = true;
+      save().then(function () { openLesson(first); });
     };
     app.querySelectorAll('[data-go]').forEach(function (card) { card.onclick = function () { window.enterGuestSection(card.dataset.go); }; });
     document.getElementById('welcomePlacement').onclick = function () {
@@ -1961,7 +1979,7 @@ window.ACADEMY_TUTOR_URL = 'https://somali-academy-tutor.rashkaa33.workers.dev';
     try{var draft=JSON.parse(localStorage.getItem(draftKey()));if(draft&&draft.version===50)S.placementDraft=draft}catch(e){}
   }
   plBegin=function(){
-    recover();plCtx='profile';var draft=S.placementDraft;
+    recover();plCtx='profile';S.profile.placementSkipped=false;var draft=S.placementDraft;
     plState=draft&&draft.version===50?JSON.parse(JSON.stringify(draft.state)):{qs:plBuildQuestions(),idx:0,answers:[],result:null,done:false};
     window.__plTest=plState;persist();plScreenRender();
   };
@@ -1984,7 +2002,7 @@ window.ACADEMY_TUTOR_URL = 'https://somali-academy-tutor.rashkaa33.workers.dev';
     document.getElementById('plBack').onclick=function(){setNav('home');render()};
     if(!plState.done){
       var skip=document.createElement('button');skip.id='plSkip';skip.className='simple-row';skip.textContent='Ka bood hadda';
-      skip.onclick=function(){persist();setNav('home');render()};app.appendChild(skip);
+      skip.onclick=function(){S.profile.placementSkipped=true;persist();setNav('home');render()};app.appendChild(skip);
     }
     if(plState.done){
       var r=plState.result;
@@ -1999,7 +2017,7 @@ window.ACADEMY_TUTOR_URL = 'https://somali-academy-tutor.rashkaa33.workers.dev';
   };
   var home=renderHome,open=openLesson;
   function needsPlacement(){return !S.profile.placementVersion&&!S.profile.placedLesson&&!Object.values(S.completed||{}).some(function(v){return !v.placed})}
-  renderHome=function(){recover();home();if(needsPlacement()||S.placementDraft){
+  renderHome=function(){recover();home();if(!S.profile.placementSkipped&&(needsPlacement()||S.placementDraft)){
     var b=document.getElementById('academyContinue');if(b){b.textContent=S.placementDraft?t('Sii wad imtixaanka →','Continue the test →'):t('Ogow heerkayga · 50 su’aalood →','Find my level · 50 questions →');b.onclick=function(){plBegin('profile')}}
     var heading=app.querySelector('.simple-next h2');if(heading)heading.textContent=t('Marka hore ogow heerkaaga','Start with your placement test');
   }};
@@ -2101,4 +2119,138 @@ window.ACADEMY_TUTOR_URL = 'https://somali-academy-tutor.rashkaa33.workers.dev';
     var host = app.querySelector('.simple-profile-rows') || app;
     if (host && !document.getElementById('simpleFoot')) host.appendChild(footer());
   };
+})();
+
+/* Round 3 (2026-11-20): Home shape. The three shortcut rows become one grouped
+   list, and the 12-stage journey folds to the current stage and the next one;
+   its heading opens the rest. The fold is a per-device convenience only. */
+(function () {
+  var KEY = 'sea-journey-open';
+  function isOpen() { try { return localStorage.getItem(KEY) === '1'; } catch (e) { return false; } }
+  function remember(open) { try { localStorage.setItem(KEY, open ? '1' : '0'); } catch (e) {} }
+  function group(box) {
+    if (box.querySelector('.home-group')) return;
+    var ids = ['homeWatchNext', 'academyAllLessons', 'homeAiTutor'];
+    var rows = ids.map(function (id) { return document.getElementById(id); }).filter(Boolean);
+    if (rows.length < 2) return;
+    var wrap = document.createElement('div'); wrap.className = 'home-group';
+    rows[0].parentNode.insertBefore(wrap, rows[0]);
+    rows.forEach(function (r) { wrap.appendChild(r); });
+  }
+  function fold(box) {
+    var journey = box.querySelector('.journey'); if (!journey || journey.dataset.folded) return;
+    var head = journey.querySelector('.journey-head'), list = journey.querySelector('ol'); if (!head || !list) return;
+    var items = Array.prototype.slice.call(list.children);
+    var cur = items.findIndex(function (li) { return li.querySelector('.j-cur'); }); if (cur < 0) cur = 0;
+    var hidden = 0;
+    items.forEach(function (li, i) { if (i < cur || i > cur + 1) { li.classList.add('jy-more'); hidden++; } });
+    if (!hidden) return;
+    journey.dataset.folded = 'true'; list.id = list.id || 'journeyList';
+    var toggle = document.createElement('button'); toggle.type = 'button'; toggle.className = 'journey-toggle';
+    toggle.setAttribute('aria-controls', list.id);
+    while (head.firstChild) toggle.appendChild(head.firstChild);
+    toggle.insertAdjacentHTML('beforeend', '<svg class="simple-icon journey-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>');
+    head.appendChild(toggle);
+    function set(open) { journey.classList.toggle('is-folded', !open); toggle.setAttribute('aria-expanded', open ? 'true' : 'false'); }
+    set(isOpen());
+    toggle.onclick = function () { var open = journey.classList.contains('is-folded'); set(open); remember(open); };
+  }
+  var home = renderHome;
+  renderHome = function () {
+    home();
+    var box = app.querySelector('.simple-home-content'); if (!box) return;
+    group(box); fold(box);
+    aiEntry(box);
+  };
+  /* Baro AI has no tab since round 2. Its Home card and Profile row are drawn
+     here with the same markup baro-ai.js uses, so the script still loads only
+     when the learner opens it (baro-ai.js skips ids that already exist). */
+  function aiState() { var b = S && S.baroAI; return b && typeof b === 'object' ? b : { completed: {}, stage1Complete: false }; }
+  function openAI() { if (typeof window.openBaroAI === 'function') window.openBaroAI(); else if (window.__seaGo) window.__seaGo('ai'); }
+  function aiEntry(box) {
+    if (document.getElementById('homeBaroAI')) return;
+    var anchor = document.getElementById('homeCit') || box.querySelector('.simple-next'); if (!anchor) return;
+    var b = document.createElement('button'); b.type = 'button'; b.id = 'homeBaroAI'; b.className = 'cz-home';
+    b.innerHTML = '<span class="cz-row-ic">✦</span><span class="cz-row-t"><b>Baro AI</b><small>' + (aiState().stage1Complete ? 'Marxaladda 1 waa dhammaatay · Stage 1 complete' : 'AI Zero to Hero — Af-Soomaali ku bilow') + '</small></span><span>›</span>';
+    b.onclick = openAI; anchor.insertAdjacentElement('afterend', b);
+  }
+  var profile = renderProfile;
+  renderProfile = function () {
+    profile();
+    var rows = app.querySelector('.simple-profile-rows'); if (!rows || document.getElementById('profileBaroAI')) return;
+    var st = aiState(), done = Math.min(6, Object.keys(st.completed || {}).length + (st.stage1Complete ? 1 : 0));
+    var b = document.createElement('button'); b.type = 'button'; b.id = 'profileBaroAI'; b.className = 'simple-row';
+    b.innerHTML = '<span class="simple-icon" aria-hidden="true">✦</span><span>Baro AI</span><small>' + done + ' / 6</small><span>›</span>';
+    b.onclick = openAI; rows.insertBefore(b, rows.children[1] || null);
+  };
+  if (S && S.profile && S.profile.onboarded && view === 'home') render();
+})();
+
+/* Round 5 (2026-11-20): lesson progress you can see. An 11-segment track under
+   the lesson title shows where the learner is; the pass-rule paragraph on the
+   objective screen folds to two lines and opens on tap. */
+(function () {
+  var lesson = renderLesson;
+  function track() {
+    if (view !== 'lesson' || !cur || typeof STEPS === 'undefined') return;
+    var old = app.querySelector('.les-track'); if (old) old.remove();
+    var anchor = app.querySelector('#app > p.muted') || app.querySelector('#app > h1'); if (!anchor) return;
+    var n = STEPS.length, at = Math.max(0, Math.min(step, n - 1));
+    var el = document.createElement('div'); el.className = 'les-track';
+    el.setAttribute('role', 'progressbar'); el.setAttribute('aria-valuemin', '1'); el.setAttribute('aria-valuemax', String(n));
+    el.setAttribute('aria-valuenow', String(at + 1)); el.setAttribute('aria-valuetext', STEPS[at]);
+    var segs = ''; for (var i = 0; i < n; i++) segs += '<span class="' + (i < at ? 'done' : i === at ? 'on' : '') + '"></span>';
+    el.innerHTML = '<div class="les-segs">' + segs + '</div><b aria-hidden="true">' + (at + 1) + '/' + n + '</b>';
+    anchor.insertAdjacentElement('afterend', el);
+  }
+  function foldRules() {
+    if (step !== 0) return;
+    var p = app.querySelector('.card p.muted'); if (!p || !/%/.test(p.textContent) || p.dataset.fold) return;
+    p.dataset.fold = '1'; p.classList.add('les-fold'); p.tabIndex = 0; p.setAttribute('role', 'button'); p.setAttribute('aria-expanded', 'false');
+    function flip() { var open = p.getAttribute('aria-expanded') !== 'true'; p.setAttribute('aria-expanded', open ? 'true' : 'false'); }
+    p.addEventListener('click', flip);
+    p.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); flip(); } });
+  }
+  renderLesson = function () { lesson.apply(this, arguments); try { track(); foldRules(); } catch (e) {} };
+})();
+
+/* Round 8 (2026-11-20): a pass gets one authored moment. On the result screen
+   the lesson track sweeps gold, the woven band crowns the card and the words
+   learned rise in; it plays once per lesson per visit and respects reduced
+   motion (CSS). A short vibration marks it on phones that support it. */
+(function () {
+  var lesson = renderLesson, played = {};
+  renderLesson = function () {
+    lesson.apply(this, arguments);
+    try {
+      if (view !== 'lesson' || !cur || typeof STEPS === 'undefined' || step !== STEPS.length - 1) return;
+      var mark = app.querySelector('.lesson-done-mark'); if (!mark) return;
+      /* same pass rule the result screen uses (80%+ quiz, 70%+ exercises) */
+      var qT = typeof quizTotal === 'function' ? quizTotal(cur) : 5;
+      if (!(qT && qCorrect / qT >= 0.8 && exCorrect / 8 >= 0.7)) return;
+      var card = mark.closest('.card'), track = app.querySelector('.les-track');
+      if (card) card.classList.add('les-won'); if (track) track.classList.add('les-won');
+      if (played[cur.n]) return; played[cur.n] = true;
+      app.classList.add('les-celebrate');
+      setTimeout(function () { app.classList.remove('les-celebrate'); }, 2600);
+      if (navigator.vibrate && !matchMedia('(prefers-reduced-motion: reduce)').matches) navigator.vibrate([18, 60, 28]);
+    } catch (e) {}
+  };
+  var r = render;
+  render = function () { app.classList.remove('les-celebrate'); r.apply(this, arguments); };
+})();
+
+/* Round 10 (2026-11-20): placement in focus mode. While the test is on screen
+   the tab bar steps away (as in lessons), so answers are never under it; the
+   layout itself is CSS (section 20 of academy-theme.css). */
+(function () {
+  if (typeof plScreenRender !== 'function') return;
+  var screen = plScreenRender, r = render;
+  plScreenRender = function () {
+    screen.apply(this, arguments);
+    document.body.classList.toggle('inPlacement', view === 'placement');
+    var count = app.querySelector('#app > progress'); if (count && count.previousElementSibling && count.previousElementSibling.tagName === 'P') count.previousElementSibling.classList.add('pl-count');
+    var info = count && count.nextElementSibling; if (info && info.tagName === 'P') info.classList.add('pl-info');
+  };
+  render = function () { if (view !== 'placement') document.body.classList.remove('inPlacement'); r.apply(this, arguments); };
 })();
