@@ -1461,3 +1461,9 @@ body.about-page[data-show="so"] [lang="en"]:not(.about-both),body.about-page[dat
 .about-block ul{margin:0;padding-left:var(--s-5)}.about-block li{margin:0 0 var(--s-1)}
 .about-foot{max-width:720px;margin:0 auto;padding:var(--s-4);color:var(--ink-2);font-size:var(--t-sm)}
 header.about-top{display:flex;flex-wrap:nowrap}.about-brand{min-width:0;font-size:var(--t-sm)}.about-brand span{line-height:1.2}.about-lang{flex:0 0 auto}
+
+/* Gauntlet round 3: welcome door — benefits become a plain list (no equal card
+   grid), icons lose their rounded-square tiles, headline renders true 600. */
+.simple-welcome .welcome-benefits{display:flex;flex-direction:column;gap:0;max-width:640px;margin:0 0 30px}
+.simple-welcome .welcome-benefit{display:flex;align-items:flex-start;gap:14px;width:100%;min-height:0;padding:16px 2px;background:transparent;border:0;border-top:1px solid var(--line);border-radius:0;color:inherit;font:inherit;text-align:left;cursor:pointer}
+.simple-welcome .welcome-benefit .welcome-icon{background:transparent;color:var(--welcome-teal);width:auto;height:auto;flex:0 0 auto;border-radius:0;display:flex;align-items:center;justify-content:center}

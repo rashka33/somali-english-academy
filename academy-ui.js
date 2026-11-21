@@ -226,15 +226,15 @@
       ['repeat', 'Ku celceli & ciyaar', 'Erayada ku celceli adigoo ciyaaraya', 'play'],
       ['flag', 'Jinsiyadda', 'U diyaargarow imtixaanka jinsiyadda Maraykanka', 'cit'],
       ['form', 'Foomamka', 'Tababar foomamka nolosha dhabta ah', 'forms'],
-      ['cap', 'GED', 'Xisaab — koorso buuxa · maadooyinka kale — hubin diyaargarow', 'ged']
+      ['cap', 'GED', 'Xisaab: koorso buuxa · maadooyinka kale: hubin diyaargarow', 'ged']
     ];
     app.innerHTML = '<section class="simple-welcome" aria-labelledby="welcomeTitle">'
       + '<header class="welcome-brand"><img src="icon-192.png" alt="" width="52" height="52"><div><strong>Somali English Academy</strong><span>Ingiriisi, Af-Soomaali ku baro</span></div></header>'
-      + '<div class="welcome-lead"><section class="welcome-hero"><div class="welcome-title-row"><h1 id="welcomeTitle"><span>Baro Ingiriisi,</span><span>tallaabo tallaabo.</span></h1><button type="button" class="welcome-say" id="welcomeSay" aria-label="Dhegeyso: Baro Ingiriisi, tallaabo tallaabo.">' + icon('speaker') + '</button></div><p>Ku soo dhawoow iskuulkaaga. Fiiri waxa gudaha ku jira — ka dibna bilow markaad diyaar tahay.</p></section>'
-      + '<div class="welcome-actions"><button type="button" class="welcome-primary" id="welcomeStart">Bilow barashada' + icon('arrow') + '</button><button type="button" class="welcome-placement" id="welcomePlacement">Hore u baratay Ingiriisi? <span>Ogaaw heerkaaga — imtixaan gaaban</span></button></div>'
+      + '<div class="welcome-lead"><section class="welcome-hero"><div class="welcome-title-row"><h1 id="welcomeTitle"><span>Ingiriisi baro,</span><span>Soomaali ku faham.</span></h1><button type="button" class="welcome-say" id="welcomeSay" aria-label="Dhegeyso: Ingiriisi baro, Soomaali ku faham.">' + icon('speaker') + '</button></div><p>Ku soo dhawoow iskuulkaaga. Fiiri waxa gudaha ku jira, ka dibna bilow markaad diyaar tahay.</p></section>'
+      + '<div class="welcome-actions"><button type="button" class="welcome-primary" id="welcomeStart">Bilow barashada' + icon('arrow') + '</button><button type="button" class="welcome-placement" id="welcomePlacement">Hore u baratay Ingiriisi? <span>Ogaaw heerkaaga: imtixaan gaaban</span></button></div>'
       + '<footer class="welcome-trust" aria-label="Macluumaad muhiim ah"><span class="welcome-trust-pill">' + icon('check') + 'Bilaash · akoon looma baahna</span><span class="welcome-trust-pill">' + icon('check') + 'Horumarku aaladdaada ayuu ku kaydsan yahay</span></footer></div>'
       + '<section class="welcome-benefits" aria-labelledby="welcomeInside"><h2 id="welcomeInside" class="welcome-inside">Waxa aad baran karto</h2>' + benefits.map(function (item) { return '<button type="button" class="welcome-benefit" data-go="' + item[3] + '"><span class="welcome-icon">' + icon(item[0]) + '</span><span class="welcome-copy"><h2>' + item[1] + '</h2><p>' + item[2] + '</p></span>' + icon('chevron') + '</button>'; }).join('') + '</section></section>';
-    document.getElementById('welcomeSay').onclick = function () { speak('Baro Ingiriisi, tallaabo tallaabo.', false, this); };
+    document.getElementById('welcomeSay').onclick = function () { speak('Ingiriisi baro, Soomaali ku faham.', false, this); };
     document.getElementById('welcomeStart').onclick = function () {
       document.body.classList.remove('welcome-entry');
       var first = window.__pendingLesson || 1; window.__pendingLesson = null;
@@ -2351,14 +2351,14 @@ window.ACADEMY_TUTOR_URL = 'https://somali-academy-tutor.rashkaa33.workers.dev';
       + group(T('Diyaargarow', 'Prepare'), [
         row('moreCit', 'flag', T('Jinsiyadda', 'Citizenship'), T('U diyaargarow imtixaanka jinsiyadda Maraykanka', 'Prepare for the U.S. citizenship test'), status('full')),
         row('moreForms', 'clipboard', T('Foomamka', 'Forms'), T('Tababar foomamka nolosha dhabta ah', 'Practise real-life forms'), status('practice')),
-        row('moreGed', 'cap', 'GED', T('Xisaab — koorso buuxa · maadooyinka kale — hubin diyaargarow', 'GED Math — full course · other subjects — readiness check'), '')])
+        row('moreGed', 'cap', 'GED', T('Xisaab: koorso buuxa · maadooyinka kale: hubin diyaargarow', 'GED Math — full course · other subjects — readiness check'), '')])
       + group(T('Tababar', 'Practice'), [
         row('morePractice', 'mic', T('Tababar hadal iyo qoraal', 'Speaking and writing practice'), T('Doorka-ciyaar iyo tababarro gaagaaban', 'Role-plays and short drills'), status('practice')),
         row('morePlay', 'puzzle', T('Ku celceli & ciyaar', 'Review & Play'), T('Erayada ku celceli adigoo ciyaaraya', 'Review words through games'), status('practice')),
         row('moreDict', 'book', T('Qaamuus', 'Dictionary'), T('Ingiriisi iyo Soomaali, erayo cod leh', 'English and Somali, with audio'), '')])
       + group(T('Caawimaad', 'Help'), [
         row('moreTutor', 'sparkle', T('Macallinka AI', 'AI Tutor'), T('Caawinta AI way qaldami kartaa.', 'AI help can make mistakes.'), ''),
-        row('morePlacement', 'target', T('Imtixaanka meelaynta', 'Placement test'), T('Ogaaw heerkaaga — imtixaan gaaban', 'Find your level with a short test'), ''),
+        row('morePlacement', 'target', T('Imtixaanka meelaynta', 'Placement test'), T('Ogaaw heerkaaga: imtixaan gaaban', 'Find your level with a short test'), ''),
         row('moreAbout', 'info', T('Ku saabsan', 'About'), T('Yaa sameeyay iyo sababta', 'Who made it and why'), '')]) + '</div>';
     var on = function (id, fn) { var b = document.getElementById(id); if (b) b.onclick = fn; };
     on('moreLessons', function () { go('simpleLessons'); });
