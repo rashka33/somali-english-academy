@@ -1,12 +1,3 @@
-/* ============================================================================
-   Jinsiyadda / Citizenship Academy
-   Civics questions and answers are loaded from data/civics-2025.json and
-   data/civics-2008.json (official USCIS text — never re-typed here).
-   Reading and writing sentences use only words from the official USCIS
-   vocabulary lists (rev. 08/08). N-400 questions quote Form N-400, edition
-   01/20/25, Part 9. Everything here is study help, not legal advice.
-   State lives in S.citizenship (optional key; older saves import unchanged).
-   ============================================================================ */
 (function () {
   'use strict';
   if (typeof UI_ICONS === 'object') {
@@ -42,8 +33,6 @@
   function knownCount(ed) { var k = cz().civ[ed].known; return DATA[ed] ? pool(ed).filter(function (q) { return k[q.n]; }).length : Object.keys(k).length; }
   var SEC = { 'Principles of American Government': 'Mabaadi’da dowladda Maraykanka', 'Principles of American Democracy': 'Mabaadi’da dimuqraadiyadda Maraykanka', 'System of Government': 'Nidaamka dowladda', 'Rights and Responsibilities': 'Xuquuqda iyo waajibaadka', 'Colonial Period and Independence': 'Xilligii gumeysiga iyo xornimada', '1800s': 'Qarnigii 1800-aadkii', 'Recent American History and Other Important Historical Information': 'Taariikhda dhow ee Maraykanka', 'Geography': 'Juqraafi', 'Symbols': 'Astaamaha qaranka', 'Holidays': 'Ciidaha qaranka' };
   function secName(s) { return T(SEC[s] || s, s); }
-
-  /* ---------- official vocabulary lists (USCIS, rev. 08/08) + Somali glosses ---------- */
   var GL = {
     'abraham lincoln': 'Abraham Lincoln — madaxweynihii 16aad', 'george washington': 'George Washington — madaxweynihii ugu horreeyay', 'american flag': 'calanka Maraykanka', 'bill of rights': 'tobanka amendment ee ugu horreeya — xuquuqda aasaasiga ah',
     'capital': 'caasimad', 'citizen': 'muwaadin', 'citizens': 'muwaadiniin', 'city': 'magaalo', 'congress': 'Congress — golaha sharci-dejinta', 'country': 'dal', 'father of our country': 'aabbaha dalkeenna (George Washington)', 'government': 'dowlad', 'president': 'madaxweyne', 'right': 'xaq',
@@ -62,7 +51,6 @@
   var GLK = Object.keys(GL).sort(function (a, b) { return b.length - a.length; });
   var READ = ['Who was the first President?', 'Who lives in the White House?', 'What is the capital of the United States?', 'When is Independence Day?', 'Who elects Congress?', 'What are the colors of the American flag?', 'Who was Abraham Lincoln?', 'Where does Congress meet?', 'Who can vote?', 'When is Flag Day?', 'What is the largest state?', 'Who is the Father of Our Country?', 'Why do people come to America?', 'What do we pay to the government?', 'How many states do we have?', 'When is Thanksgiving?', 'Who was the second President?', 'What country is north of the United States?', 'Who is on the dollar bill?', 'What is one right in the Bill of Rights?', 'When is Memorial Day?', 'When is Labor Day?', 'When is Columbus Day?', 'When is Presidents’ Day?', 'What state has the most people?', 'How many Senators does a state have?', 'Where is the White House?', 'Who was George Washington?'];
   var WRITE = ['Washington was the first President.', 'Lincoln was President during the Civil War.', 'The President lives in the White House.', 'Washington, D.C. is the capital of the United States.', 'Citizens can vote.', 'We pay taxes.', 'The flag is red, white, and blue.', 'Independence Day is in July.', 'Thanksgiving is in November.', 'Alaska is the largest state.', 'The United States has fifty states.', 'Congress meets in Washington, D.C.', 'Adams was the second President.', 'Canada is north of the United States.', 'Mexico is south of the United States.', 'Washington is the Father of Our Country.', 'People want to be free.', 'We have one hundred Senators.', 'We elect the President in November.', 'Memorial Day is in May.', 'Flag Day is in June.', 'Labor Day is in September.', 'Columbus Day is in October.', 'Presidents’ Day is in February.', 'Washington is on the dollar bill.', 'California has the most people.', 'American Indians lived here first.', 'People have freedom of speech.', 'Delaware was the first state.', 'New York City was the first capital.'];
-  /* split a sentence into official-vocabulary chips (longest phrase first) */
   function chips(sentence) {
     var out = [], rest = sentence;
     while (rest.length) {
@@ -75,8 +63,6 @@
     return out;
   }
   function plain(s) { return String(s || '').toLowerCase().replace(/’/g, "'").replace(/\b50\b/g, 'fifty').replace(/\b100\b/g, 'one hundred').replace(/[^a-z' ]+/g, ' ').replace(/\s+/g, ' ').trim(); }
-
-  /* ---------- N-400 Part 9 (edition 01/20/25): interview practice ---------- */
   var E = 'Have you EVER ';
   var N4 = [
     { g: ['Jinsiyad, codayn iyo canshuur', 'Citizenship claims, voting and taxes'], items: [
@@ -134,8 +120,6 @@
   ];
   var OATH = ['Please stand and raise your right hand. Do you swear or affirm that the statements you will give today will be the truth, the whole truth, and nothing but the truth?', 'Fadlan istaag oo gacantaada midig kor u qaad. Ma ku dhaaranaysaa in hadalka aad maanta bixinayso uu noqon doono run, runta oo dhan, runna mooyee aan wax kale ahayn?'];
   window.__CZ = { READ: READ, WRITE: WRITE, GL: GL, N4: N4ALL, chips: chips };
-
-  /* ---------- shared pieces ---------- */
   function back(label, fn) { return '<button type="button" class="simple-back" id="czBack">' + ic('back') + esc(label || T('Jinsiyadda', 'Citizenship')) + '</button>'; }
   function wireBack(fn) { var b = document.getElementById('czBack'); if (b) b.onclick = fn || function () { C.route = 'hub'; paint(); }; }
   function go(route) { C.route = route; C.show = false; paint(); window.scrollTo({ top: 0, behavior: 'instant' }); }
@@ -157,13 +141,10 @@
     return { civ: civ, rd: rd, wr: wr, n4: n4, iv: iv, all: 0.6 * civ + 0.1 * rd + 0.1 * wr + 0.1 * n4 + 0.1 * iv, tot: tot };
   }
   function daysLeft() { var d = cz().testDate; if (!d) return null; var t = new Date(d + 'T00:00:00'), n = new Date(todayStr() + 'T00:00:00'); if (isNaN(t)) return null; return Math.round((t - n) / 86400000); }
-
-  /* ---------- hub ---------- */
   function hub() {
     var c = cz(), ed = c.edition, r = readiness(), known = knownCount(ed), dl = daysLeft(), name = (S.profile.name || '').split(' ')[0];
     var lastMock = c.civ[ed].mocks[c.civ[ed].mocks.length - 1], rl = rules(ed);
     var h = '<div class="cz"><p class="hero-eyebrow">' + ic('flag') + T('Jinsiyadda · Imtixaanka muwaadinimada', 'Citizenship · Naturalization test') + '</p><h1>' + (name ? esc(name) + ', ' : '') + T('maalintaada way soo socotaa.', 'your day is coming.') + '</h1><p class="simple-intro">' + T('Wax walba oo wareysiga lagu weydiiyo, hal meel, Af-Soomaali lagu sharxay. Tallaabo tallaabo — annaga ayaa kula soconna.', 'Everything asked at the interview, in one place, explained in Somali. One step at a time — we are with you.') + '</p>';
-    /* countdown */
     h += '<section class="cz-count">';
     if (dl === null) h += '<div class="cz-count-body"><h2>' + ic('calendar') + T('Goorma ayuu wareysigaagu yahay?', 'When is your interview?') + '</h2><p>' + T('Taariikhda geli, annaguna waxaan kuu samaynaynaa qorshe maalinle ah. Haddii aadan weli ogayn, waa caadi — hadda bilow.', 'Add the date and we will pace your study. If you do not know it yet, that is fine — start today.') + '</p><div class="cz-date"><input type="date" id="czDate" min="' + todayStr() + '" aria-label="' + T('Taariikhda wareysiga', 'Interview date') + '"><button type="button" class="btn" id="czDateSave">' + T('Kaydi', 'Save') + '</button></div></div>';
     else {
@@ -173,15 +154,12 @@
         + '<button type="button" class="simple-text-button" id="czDateClear">' + T('Beddel taariikhda', 'Change the date') + '</button></div>';
     }
     h += '</section>';
-    /* readiness */
-    h += '<section class="cz-ready"><div class="cz-ready-top">' + ringHTML(r.all, T('Diyaargarow', 'Readiness')) + '<div><h2>' + T('Diyaargarowgaaga', 'Your readiness') + '</h2><p>' + (r.all < 0.05 ? T('Tallaabada koowaad ayaa ugu adag. Hal kaar fur.', 'The first step is the hardest. Open one card.') : r.all < 0.5 ? T('Si fiican ayaad u socotaa. Maalin kasta wax yar.', 'You are on your way. A little every day.') : r.all < 0.9 ? T('Waad ku dhowdahay. Sii wad!', 'You are close. Keep going!') : T('Waad diyaarsan tahay. Ku faan naftaada.', 'You are ready. Be proud of yourself.')) + '</p></div></div>'
+    h += '<section class="cz-ready"><div class="cz-ready-top">' + ringHTML(r.all, T('Diyaargarow', 'Readiness')) + '<div><h2>' + T('Diyaargarowgaaga', 'Your readiness') + '</h2><p>' + (r.all < 0.05 ? T('Tallaabada koowaad ayaa ugu adag. Hal kaar fur.', 'The first step is the hardest. Open one card.') : r.all < 0.5 ? T('Si fiican ayaad u socotaa. Maalin kasta wax yar.', 'You know some answers. Study a few new cards each day.') : r.all < 0.9 ? T('Waad ku dhowdahay. Sii wad!', 'You know most answers. Review the cards you missed.') : T('Waad diyaarsan tahay. Ku faan naftaada.', 'You know 90% or more. Practise the interview next.')) + '</p></div></div>'
       + '<dl class="cz-stats"><div><dt>' + T('Su’aalaha (civics)', 'Civics') + '</dt><dd>' + known + ' / ' + r.tot + '</dd></div><div><dt>' + T('Akhris', 'Reading') + '</dt><dd>' + Object.keys(c.read.ok).length + '</dd></div><div><dt>' + T('Qoraal', 'Writing') + '</dt><dd>' + Object.keys(c.write.ok).length + '</dd></div><div><dt>N-400</dt><dd>' + Object.keys(c.n400.seen).length + ' / ' + N4ALL.length + '</dd></div></dl></section>';
-    /* edition */
     h += '<section class="cz-ed"><h2>' + T('Imtixaankee ayaa ku khuseeya?', 'Which test applies to you?') + '</h2><div class="cz-seg" role="group" aria-label="' + T('Nooca imtixaanka', 'Test edition') + '">'
       + ['2025', '2008'].map(function (e) { return '<button type="button" data-ed="' + e + '" aria-pressed="' + (ed === e) + '"><b>' + e + '</b><span>' + (e === '2025' ? T('128 su’aalood', '128 questions') : T('100 su’aalood', '100 questions')) + '</span></button>'; }).join('') + '</div>'
       + '<p class="small muted">' + T('Haddii aad foomka N-400 gudbisay <strong>October 20, 2025 ama ka dib</strong>, waxaad gelaysaa imtixaanka 2025. Haddii aad ka hor gudbisay, waa kan 2008. Taariikhdu waxay ku qoran tahay warqadda USCIS ee rasiidka (receipt notice).', 'If you filed Form N-400 <strong>on or after October 20, 2025</strong>, you take the 2025 test. If you filed before, it is the 2008 test. The date is on your USCIS receipt notice.') + '</p>'
       + '<label class="cz-toggle"><input type="checkbox" id="czSenior"' + (c.senior ? ' checked' : '') + '><span><b>65/20</b> — ' + T('Waxaan ahay 65 jir ama ka weyn, green card-na waxaan haystay 20 sano ama ka badan: 20-ka su’aalood ee xiddigta leh oo keliya i tus.', 'I am 65 or older and have been a permanent resident for 20 years or more: show only the 20 starred questions.') + '</span></label></section>';
-    /* parts */
     function row(id, icon, so, en, sub) { return '<button type="button" class="cz-row" data-go="' + id + '"><span class="cz-row-ic">' + ic(icon) + '</span><span class="cz-row-t"><b>' + T(so, en) + '</b><small>' + sub + '</small></span>' + ic('chevron') + '</button>'; }
     h += '<h2 class="cz-h">' + T('Qaybaha imtixaanka', 'The parts of the test') + '</h2><div class="cz-rows">'
       + row('cards', 'cards', 'Kaararka su’aalaha', 'Civics flashcards', known + ' / ' + r.tot + ' ' + T('waad taqaan', 'known'))
@@ -206,8 +184,6 @@
     document.getElementById('czSenior').onchange = function () { c.senior = this.checked; save(); C.idx = 0; paint(); };
     app.querySelectorAll('[data-go]').forEach(function (b) { b.onclick = function () { C.topic = null; C.idx = 0; C.run = null; C.rw = null; C.ear = null; if (b.dataset.go === 'interview') C.iv = null; go(b.dataset.go); }; });
   }
-
-  /* ---------- flashcards + topics ---------- */
   function deck() {
     var c = cz(), ed = c.edition, k = c.civ[ed].known, l = pool(ed);
     if (C.topic) l = l.filter(function (q) { return q.section === C.topic; });
@@ -220,10 +196,10 @@
     var h = '<div class="cz">' + back(C.topic ? T('Mawduucyada', 'Topics') : null) + '<h1>' + (C.topic ? esc(secName(C.topic)) : T('Kaararka su’aalaha', 'Civics flashcards')) + '</h1>'
       + '<div class="cz-meter"><span>' + kn + ' / ' + all.length + ' ' + T('waad taqaan', 'known') + '</span>' + bar(kn, all.length, T('Horumarka', 'Progress')) + '</div>'
       + '<div class="cz-chips"><button type="button" class="chipbtn' + (C.filter === 'todo' ? ' sel' : '') + '" data-f="todo">' + T('Kuwa aan weli baran', 'Still to learn') + '</button><button type="button" class="chipbtn' + (C.filter === 'all' ? ' sel' : '') + '" data-f="all">' + T('Dhammaan', 'All') + '</button></div>';
-    if (!l.length) h += '<div class="card empty cz-done">' + ic('award') + '<h2>' + T('Dhammaantood waad taqaan!', 'You know them all!') + '</h2><p>' + T('Shaqo qurux badan. Hadda isku day imtixaanka tijaabada ah, ama dib u eeg dhammaan kaararka.', 'Beautiful work. Try the mock test now, or review every card again.') + '</p><p><button type="button" class="btn" id="czToMock">' + T('Imtixaan tijaabo ah', 'Take the mock test') + '</button></p></div>';
+    if (!l.length) h += '<div class="card empty cz-done">' + ic('award') + '<h2>' + T('Dhammaantood waad taqaan!', 'You know them all') + '</h2><p>' + T('Shaqo qurux badan. Hadda isku day imtixaanka tijaabada ah, ama dib u eeg dhammaan kaararka.', 'Beautiful work. Try the mock test now, or review every card again.') + '</p><p><button type="button" class="btn" id="czToMock">' + T('Imtixaan tijaabo ah', 'Take the mock test') + '</button></p></div>';
     else {
       var q = l[C.idx];
-      h += '<article class="cz-card" data-n="' + q.n + '"><p class="hero-eyebrow">' + T('Su’aasha ', 'Question ') + q.n + (q.star65 ? ' · 65/20 ★' : '') + ' · ' + esc(secName(q.section)) + '</p><div class="cz-qrow"><h2 class="cz-q" lang="en">' + esc(q.q) + '</h2>' + speakBtn(q.q) + '</div>';
+      h += '<article class="cz-card" data-n="' + q.n + '"><p class="hero-eyebrow">' + T('Su’aasha ', 'Question ') + q.n + (q.star65 ? ' · 65/20 '+uiIcon("star") : '') + ' · ' + esc(secName(q.section)) + '</p><div class="cz-qrow"><h2 class="cz-q" lang="en">' + esc(q.q) + '</h2>' + speakBtn(q.q) + '</div>';
       if (!C.show) h += '<p class="muted">' + T('Marka hore cod dheer isku day, kadibna eeg jawaabta.', 'Try to answer aloud first, then look.') + '</p><button type="button" class="btn cz-wide" id="czShow">' + T('Muuji jawaabta', 'Show the answer') + '</button>';
       else h += '<div class="cz-reveal">' + answersHTML(q) + '<div class="cz-two"><button type="button" class="btn secondary" id="czAgain">' + T('Wali waan baranayaa', 'Still learning') + '</button><button type="button" class="btn" id="czKnow">' + ic('check') + T('Waan aqaan', 'I know it') + '</button></div></div>';
       h += '</article><div class="cz-pager"><button type="button" class="simple-text-button" id="czPrev"' + (C.idx ? '' : ' disabled') + '>' + ic('back') + T('Hore', 'Previous') + '</button><span>' + (C.idx + 1) + ' / ' + l.length + '</span><button type="button" class="simple-text-button" id="czNext">' + T('Xiga', 'Next') + ic('arrow') + '</button></div>';
@@ -246,8 +222,6 @@
       + seen.map(function (s, i) { var x = by[s]; return '<button type="button" class="cz-row cz-topic" data-topic="' + esc(s) + '" style="--stage:var(--st' + (i % 12 + 1) + ')"><span class="cz-row-ic cz-num">' + (x.k === x.n ? ic('check') : (i + 1)) + '</span><span class="cz-row-t"><b>' + esc(secName(s)) + '</b><small>' + x.k + ' / ' + x.n + '</small>' + bar(x.k, x.n, s) + '</span>' + ic('chevron') + '</button>'; }).join('') + '</div></div>';
     wireBack(); app.querySelectorAll('[data-topic]').forEach(function (b) { b.onclick = function () { C.topic = b.dataset.topic; C.idx = 0; C.filter = 'all'; go('cards'); }; });
   }
-
-  /* ---------- civics mock test (oral, self-checked against the official answers) ---------- */
   function startMock(cb, family) { var ed = cz().edition, rl = rules(ed); C.run = { family: !!family, ed: ed, asked: rl.asked, pass: rl.pass, qs: shuffled(pool(ed)).slice(0, rl.asked), i: 0, right: 0, wrong: 0, missed: [], show: false, started: false, done: false, cb: cb || null }; }
   function mock() {
     if (!C.run) startMock();
@@ -281,8 +255,6 @@
       + (r.missed.length ? '<h2 class="cz-h">' + T('Kuwan dib u eeg', 'Review these') + '</h2><div class="cz-missed">' + r.missed.map(function (q) { return '<details class="simple-details"><summary lang="en">' + esc(q.q) + '</summary>' + answersHTML(q) + '</details>'; }).join('') + '</div><p class="small muted">' + ic('plus') + ' ' + T('Waxaa lagu daray kaararkaaga dib-u-eegista.', 'Added to your review cards.') + '</p>' : '')
       + (r.cb ? '<button type="button" class="btn cz-wide" id="czCont">' + T('Sii wad wareysiga', 'Continue the interview') + ic('arrow') + '</button>' : '<div class="cz-two"><button type="button" class="btn secondary" id="czHub">' + T('Ku noqo Jinsiyadda', 'Back to Citizenship') + '</button><button type="button" class="btn" id="czRetake">' + T('Mar kale isku day', 'Try again') + '</button></div>') + '</section>';
   }
-
-  /* ---------- reading + writing (practice and real-format test) ---------- */
   var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   function startRW(kind, test, cb) { var list = kind === 'read' ? READ : WRITE; C.rw = { kind: kind, test: !!test, cb: cb || null, order: test ? shuffled(list.map(function (_, i) { return i; })).slice(0, 3) : null, i: 0, tries: 0, state: '', heard: '', typed: '', done: false, ok: false, gloss: null }; }
   function rw(kind) {
@@ -337,8 +309,6 @@
       var nx = document.getElementById('czNextS'); if (nx) nx.onclick = function () { result(r.state === 'ok'); };
     }
   }
-
-  /* ---------- N-400 yes/no questions ---------- */
   function disclaimer() { return '<aside class="cz-legal">' + ic('shield') + '<div><p lang="so"><strong>Tani waa caawimaad waxbarasho, ma aha talo sharci.</strong> Halkan waxaad ku baranaysaa waxa su’aalahu ka dhigan yihiin. Jawaabta saxda ahi waa runta noloshaada — annagu kuuma sheegi karno sanduuqa aad calaamadinayso. Haddii aad shaki qabto, la tasho qareen socdaal ama wakiil DOJ aqoonsan tahay.</p><p lang="en" class="muted">This is study help, not legal advice. Here you learn what the questions mean. The right answer is the truth about your own life — we cannot tell you which box to tick. If you are unsure, speak with an immigration attorney or a DOJ-accredited representative.</p></div></aside>'; }
   function n400() {
     var c = cz(), seen = c.n400.seen, n = Object.keys(seen).length;
@@ -354,8 +324,6 @@
     bindSpeak(app); wireBack();
     app.querySelectorAll('[data-n4]').forEach(function (b) { b.onclick = function () { var id = b.dataset.n4; if (seen[id]) delete seen[id]; else seen[id] = 1; save(); var y = window.scrollY; paint(); var d = app.querySelector('[data-n4="' + id + '"]'); if (d) d.closest('details').open = true; window.scrollTo({ top: y, behavior: 'instant' }); }; });
   }
-
-  /* ---------- full mock interview ---------- */
   var IVSTEPS = [['Dhaarta', 'Oath'], ['Su’aalo shakhsi', 'About you'], ['N-400', 'N-400'], ['Civics', 'Civics'], ['Akhris', 'Reading'], ['Qoraal', 'Writing']];
   function ivHead(i) { return '<button type="button" class="simple-back" id="czBack">' + ic('close') + T('Ka bax wareysiga', 'Leave the interview') + '</button><ol class="cz-steps" aria-label="' + T('Tallaabooyinka wareysiga', 'Interview steps') + '">' + IVSTEPS.map(function (s, k) { return '<li class="' + (k < i ? 'done' : k === i ? 'now' : '') + '"><span>' + (k < i ? ic('check') : (k + 1)) + '</span><small>' + T(s[0], s[1]) + '</small></li>'; }).join('') + '</ol>'; }
   function ivQuit() { C.iv = null; C.run = null; C.rw = null; go('hub'); }
@@ -405,10 +373,6 @@
     var t = document.getElementById('czToIv'); if (t) t.onclick = function () { C.iv = null; go('interview'); };
     var p = document.getElementById('czPrint'); if (p) p.onclick = function () { document.body.classList.add('cz-printing'); window.print(); setTimeout(function () { document.body.classList.remove('cz-printing'); }, 500); };
   }
-
-
-  /* ============ Five ways to learn that nobody asked for ============ */
-  /* (1) My answers — her own state and officials on the "answers will vary" cards */
   var MINE = [
     ['senator', /state’s U\.S\. senators? now/i, 'Mid ka mid ah senator-rada gobolkayga', 'One of my state’s U.S. senators', 'https://www.senate.gov/senators/'],
     ['rep', /Name your U\.S\. representative/i, 'Wakiilkayga (U.S. representative)', 'My U.S. representative', 'https://www.house.gov/representatives/find-your-representative'],
@@ -437,8 +401,6 @@
     st.onchange = function () { if (cap && (!cap.value || Object.keys(CAPS).some(function (s) { return CAPS[s] === cap.value; }))) cap.value = CAPS[st.value] || ''; };
     document.getElementById('czMine').onsubmit = function (e) { e.preventDefault(); var o = { state: st.value, updated: todayStr() }; defs.forEach(function (d) { var v = document.getElementById('czM_' + d[0]).value.trim(); if (v) o[d[0]] = v; }); c.mine = o; save(); document.getElementById('czMineOk').textContent = T('Waa la kaydiyay. Kaararkaaga ayay hadda ka muuqdaan.', 'Saved. They now appear on your cards.'); };
   }
-
-  /* (2) Listen and recognise — the real test is heard, never read */
   function startEar() {
     var ed = cz().edition, st = cz().civ[ed], p = pool(ed).filter(function (q) { return !q.changes; }), todo = p.filter(function (q) { return !st.known[q.n]; });
     C.ear = { ed: ed, qs: shuffled(todo.length >= 8 ? todo : p).slice(0, 8), i: 0, right: 0, pick: null, text: false, opts: null, done: false, missed: [] };
@@ -459,7 +421,7 @@
       h += '<p class="simple-intro">' + T('Su’aasha lama qorin — sida wareysiga dhabta ah. Dhegeyso, kadibna dooro jawaabta saxda ah.', 'The question is not written — just like the real interview. Listen, then choose the correct answer.') + '</p><div class="cz-meter"><span>' + (e.i + 1) + ' / ' + e.qs.length + '</span><span class="cz-tally">' + ic('check') + e.right + '</span>' + bar(e.i, e.qs.length, '') + '</div><article class="cz-card cz-officer"><div class="cz-ear"><button type="button" class="cz-earbtn" id="czEarPlay" aria-label="' + T('Dhegeyso su’aasha', 'Listen to the question') + '">' + ic('speaker') + '</button><div><b>' + T('Dhegeyso su’aasha', 'Listen to the question') + '</b><button type="button" class="simple-text-button" id="czEarSlow">' + T('Tartiib ku celi', 'Repeat slowly') + '</button></div></div>'
         + (e.text || e.pick !== null ? '<p class="cz-q" lang="en">' + esc(q.q) + '</p>' : '<button type="button" class="simple-text-button" id="czEarText">' + T('Ma maqli karo — i tus qoraalka', 'I cannot catch it — show the text') + '</button>')
         + '<div class="opts">' + e.opts.map(function (o, i) { var cls = e.pick === null ? '' : plain(o) === plain(q.answers[0]) ? ' correct' : e.pick === i ? ' wrong' : ''; return '<button type="button" class="opt keep-emoji' + cls + '" lang="en" data-o="' + i + '"' + (e.pick !== null ? ' disabled' : '') + '>' + esc(o) + '</button>'; }).join('') + '</div>'
-        + (e.pick !== null ? '<div class="cz-reveal"><p class="cz-so" lang="so" style="margin-top:var(--s-4)">' + esc(q.explain_so) + '</p><button type="button" class="btn cz-wide" id="czEarNext">' + T('Xiga', 'Next') + ic('arrow') + '</button></div>' : '') + '</article>';
+        + (e.pick !== null ? '<div class="cz-reveal"><p class="u-mt-4 cz-so" lang="so">' + esc(q.explain_so) + '</p><button type="button" class="btn cz-wide" id="czEarNext">' + T('Xiga', 'Next') + ic('arrow') + '</button></div>' : '') + '</article>';
     }
     app.innerHTML = h + '</div>'; wireBack();
     var again = document.getElementById('czEarAgain'); if (again) again.onclick = function () { C.ear = null; paint(); }; var hb = document.getElementById('czHub'); if (hb) hb.onclick = function () { C.ear = null; go('hub'); };
@@ -470,8 +432,6 @@
     var nx = document.getElementById('czEarNext'); if (nx) nx.onclick = function () { e.i++; e.pick = null; e.text = false; e.opts = null; if (e.i >= e.qs.length) e.done = true; paint(); if (!e.done) speak(e.qs[e.i].q); window.scrollTo({ top: 0, behavior: 'instant' }); };
     if (e.i === 0 && e.pick === null && !e.started) { e.started = true; speak(q2.q); }
   }
-
-  /* (3) Hands-free listening loop — question, a pause for her answer, then the answer */
   function say(text, done) {
     var fired = false, fin = function () { if (fired) return; fired = true; if (done) done(); };
     try { if (!('speechSynthesis' in window)) throw 0; var u = new SpeechSynthesisUtterance(text); u.lang = 'en-US'; u.rate = 0.9; u.onend = fin; u.onerror = fin; window.speechSynthesis.cancel(); window.speechSynthesis.speak(u); setTimeout(fin, 3000 + text.length * 120); }
@@ -498,8 +458,6 @@
     document.getElementById('czLoopSkip').onclick = function () { var was = l.playing; stopLoop(); l.i = (l.i + 1) % l.list.length; if (was) { l.playing = true; loopStep(); } else { l.phase = 'idle'; paint(); } };
     app.querySelectorAll('[data-pause]').forEach(function (b) { b.onclick = function () { l.pause = +b.dataset.pause; if (!l.playing) paint(); else b.parentNode.querySelectorAll('.chipbtn').forEach(function (x) { x.classList.toggle('sel', x === b); }); }; });
   }
-
-  /* (4) The wall — every question as a square that fills in as she learns */
   function wall() {
     var c = cz(), ed = c.edition, st = c.civ[ed], p = pool(ed), kn = p.filter(function (q) { return st.known[q.n]; }).length;
     app.innerHTML = '<div class="cz">' + back() + '<h1>' + T('Darbiga ' + p.length + '-ka su’aalood', 'The wall of ' + p.length) + '</h1><p class="simple-intro">' + (kn === p.length ? T('Darbigu wuu buuxsamay. Adiga ayaa dhisay, leben leben.', 'The wall is full. You built it, brick by brick.') : T('Su’aal kasta oo aad barato hal leben ayay darbiga ku dartaa. ' + kn + ' ayaad dhigtay, ' + (p.length - kn) + ' ayaa kuu haray.', 'Every question you learn lays one brick. You have laid ' + kn + '; ' + (p.length - kn) + ' to go.')) + '</p>'
@@ -507,11 +465,7 @@
       + '<p class="cz-legend"><span><i class="cz-sq k"></i>' + T('Waan aqaan', 'Known') + '</span><span><i class="cz-sq s"></i>' + T('Waan arkay', 'Seen') + '</span><span><i class="cz-sq"></i>' + T('Cusub', 'New') + '</span></p></div>';
     wireBack(); app.querySelectorAll('.cz-wall .cz-sq').forEach(function (b) { b.onclick = function () { C.topic = null; C.filter = 'all'; C.idx = +b.dataset.i; go('cards'); }; });
   }
-
-  /* (5) Let your child be the officer — two people, one phone */
   function family() { if (!C.run || !C.run.family) startMock(null, true); mock(); }
-
-  /* ---------- router ---------- */
   function paint() {
     document.body.classList.add('view-cit'); if (C.route !== 'audio') stopLoop();
     ({ hub: hub, cards: cards, topics: topics, mock: mock, read: function () { rw('read'); }, write: function () { rw('write'); }, n400: n400, interview: interview, report: report, mine: mine, ear: ear, audio: audio, wall: wall, family: family }[C.route] || hub)();
@@ -528,8 +482,6 @@
     });
   };
   window.openCitizenship = function (route) { C.route = route || 'hub'; C.run = null; C.rw = null; C.iv = null; setNav('cit'); render(); };
-
-  /* ---------- progress on Home and Profile ---------- */
   function summary() { var c = cz(), ed = c.edition, tot = ed === '2025' ? 128 : 100; if (c.senior) tot = 20; var k = DATA[ed] ? knownCount(ed) : Object.keys(c.civ[ed].known).length; return { k: Math.min(k, tot), tot: tot, ed: ed, dl: daysLeft(), started: k > 0 || c.interviews.length > 0 || Object.keys(c.n400.seen).length > 0 }; }
   var home = renderHome, profile = renderProfile;
   renderHome = function () {

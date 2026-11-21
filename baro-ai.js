@@ -1,4 +1,3 @@
-/* Baro AI — loaded only when the learner opens the AI academy. */
 (function () {
   'use strict';
   var route = 'roadmap', lesson = 0, selected = '';

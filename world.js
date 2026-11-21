@@ -1,11 +1,3 @@
-/* ============================================================================
-   Magaalada Erayada 3D / Word Town 3D — a small open world for Play & Learn.
-   A hand-written WebGL renderer (no engine, nothing to download): a town of
-   named places she can walk or drive through, people to talk to, and errands
-   that are English tasks. Conversations come from the curriculum's own
-   role-plays (ROLEPLAYS); fetch words come from the picture dictionary.
-   Called by games.js as window.gWorld(R, stage, kit) on the shared level law.
-   ============================================================================ */
 (function () {
   'use strict';
   var N = 5, B = 26, RW = 10, PITCH = B + RW, SIZE = N * PITCH + RW;
@@ -22,13 +14,9 @@
   function place(k) { for (var i = 0; i < PLACES.length; i++) if (PLACES[i].k === k) return PLACES[i]; return PLACES[0]; }
   function blockX(i) { return i * PITCH + RW; }
   function door(p) { return { x: blockX(p.b[0]) + B / 2, z: blockX(p.b[1]) - 2.2 }; }
-
-  /* ---------- tiny matrix kit ---------- */
   function persp(fov, asp, n, f) { var t = 1 / Math.tan(fov / 2); return [t / asp, 0, 0, 0, 0, t, 0, 0, 0, 0, (f + n) / (n - f), -1, 0, 0, 2 * f * n / (n - f), 0]; }
   function look(e, c) { var zx = e[0] - c[0], zy = e[1] - c[1], zz = e[2] - c[2], l = Math.hypot(zx, zy, zz) || 1; zx /= l; zy /= l; zz /= l; var xx = zz, xz = -zx, xl = Math.hypot(xx, xz) || 1; xx /= xl; xz /= xl; var yx = zy * xz, yy = zz * xx - zx * xz, yz = -zy * xx; return [xx, yx, zx, 0, 0, yy, zy, 0, xz, yz, zz, 0, -(xx * e[0] + xz * e[2]), -(yx * e[0] + yy * e[1] + yz * e[2]), -(zx * e[0] + zy * e[1] + zz * e[2]), 1]; }
   function mul(a, b) { var o = new Array(16); for (var c = 0; c < 4; c++) for (var r = 0; r < 4; r++) o[c * 4 + r] = a[r] * b[c * 4] + a[4 + r] * b[c * 4 + 1] + a[8 + r] * b[c * 4 + 2] + a[12 + r] * b[c * 4 + 3]; return o; }
-
-  /* ---------- geometry ---------- */
   function quad(o, a, b, c, d, col, s) { var r = col[0] * s, g = col[1] * s, bl = col[2] * s; [a, b, c, a, c, d].forEach(function (p) { o.push(p[0], p[1], p[2], r, g, bl); }); }
   function rbox(o, cx, cz, w, d, h, y0, ang, col) {
     var ca = Math.cos(ang), sa = Math.sin(ang), hw = w / 2, hd = d / 2, y1 = y0 + h;
@@ -57,7 +45,6 @@
     }
     return new Float32Array(o);
   }
-
   window.gWorld = function (R, stage, K) {
     var T = K.T, ic = K.ic, cv = document.createElement('canvas'), gl = null;
     stage.classList.add('gm-run3d', 'gm-town'); stage.innerHTML = '';
@@ -87,8 +74,6 @@
     var solids = [], town = buildTown(solids), vbS = gl.createBuffer(), vbD = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, vbS); gl.bufferData(gl.ARRAY_BUFFER, town, gl.STATIC_DRAW);
     gl.enableVertexAttribArray(aP); gl.enableVertexAttribArray(aC);
     function drawBuf(buf, n) { gl.bindBuffer(gl.ARRAY_BUFFER, buf); gl.vertexAttribPointer(aP, 3, gl.FLOAT, false, 24, 0); gl.vertexAttribPointer(aC, 3, gl.FLOAT, false, 24, 12); gl.drawArrays(gl.TRIANGLES, 0, n); }
-
-    /* ---------- world state ---------- */
     var home = door(place('home')), me = { x: home.x, z: home.z - 1.2, a: Math.PI / 2, v: 0, car: false }, car = { x: home.x + 9, z: home.z - 4.2, a: Math.PI / 2, v: 0 }, camA = me.a, time = 0, hurt = 0;
     var keys = {}, joy = { x: 0, y: 0 }, npcs = [], peds = [], traffic = [], items = [], marker = null, task = null, tasksDone = 0, dlg = null, passenger = null, MVP = null;
     var lab = document.getElementById('twLabels'), cmp = document.getElementById('twCompass'), bTalk = document.getElementById('twTalk'), bCar = document.getElementById('twCar'), sayEl = document.getElementById('twSay'), dlgEl = document.getElementById('twDlg');
@@ -97,8 +82,6 @@
     for (i = 0; i < 9; i++) { var bi = Math.floor(K.rnd(0, N)), bj = Math.floor(K.rnd(0, N)); peds.push({ x: blockX(bi) + K.rnd(2, B - 2), z: blockX(bj) + (i % 2 ? 0.9 : B - 0.9), x0: blockX(bi) + 1.5, x1: blockX(bi) + B - 1.5, d: i % 2 ? 1 : -1, c: cloths[i % cloths.length], s: skins[i % 3], line: pedLines.length ? pedLines[Math.floor(K.rnd(0, pedLines.length))] : ['Hello!', 'Salaam!'], name: T('Qof', 'Neighbour') }); }
     var nT = Math.min(8, 1 + Math.floor(R.c.L / 2) + (R.c.hard ? 2 : R.c.med ? 1 : 0));
     for (i = 0; i < nT; i++) { var ri = 1 + (i % (N - 1)), horiz = i % 2 === 0; traffic.push({ horiz: horiz, line: ri * PITCH + RW / 2 + (i % 4 < 2 ? 2.4 : -2.4), s: K.rnd(10, SIZE - 10), dir: i % 4 < 2 ? 1 : -1, v: K.lerp(7, 13, Math.min(1, R.c.t)), c: cloths[(i + 2) % cloths.length] }); }
-
-    /* ---------- tasks ---------- */
     function instr(en, so, pic) { document.getElementById('gmTarget').innerHTML = (pic || '<span class="gm-pic">' + ic(task && task.type === 'talk' ? 'chat' : task && task.type === 'fetch' ? 'search' : 'map') + '</span>') + '<span class="gm-tt"><span class="tw-en" lang="en">' + esc(en) + '</span><span class="tw-so" lang="so">' + esc(so) + '</span></span><button type="button" class="iconbtn" id="twHear" aria-label="' + T('Dhegeyso', 'Listen') + '">' + ic('speaker') + '</button>'; var h = document.getElementById('twHear'); if (h) h.onclick = function () { try { speak(en, true); } catch (e) { } }; try { speak(en); } catch (e) { } }
     function near(a, b, d) { return Math.hypot(a.x - b.x, a.z - b.z) < d; }
     function rpList() { var out = []; try { ROLEPLAYS.forEach(function (rp) { if (RP_AT[rp.id] && rp.turns && rp.turns.length) out.push(rp); }); } catch (e) { } return out; }
@@ -112,8 +95,6 @@
       else { var pool = R.pool.filter(function (e) { return visualFor(e.en); }), w = pool[Math.floor(K.rnd(0, pool.length))], ds = K.distract(w, R, 2), opts = K.shuf([w].concat(ds)), bx = Math.max(0, Math.min(N - 1, Math.floor((me.x - RW) / PITCH) + (Math.random() < 0.5 ? 1 : -1))), bz = Math.max(0, Math.min(N - 1, Math.floor((me.z - RW) / PITCH))); task = { type: 'fetch', w: w }; opts.forEach(function (o, n) { items.push({ x: blockX(bx) + 5 + n * 8, z: blockX(bz) - 1.6, w: o, ok: o === w }); }); marker = { x: blockX(bx) + 13, z: blockX(bz) - 1.6 }; instr('Find this word in the street and walk into it.', 'Erayga sawirkan ka raadi waddada oo ku dhex soco.', '<span class="gm-pic keep-emoji">' + visHTML(w.en) + '</span>'); document.querySelector('#gmTarget .tw-so').textContent = w.so + ' — ' + document.querySelector('#gmTarget .tw-so').textContent; }
     }
     function done(x, z) { tasksDone++; var p = proj(x, 2, z) || [W / 2, H / 2]; R.good(task.w, p[0], p[1]); if (!R.over) setTimeout(function () { if (!R.over) newTask(); }, 900); task = null; marker = null; }
-
-    /* ---------- talking ---------- */
     function say(name, en, so) { sayEl.hidden = false; sayEl.innerHTML = '<b>' + esc(name) + '</b><span lang="en">' + esc(en) + '</span><small lang="so">' + esc(so) + '</small>'; try { speak(en); } catch (e) { } clearTimeout(say.t); say.t = setTimeout(function () { sayEl.hidden = true; }, 4200); }
     function openDlg() { var rp = task.rp, n = Math.min(rp.turns.length, R.c.L >= 6 ? 3 : 2); dlg = { rp: rp, i: 0, n: n, wait: false }; me.v = 0; car.v = 0; paintDlg(); }
     function paintDlg() {
@@ -127,8 +108,6 @@
         if (R.over) return; setTimeout(function () { if (R.over) return; dlg.i++; dlg.wait = false; if (dlg.i >= dlg.n) { dlgEl.hidden = true; dlg = null; done(me.x, me.z); } else paintDlg(); }, o.c ? 1300 : 2600);
       }; });
     }
-
-    /* ---------- controls ---------- */
     var stick = document.getElementById('twStick'), knob = stick.firstChild, sid = null;
     function sMove(e) { var r = stick.getBoundingClientRect(), dx = e.clientX - (r.left + r.width / 2), dy = e.clientY - (r.top + r.height / 2), m = Math.hypot(dx, dy), lim = r.width / 2 - 14; if (m > lim) { dx *= lim / m; dy *= lim / m; } joy.x = dx / lim; joy.y = -dy / lim; knob.style.transform = 'translate(' + dx + 'px,' + dy + 'px)'; }
     stick.onpointerdown = function (e) { sid = e.pointerId; try { stick.setPointerCapture(sid); } catch (er) { } sMove(e); };
@@ -138,8 +117,6 @@
     addEventListener('keydown', kd); addEventListener('keyup', ku);
     bCar.onclick = function () { if (dlg) return; K.sfx('pop'); if (me.car) { me.car = false; me.x = car.x + Math.cos(car.a) * 2.6; me.z = car.z - Math.sin(car.a) * 2.6; me.a = car.a; car.v = 0; } else if (near(me, car, 7)) { me.car = true; } };
     bTalk.onclick = function () { if (dlg) return; var t = null; npcs.forEach(function (n) { if (n.task && near(me.car ? car : me, n, 6)) t = n; }); if (t && task && task.type === 'talk') { openDlg(); return; } var p = null; peds.forEach(function (q) { if (near(me.car ? car : me, q, 5)) p = q; }); if (p) { K.sfx('pop'); say(p.name, p.line[0], p.line[1]); } };
-
-    /* ---------- simulation ---------- */
     function blocked(x, z, r) { if (x < 1 || z < 1 || x > SIZE - 1 || z > SIZE - 1) return true; for (var i = 0; i < solids.length; i++) { var s = solids[i]; if (x > s[0] - r && x < s[2] + r && z > s[1] - r && z < s[3] + r) return true; } return false; }
     function proj(x, y, z) { if (!MVP) return null; var m = MVP, w = m[3] * x + m[7] * y + m[11] * z + m[15]; if (w <= 0.1) return null; var px = (m[0] * x + m[4] * y + m[8] * z + m[12]) / w, py = (m[1] * x + m[5] * y + m[9] * z + m[13]) / w; return [(px * 0.5 + 0.5) * W, (1 - (py * 0.5 + 0.5)) * H, w]; }
     function step(dt) {
@@ -164,8 +141,6 @@
         else if (task.type === 'fetch') items.slice().forEach(function (it) { if (near(who, it, me.car ? 2.6 : 1.8)) { items.splice(items.indexOf(it), 1); if (it.ok) done(it.x, it.z); else { K.sfx('thud'); R.bad(task.w); } } });
       }
     }
-
-    /* ---------- render ---------- */
     function person(o, x, z, a, cloth, skin, bob) { rbox(o, x, z, 0.9, 0.6, 1.5, 0.15 + bob, a, cloth); rbox(o, x, z, 0.6, 0.6, 0.6, 1.7 + bob, a, skin); rbox(o, x, z, 0.72, 0.72, 0.22, 2.2 + bob, a, [cloth[0] * 0.7, cloth[1] * 0.7, cloth[2] * 0.7]); }
     function vehicle(o, x, z, a, col) { flat(o, x - 2.2, z - 2.2, x + 2.2, z + 2.2, 0.03, [0.16, 0.16, 0.15]); rbox(o, x, z, 2.2, 4.4, 0.9, 0.35, a, col); rbox(o, x - Math.sin(a) * 0.3, z - Math.cos(a) * 0.3, 1.9, 2.3, 0.8, 1.25, a, [0.24, 0.32, 0.38]); [[-1.1, 1.4], [1.1, 1.4], [-1.1, -1.4], [1.1, -1.4]].forEach(function (w) { var ca = Math.cos(a), sa = Math.sin(a); rbox(o, x + w[0] * ca + w[1] * sa, z - w[0] * sa + w[1] * ca, 0.4, 0.9, 0.7, 0, a, [0.1, 0.1, 0.1]); }); }
     function label(html, x, y, z, cls) { var p = proj(x, y, z); if (!p || p[2] > 95 || p[0] < -40 || p[0] > W + 40 || p[1] < -20 || p[1] > H) return ''; return '<span class="' + (cls || '') + '" style="left:' + p[0].toFixed(0) + 'px;top:' + p[1].toFixed(0) + 'px">' + html + '</span>'; }

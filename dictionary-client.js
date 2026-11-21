@@ -1,4 +1,3 @@
-/* Live English dictionary. No keys, accounts, or learner data are sent. */
 (function (root) {
   'use strict';
   var key = 'sea-dictionary-cache-v1';

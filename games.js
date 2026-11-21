@@ -1,11 +1,3 @@
-/* ============================================================================
-   Ciyaar oo Baro / Play & Learn — six games, ten levels each.
-   Words come only from the curriculum's picture dictionary (DICT_ENTRIES).
-   Missed words join the existing review deck (addSRS). XP uses the existing
-   best-score rule (awardBestXP), so a level pays once per improvement.
-   State is the optional S.games key; lessons and all other progress untouched.
-   Sound is synthesised with WebAudio (no files); spoken words use speak().
-   ============================================================================ */
 (function () {
   'use strict';
   if (typeof UI_ICONS === 'object') {
@@ -47,8 +39,6 @@
   function diffOf(id) { var d = gz().diff[id]; return d === 'hard' || d === 'medium' ? d : 'easy'; }
   function gameXP(st) { var b = st && st.stageF && st.stageF.best || {}, n = 0; Object.keys(b).forEach(function (x) { if (x.indexOf('game:') === 0) n += b[x] || 0; }); return n; }
   function starsOf(id) { var s = gz().lv[id].s, n = 0; Object.keys(s).forEach(function (k) { n += s[k]; }); return n; }
-
-  /* ---------------- sound: WebAudio, nothing to download ---------------- */
   var AC = null, master = null, musicOn = false, musicT = 0, musicStep = 0, musicTimer = null, noiseBuf = null;
   function ac() {
     if (!S || !gz().sound) return null;
@@ -67,12 +57,12 @@
     g.gain.setValueAtTime(vol, t0); g.gain.exponentialRampToValueAtTime(0.0001, t0 + d); s.connect(f); f.connect(g); g.connect(master); s.start(t0); s.stop(t0 + d + 0.02);
   }
   var SFX = {
-    blip: function (t) { tone(660, t, 0.09, 'triangle', 0.22, 990); },                                   /* snake eats a right letter */
-    tok: function (t) { tone(190, t, 0.12, 'sine', 0.5, 95); hiss(t, 0.05, 0.12, 900, 400); },           /* soft wooden catch */
-    chime: function (t) { tone(880, t, 0.28, 'sine', 0.2); tone(1318.5, t + 0.07, 0.36, 'sine', 0.18); }, /* correct */
-    thud: function (t) { tone(120, t, 0.26, 'sine', 0.32, 62); },                                         /* gentle miss, never a buzzer */
-    pop: function (t) { tone(420, t, 0.07, 'sine', 0.18, 760); },                                         /* card flip, star */
-    shwick: function (t) { hiss(t, 0.14, 0.4, 1400, 7000); tone(1600, t, 0.06, 'sine', 0.06, 3200); },    /* slice */
+    blip: function (t) { tone(660, t, 0.09, 'triangle', 0.22, 990); },
+    tok: function (t) { tone(190, t, 0.12, 'sine', 0.5, 95); hiss(t, 0.05, 0.12, 900, 400); },
+    chime: function (t) { tone(880, t, 0.28, 'sine', 0.2); tone(1318.5, t + 0.07, 0.36, 'sine', 0.18); },
+    thud: function (t) { tone(120, t, 0.26, 'sine', 0.32, 62); },
+    pop: function (t) { tone(420, t, 0.07, 'sine', 0.18, 760); },
+    shwick: function (t) { hiss(t, 0.14, 0.4, 1400, 7000); tone(1600, t, 0.06, 'sine', 0.06, 3200); },
     coins: function (t) { [1568, 2093, 2637, 3136, 2637, 3520].forEach(function (f, i) { tone(f, t + i * 0.055, 0.16, 'triangle', 0.13); }); hiss(t + 0.1, 0.3, 0.05, 6000, 9000); },
     fanfare: function (t) { [523.25, 659.25, 783.99, 1046.5].forEach(function (f, i) { tone(f, t + i * 0.13, 0.3, 'triangle', 0.22); }); tone(1318.5, t + 0.56, 0.6, 'sine', 0.2); tone(1046.5, t + 0.56, 0.6, 'triangle', 0.14); },
     combo: function (t) { tone(988, t, 0.1, 'triangle', 0.18); tone(1480, t + 0.07, 0.16, 'triangle', 0.18); },
@@ -93,8 +83,6 @@
   function sayWord(en, wait) { setTimeout(function () { try { speak(en); } catch (e) { } }, wait || 320); }
   function soundBtn() { var on = gz().sound; return '<button type="button" class="gm-sound' + (on ? ' on' : '') + '" id="gmSound" aria-pressed="' + on + '">' + ic(on ? 'speaker' : 'mute') + '<span>' + (on ? T('Codka: shidan', 'Sound: on') : T('Codka: damsan', 'Sound: off')) + '</span></button>'; }
   function wireSound(after) { var b = document.getElementById('gmSound'); if (b) b.onclick = function () { var g = gz(); g.sound = !g.sound; save(); if (!g.sound) stopMusic(); else sfx('pop'); after(); }; }
-
-  /* ---------------- juice: one light particle canvas ---------------- */
   var fxC = null, fxX = null, parts = [], fxRaf = 0;
   function fxInit() { if (fxC) return; fxC = document.createElement('canvas'); fxC.className = 'gm-fx'; document.body.appendChild(fxC); fxX = fxC.getContext('2d'); var z = function () { fxC.width = innerWidth; fxC.height = innerHeight; }; z(); addEventListener('resize', z); }
   function kick() {
@@ -111,8 +99,6 @@
   }
   function burst(x, y, colors, n, sp) { fxInit(); if (calm) n = Math.ceil(n / 3); sp = sp || 260; for (var i = 0; i < n; i++) parts.push({ x: x, y: y, vx: rnd(-1, 1) * sp, vy: rnd(-1.3, 0.3) * sp, g: 900, life: rnd(0.45, 0.9), t: 0, c: colors[i % colors.length], s: rnd(4, 9), rot: rnd(0, 6), vr: rnd(-8, 8) }); kick(); }
   function confetti() { fxInit(); if (calm) return; var cs = [cssv('--accent'), cssv('--gold'), '#e4572e', cssv('--ink'), '#58a4b0']; for (var i = 0; i < 120; i++) parts.push({ x: rnd(0, innerWidth), y: rnd(-innerHeight * 0.4, -10), vx: rnd(-40, 40), vy: rnd(140, 380), g: 160, life: rnd(2, 3.4), t: 0, c: cs[i % cs.length], s: rnd(8, 14), rot: rnd(0, 6), vr: rnd(-6, 6), sq: 1, sw: 1 }); kick(); }
-
-  /* ---------------- the level law (same for every game) ---------------- */
   function law(L, diff) {
     var hard = diff === 'hard', med = diff === 'medium', t = (L - 1) / 9;
     return { L: L, hard: hard, med: med, t: Math.min(1.15, t + (hard ? 0.22 : med ? 0.11 : 0)), lives: Math.max(1, (L <= 3 ? 4 : L <= 8 ? 3 : 2) - (hard ? 1 : 0)), maxLen: Math.min(11, 4 + Math.floor(L * 0.7)), lessons: 25 * L, opts: L <= 2 ? 2 : L <= 6 ? 3 : 4 };
@@ -129,8 +115,6 @@
     if (R.c.L >= 5) { var sc = function (e) { return (e.en[0] === w.en[0] ? 2 : 0) + (e.theme === w.theme ? 1 : 0) + (Math.abs(e.en.length - w.en.length) <= 1 ? 1 : 0); }; c.sort(function (a, b) { return sc(b) - sc(a); }); c = shuf(c.slice(0, Math.max(n + 2, 6))); }
     return c.slice(0, n);
   }
-
-  /* ---------------- round engine ---------------- */
   function stopGame() { var R = P.R; if (!R) return; R.over = true; cancelAnimationFrame(R.raf); if (R.cleanup) { try { R.cleanup(); } catch (e) { } } clearTimeout(R.slowT); P.R = null; document.body.classList.remove('gm-playing', 'gm-last'); }
   function play(id, L) {
     stopGame(); stopMusic(); var g = gz(), diff = diffOf(id), c = law(L, diff), def = gdef(id);
@@ -194,12 +178,10 @@
     var r = document.getElementById('gmRetry'); if (r) r.onclick = function () { play(id, L); };
     document.getElementById('gmHome').onclick = function () { P.route = 'home'; paint(); };
   }
-
-  /* ---------------- 1. Word Snake ---------------- */
   function gSnake(R, stage) {
     var cols = 9, rows = 10, dpr = Math.min(2, window.devicePixelRatio || 1), cell = 40, cv = document.createElement('canvas'), x = cv.getContext('2d');
     stage.innerHTML = ''; stage.classList.add('gm-snake'); stage.appendChild(cv);
-    stage.insertAdjacentHTML('beforeend', '<div class="gm-pad"><button type="button" data-d="0,-1" aria-label="Up" style="grid-area:u">' + ic('chevron') + '</button><button type="button" data-d="-1,0" aria-label="Left" style="grid-area:l">' + ic('chevron') + '</button><button type="button" data-d="1,0" aria-label="Right" style="grid-area:r">' + ic('chevron') + '</button><button type="button" data-d="0,1" aria-label="Down" style="grid-area:d">' + ic('chevron') + '</button></div>');
+    stage.insertAdjacentHTML('beforeend', '<div class="gm-pad"><button type="button" data-d="0,-1" aria-label="Up" class="ga-u">' + ic('chevron') + '</button><button type="button" data-d="-1,0" aria-label="Left" class="ga-l">' + ic('chevron') + '</button><button type="button" data-d="1,0" aria-label="Right" class="ga-r">' + ic('chevron') + '</button><button type="button" data-d="0,1" aria-label="Down" class="ga-d">' + ic('chevron') + '</button></div>');
     cell = Math.floor(Math.min(stage.clientWidth, 440) / cols); cv.style.width = cell * cols + 'px'; cv.style.height = cell * rows + 'px'; cv.width = cell * cols * dpr; cv.height = cell * rows * dpr; x.setTransform(dpr, 0, 0, dpr, 0, 0);
     var snake, dir, queue = [], letters = [], words = shuf(R.pool).slice(0, R.need + 3), wi = 0, word, idx = 0, acc = 0, tick = lerp(0.36, 0.17, Math.min(1, R.c.t)), col = { a: cssv('--accent'), g: cssv('--gold'), s: cssv('--soft'), i: cssv('--ink'), p: cssv('--surface'), l: cssv('--line') };
     function reset() { snake = [{ x: 4, y: 6 }, { x: 3, y: 6 }, { x: 2, y: 6 }]; dir = { x: 1, y: 0 }; queue = []; }
@@ -234,8 +216,6 @@
     R.step = function (dt) { acc += dt; var moved = false; while (acc >= tick && !R.over) { acc -= tick; move(); moved = true; } if (moved && !R.over) draw(); };
     R.cleanup = function () { removeEventListener('keydown', key); };
   }
-
-  /* ---------------- 2. Word Catch ---------------- */
   function gCatch(R, stage) {
     stage.classList.add('gm-catch'); stage.innerHTML = '<div class="gm-far" id="gmFar"></div><div class="gm-near" id="gmNear"></div><div class="gm-basket" id="gmBasket"><svg viewBox="0 0 104 56" aria-hidden="true"><path d="M6 14h92l-10 36a6 6 0 0 1-6 4H22a6 6 0 0 1-6-4z" fill="var(--gold)"/><path d="M6 14h92" stroke="var(--gold-ink)" stroke-width="5" stroke-linecap="round"/><path d="M30 18l4 32M52 18v32M74 18l-4 32" stroke="var(--gold-ink)" stroke-width="2" opacity=".5"/></svg></div>';
     var bk = document.getElementById('gmBasket'), W = stage.clientWidth, H = stage.clientHeight, bx = W / 2, items = [], spawnT = 0.5, since = 2, words = shuf(R.pool), wi = 0, target, speed = lerp(75, 185, Math.min(1, R.c.t)), gap = lerp(1.6, 0.8, Math.min(1, R.c.t));
@@ -260,8 +240,6 @@
     };
     R.cleanup = function () { removeEventListener('keydown', key); };
   }
-
-  /* ---------------- 3. The Ladder ---------------- */
   function gLadder(R, stage) {
     stage.classList.add('gm-ladder'); if (R.c.hard) { R.lives = R.lives0 = 1; R.hud(); } var life = { half: true, slow: true }; var rung = 0, safe = 0, pot = 0, words = shuf(R.pool), wi = 0, cur, lock = false, tMax = R.c.hard ? lerp(9, 5, Math.min(1, R.c.t)) : 0, tLeft = 0;
     function q() {
@@ -281,8 +259,6 @@
     }
     q(); R.step = function (dt) { if (!tMax || lock) return; tLeft -= dt; var el = document.getElementById('gmTime'); if (el) el.style.width = Math.max(0, tLeft / tMax * 100) + '%'; if (tLeft <= 0) wrong(null); };
   }
-
-  /* ---------------- 4. Memory Match ---------------- */
   function gMatch(R, stage) {
     stage.classList.add('gm-match'); var n = R.need, ws = shuf(R.pool.filter(function (e) { return visualFor(e.en); })).slice(0, n), text = R.c.L >= 6, cards = [], open = [], busy = false, back = R.c.hard ? 650 : 1050;
     ws.forEach(function (w) { cards.push({ w: w, k: 'a' }); cards.push({ w: w, k: 'b' }); }); cards = shuf(cards);
@@ -300,8 +276,6 @@
     els.forEach(function (el) { el.onclick = function () { tap(+el.dataset.i); }; });
     if (!R.c.hard && R.c.L <= 4) { busy = true; els.forEach(function (el) { el.classList.add('open'); }); setTimeout(function () { els.forEach(function (el) { el.classList.remove('open'); }); busy = false; }, 1700); }
   }
-
-  /* ---------------- 5. Duel Dash ---------------- */
   function gDuel(R, stage) {
     stage.classList.add('gm-duel'); var me = 0, rv = 0, pace = lerp(5.4, 2.6, Math.min(1, R.c.t)) * (R.c.hard ? 0.85 : 1), words = shuf(R.pool), wi = 0, cur, lock = false, nOpt = R.c.L <= 4 ? 2 : 3, init = ((S.profile.name || 'A').charAt(0) || 'A').toUpperCase();
     stage.innerHTML = '<div class="gm-track"><div class="gm-lane"><span class="gm-run me" id="gmMe">' + esc(init) + '</span></div><div class="gm-lane"><span class="gm-run rv" id="gmRv" title="Geel">G</span></div><span class="gm-finish" aria-hidden="true"></span></div><p class="small muted gm-vs">' + T('Adiga iyo Geel — yaa hor gaari doona?', 'You and Geel — who gets there first?') + '</p><div class="opts" id="gmOpts"></div>';
@@ -316,8 +290,6 @@
     pos(); q();
     R.step = function (dt) { var near = R.need - rv < 1.2 && R.need - me <= 2; rv += dt / pace * (near ? 0.5 : 1); stage.classList.toggle('near', near); pos(); if (rv >= R.need) { R.toast(cur, T('Geel ayaa hor gaaray', 'Geel got there first')); R.missed[cur.en] = cur; R.fail(); } };
   }
-
-  /* ---------------- 6. Word Slice ---------------- */
   function gSlice(R, stage) {
     stage.classList.add('gm-slice'); var dpr = Math.min(2, window.devicePixelRatio || 1), cv = document.createElement('canvas'), x = cv.getContext('2d'), W = stage.clientWidth, H = stage.clientHeight; stage.innerHTML = ''; stage.appendChild(cv);
     cv.style.width = W + 'px'; cv.style.height = H + 'px'; cv.width = W * dpr; cv.height = H * dpr; x.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -353,10 +325,6 @@
       if (trail.length > 1) { x.lineCap = 'round'; x.lineJoin = 'round'; for (var i = 1; i < trail.length; i++) { x.strokeStyle = 'rgba(233,180,76,' + (i / trail.length) + ')'; x.lineWidth = 2 + 6 * i / trail.length; x.beginPath(); x.moveTo(trail[i - 1].x, trail[i - 1].y); x.lineTo(trail[i].x, trail[i].y); x.stroke(); } }
     };
   }
-
-
-
-  /* ---------------- daily quests: one game, one review, one new word set ---------------- */
   function qz() { var g = gz(), t = todayStr(); if (!g.q || g.q.d !== t) g.q = { d: t }; return g.q; }
   function quest(k) { if (!S) return; var q = qz(); if (!q[k]) { q[k] = 1; } }
   function questState() { var q = qz(), noDue = false; try { noDue = dueCards().length === 0; } catch (e) { } var r = !!q.review || noDue; return { game: !!q.game, review: r, reviewFree: !q.review && noDue, words: !!q.words, n: (q.game ? 1 : 0) + (r ? 1 : 0) + (q.words ? 1 : 0), chest: !!q.chest }; }
@@ -387,8 +355,6 @@
     app.innerHTML = '<div class="gmh"><button type="button" class="simple-back" id="gmBack">' + ic('back') + T('Ciyaaraha', 'All games') + '</button><p class="hero-eyebrow">' + T('Erayada cusub', 'New words') + ' · ' + (i + 1) + ' / ' + ws.length + '</p><h1>' + T('Shan eray oo casharkaaga xiga ah', 'Five words from your next lesson') + '</h1><article class="cz-card gm-ws"><span class="gm-pic keep-emoji">' + (visualFor(w.en) ? visHTML(w.en) : '') + '</span><div class="cz-qrow"><h2 class="cz-q" lang="en">' + esc(w.en) + '</h2>' + speakBtn(w.en) + '</div><p class="gm-ws-so" lang="so">' + esc(w.so) + '</p>' + (w.exEn ? '<p class="cz-so"><span lang="en">' + esc(w.exEn) + '</span><br><span class="muted" lang="so">' + esc(w.exSo || '') + '</span></p>' : '') + '<button type="button" class="btn cz-wide" id="gmWsNext">' + (i === ws.length - 1 ? T('Dhammee', 'Finish') : T('Xiga', 'Next')) + ic('arrow') + '</button></article><p class="small muted">' + T('Casharka ', 'Lesson ') + L.n + ': ' + esc(T(L.titleSo, L.titleEn)) + '</p></div>';
     bindSpeak(app); sayWord(w.en, 250); document.getElementById('gmBack').onclick = function () { P.route = 'home'; paint(); }; document.getElementById('gmWsNext').onclick = function () { P.ws = i + 1; paint(); };
   }
-
-  /* ---------------- Duel Dash: the rivalry engine ---------------- */
   var DD = { E: { len: 5, les: 60, opts: 3, so: 'Xad fudud', en: 'Easy' }, M: { len: 7, les: 150, opts: 3, so: 'Dhexe', en: 'Medium' }, H: { len: 11, les: 250, opts: 4, so: 'Adag', en: 'Hard' } };
   function rng(seed) { var a = seed >>> 0; return function () { a |= 0; a = a + 0x6D2B79F5 | 0; var t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
   function duelPool(d) { var c = DD[d]; return DICT_ENTRIES.filter(function (e) { return /^[a-z]+$/i.test(e.en) && e.en.length >= 2 && e.en.length <= c.len && e.lesson <= c.les; }).sort(function (a, b) { return a.en < b.en ? -1 : a.en > b.en ? 1 : 0; }); }
@@ -419,7 +385,6 @@
     q(); raf = requestAnimationFrame(function f(ts) { if (over) return; var dt = Math.min(0.1, (ts - last) / 1000); last = ts; left -= dt; document.getElementById('gmClock').style.width = Math.max(0, left / total * 100) + '%'; document.getElementById('gmSecs').textContent = Math.max(0, Math.ceil(left)); if (left <= 10) document.querySelector('.gm-clock').classList.add('low'); if (left <= 0) { end(false); return; } raf = requestAnimationFrame(f); });
     window.scrollTo({ top: 0, behavior: 'instant' });
   }
-  /* (a) pass-and-play: two players, one phone, the same questions each round */
   function passPlay() {
     var pp = P.pp = P.pp || { stage: 'setup', names: [(S.profile.name || '').split(' ')[0] || T('Ciyaartoy 1', 'Player 1'), T('Ciyaartoy 2', 'Player 2')], d: 'E', rounds: 1 };
     var h = '<div class="gmh"><button type="button" class="simple-back" id="gmBack">' + ic('back') + T('Tartanka Degdegga', 'Duel Dash') + '</button>';
@@ -450,17 +415,16 @@
     } else { document.getElementById('gmRematch').onclick = function () { pp.stage = 'setup'; paint(); }; document.getElementById('gmHome').onclick = function () { P.pp = null; P.route = 'home'; paint(); }; }
     window.scrollTo({ top: 0, behavior: 'instant' });
   }
-  /* (b) challenge by code: the code carries the seed (the exact questions) and the score to beat */
   function shareText(code, score) { var url = location.origin + location.pathname + '?duel=' + code + '&n=' + encodeURIComponent((S.profile.name || '').split(' ')[0].slice(0, 14)); return { url: url, text: 'Somali English Academy — Duel Dash: waxaan helay ' + score + ' dhibcood. Ma iga badin kartaa? / I scored ' + score + '. Can you beat me? ' + url + ' (koodh / code: ' + code + ')' }; }
   function challenge() {
     var ch = P.ch = P.ch || { stage: 'menu', d: 'E' }, h = '<div class="gmh"><button type="button" class="simple-back" id="gmBack">' + ic('back') + T('Tartanka Degdegga', 'Duel Dash') + '</button>';
     if (ch.stage === 'menu') {
-      h += '<h1>' + T('Loollan koodh ah', 'Challenge by code') + '</h1><p class="simple-intro">' + T('Wareeggaaga ciyaar, koodhka WhatsApp ugu dir qof aad jeceshahay. Isagu wuxuu ciyaarayaa isla su’aalihii, wuxuuna isku dayayaa inuu kaa badiyo.', 'Play your round, then send the code by WhatsApp to someone you love. They play the very same questions and try to beat you.') + '</p><div class="cz-card"><h2>' + T('Bilow loollan cusub', 'Start a new challenge') + '</h2>' + diffSeg(ch.d) + '<button type="button" class="btn cz-wide" id="gmChGo">' + T('Ciyaar wareeggayga', 'Play my round') + ic('arrow') + '</button></div><div class="cz-card" style="margin-top:var(--s-4)"><h2>' + T('Koodh ma lagu soo diray?', 'Did someone send you a code?') + '</h2><form id="gmChForm"><label class="simple-label" for="gmChCode">' + T('Halkan ku qor koodhka', 'Type the code here') + '</label><input type="text" id="gmChCode" class="cz-input" autocapitalize="characters" autocomplete="off" spellcheck="false" placeholder="7K2QF-E-3W-9" value="' + esc(ch.typed || '') + '"><p class="small" role="status" id="gmChErr"></p><button type="submit" class="btn secondary cz-wide">' + T('Ciyaar loollankan', 'Play this challenge') + '</button></form></div><p class="cz-source">' + T('Tani waa loollan daacad ah oo aan internet toos ah u baahnayn: koodhku wuxuu sidaa su’aalaha iyo dhibcaha oo keliya.', 'This is an honest challenge with no live connection: the code only carries the questions and the score.') + '</p>';
+      h += '<h1>' + T('Loollan koodh ah', 'Challenge by code') + '</h1><p class="simple-intro">' + T('Wareeggaaga ciyaar, koodhka WhatsApp ugu dir qof aad jeceshahay. Isagu wuxuu ciyaarayaa isla su’aalihii, wuxuuna isku dayayaa inuu kaa badiyo.', 'Play your round, then send the code by WhatsApp to someone you love. They play the very same questions and try to beat you.') + '</p><div class="cz-card"><h2>' + T('Bilow loollan cusub', 'Start a new challenge') + '</h2>' + diffSeg(ch.d) + '<button type="button" class="btn cz-wide" id="gmChGo">' + T('Ciyaar wareeggayga', 'Play my round') + ic('arrow') + '</button></div><div class="u-mt-4 cz-card"><h2>' + T('Koodh ma lagu soo diray?', 'Did someone send you a code?') + '</h2><form id="gmChForm"><label class="simple-label" for="gmChCode">' + T('Halkan ku qor koodhka', 'Type the code here') + '</label><input type="text" id="gmChCode" class="cz-input" autocapitalize="characters" autocomplete="off" spellcheck="false" placeholder="7K2QF-E-3W-9" value="' + esc(ch.typed || '') + '"><p class="small" role="status" id="gmChErr"></p><button type="submit" class="btn secondary cz-wide">' + T('Ciyaar loollankan', 'Play this challenge') + '</button></form></div><p class="cz-source">' + T('Tani waa loollan daacad ah oo aan internet toos ah u baahnayn: koodhku wuxuu sidaa su’aalaha iyo dhibcaha oo keliya.', 'This is an honest challenge with no live connection: the code only carries the questions and the score.') + '</p>';
     } else if (ch.stage === 'incoming') {
       h += '<div class="gm-hand"><p class="hero-eyebrow">' + T('Loollan ayaa kuu yimid', 'A challenge has arrived') + ' · ' + T(DD[ch.d].so, DD[ch.d].en) + '</p><div class="gm-chest-big">' + ic('flag') + '</div><h1>' + (ch.from ? esc(ch.from) + T(': ', ' scored ') : T('Dhibcaha laga badinayo: ', 'Score to beat: ')) + ch.beat + (ch.from ? T(' dhibcood', '') : '') + '</h1><p class="simple-intro">' + T('Isla su’aalihii ayaad helaysaa, 60 ilbiriqsi. Ka badi!', 'You get the very same questions and 60 seconds. Beat it!') + '</p><button type="button" class="btn cz-wide gm-glow" id="gmChPlay">' + T('Waan diyaarsanahay', 'I am ready') + '</button></div>';
     } else {
       var res = ch.res, beat = ch.beat, won = beat == null ? null : res.score > beat ? 1 : res.score === beat ? 0 : -1, code = mintCode(ch.seed, ch.d, res.score), sh = shareText(code, res.score);
-      h += '<div class="gm-result' + (won !== -1 ? ' win' : '') + '"><p class="hero-eyebrow">' + T('Tartanka Degdegga', 'Duel Dash') + ' · ' + T(DD[ch.d].so, DD[ch.d].en) + '</p><div class="cz-seal ok" style="margin:var(--s-3) 0"><svg viewBox="0 0 120 120"><circle class="cz-seal-bg" cx="60" cy="60" r="52"/><circle class="cz-seal-fg" cx="60" cy="60" r="52" stroke-dasharray="326.7" stroke-dashoffset="0"/></svg><div><b>' + res.score + '</b><small>' + res.right + ' ' + T('sax', 'correct') + '</small></div></div><h1>' + (won === null ? T('Wareeggaagu waa diyaar', 'Your round is ready') : won === 1 ? T('Waad ka badisay!', 'You beat it!') : won === 0 ? T('Barbaro!', 'A tie!') : T('Wax yar baa kaa dhimmanaa', 'So close')) + '</h1><p class="simple-intro">' + (won === null ? T('Koodhkan u dir qof, ha isku dayo inuu kaa badiyo.', 'Send this code to someone and let them try to beat you.') : T('Dhibcihii laga badinayay: ', 'The score to beat was ') + beat + '. ' + T('Hadda koodhkaaga u celi.', 'Now send your own code back.')) + (res.xp ? ' +' + res.xp + ' XP' : '') + '</p><div class="gm-code" aria-label="' + T('Koodhka loollanka', 'Challenge code') + '"><b id="gmCode">' + code + '</b></div><div class="gm-two"><a class="btn" id="gmWa" href="https://wa.me/?text=' + encodeURIComponent(sh.text) + '" target="_blank" rel="noopener noreferrer">' + T('U dir WhatsApp', 'Send by WhatsApp') + '</a><button type="button" class="btn secondary" id="gmCopy">' + T('Koobiyee', 'Copy') + '</button></div><p class="small muted" role="status" id="gmCopyOk"></p><button type="button" class="simple-text-button" id="gmChAgain">' + T('Loollan kale', 'Another challenge') + '</button></div>';
+      h += '<div class="gm-result' + (won !== -1 ? ' win' : '') + '"><p class="hero-eyebrow">' + T('Tartanka Degdegga', 'Duel Dash') + ' · ' + T(DD[ch.d].so, DD[ch.d].en) + '</p><div class="u-mt-3 u-mb-3 cz-seal ok"><svg viewBox="0 0 120 120"><circle class="cz-seal-bg" cx="60" cy="60" r="52"/><circle class="cz-seal-fg" cx="60" cy="60" r="52" stroke-dasharray="326.7" stroke-dashoffset="0"/></svg><div><b>' + res.score + '</b><small>' + res.right + ' ' + T('sax', 'correct') + '</small></div></div><h1>' + (won === null ? T('Wareeggaagu waa diyaar', 'Your round is ready') : won === 1 ? T('Waad ka badisay!', 'You beat it!') : won === 0 ? T('Barbaro!', 'A tie!') : T('Wax yar baa kaa dhimmanaa', 'So close')) + '</h1><p class="simple-intro">' + (won === null ? T('Koodhkan u dir qof, ha isku dayo inuu kaa badiyo.', 'Send this code to someone and let them try to beat you.') : T('Dhibcihii laga badinayay: ', 'The score to beat was ') + beat + '. ' + T('Hadda koodhkaaga u celi.', 'Now send your own code back.')) + (res.xp ? ' +' + res.xp + ' XP' : '') + '</p><div class="gm-code" aria-label="' + T('Koodhka loollanka', 'Challenge code') + '"><b id="gmCode">' + code + '</b></div><div class="gm-two"><a class="btn" id="gmWa" href="https://wa.me/?text=' + encodeURIComponent(sh.text) + '" target="_blank" rel="noopener noreferrer">' + T('U dir WhatsApp', 'Send by WhatsApp') + '</a><button type="button" class="btn secondary" id="gmCopy">' + T('Koobiyee', 'Copy') + '</button></div><p class="small muted" role="status" id="gmCopyOk"></p><button type="button" class="simple-text-button" id="gmChAgain">' + T('Loollan kale', 'Another challenge') + '</button></div>';
     }
     app.innerHTML = h + '</div>';
     document.getElementById('gmBack').onclick = function () { P.ch = null; P.game = 'duel'; P.route = 'levels'; paint(); };
@@ -480,14 +444,11 @@
   }
   var incoming = null; try { var sp = new URLSearchParams(location.search); if (sp.get('duel')) { incoming = { code: sp.get('duel'), from: (sp.get('n') || '').slice(0, 14) }; history.replaceState(null, '', location.pathname); } } catch (e) { }
   function openIncoming() { if (!incoming || !S || !S.profile || !S.profile.onboarded) return false; var c = readCode(incoming.code), from = incoming.from; incoming = null; P.ch = c ? { stage: 'incoming', seed: c.seed, d: c.d, beat: c.score, from: from } : { stage: 'menu', d: 'E', typed: '' }; P.route = 'ch'; view = 'play'; return true; }
-  /* (c) the family leaderboard: the profiles on this phone, ranked by game XP */
   function board() {
     var rows = Object.keys(ROOT.profiles).map(function (id) { var p = ROOT.profiles[id], st = 0; if (p.games && p.games.lv) Object.keys(p.games.lv).forEach(function (g) { var s = p.games.lv[g].s || {}; Object.keys(s).forEach(function (n) { st += s[n]; }); }); return { id: id, name: (p.profile && p.profile.name) || T('Ciyaartoy', 'Player'), color: (p.profile && p.profile.avatarColor) || cssv('--accent'), xp: gameXP(p), stars: st }; }).sort(function (a, b) { return b.xp - a.xp || b.stars - a.stars; });
     app.innerHTML = '<div class="gmh"><button type="button" class="simple-back" id="gmBack">' + ic('back') + T('Tartanka Degdegga', 'Duel Dash') + '</button><h1>' + T('Shaxda qoyska', 'Family leaderboard') + '</h1><p class="simple-intro">' + T('Qof kasta oo taleefankan boggiisa ku leh, waxaa lagu kala saaray XP-ga ciyaaraha.', 'Everyone with a profile on this phone, ranked by game XP.') + '</p><ol class="gm-board">' + rows.map(function (r, i) { return '<li class="' + (r.id === ROOT.activeId ? 'me' : '') + (i === 0 && r.xp > 0 ? ' top' : '') + '"><span class="gm-rank">' + (i + 1) + '</span><span class="gm-av" style="background:' + esc(r.color) + '">' + esc(r.name.charAt(0).toUpperCase()) + '</span><span class="gm-qt"><b>' + esc(r.name) + '</b><small>' + ic('star') + ' ' + r.stars + '</small></span><span class="gm-bxp"><b>' + r.xp + '</b><small>XP</small></span></li>'; }).join('') + '</ol>' + (rows.length < 2 ? '<div class="card empty">' + ic('user') + '<h2>' + T('Shaxdu waxay u baahan tahay tartame', 'A table needs a rival') + '</h2><p>' + T('Ku dar xubin kale oo qoyska ah: Boggaaga → Dejimo kale → Beddel ama ku dar ardey. Taleefankan ilaa afar bog ayuu qaadaa.', 'Add another family member: Profile → More settings → switch or add a learner. This phone holds up to four profiles.') + '</p></div>' : '') + '</div>';
     document.getElementById('gmBack').onclick = function () { P.game = 'duel'; P.route = 'levels'; paint(); };
   }
-
-  /* ---------------- games home, journey map, level ladder ---------------- */
   function home() {
     var g = gz(), total = 0, reach = 10; GAMES.forEach(function (x) { total += starsOf(x.id); reach = Math.min(reach, g.lv[x.id].u); });
     var h = '<div class="gmh"><p class="hero-eyebrow">' + ic('game') + T('Ciyaar oo baro', 'Play and learn') + '</p><h1>' + T('Ciyaar. Qosol. Baro.', 'Play. Laugh. Learn.') + '</h1><p class="simple-intro">' + T('Toddobo ciyaarood, toban heer midkiiba. Eray kasta oo aad ku guulaysato waad maqlaysaa oo waad arkaysaa.', 'Seven games, ten levels each. You hear and see every word you win.') + '</p>' + soundBtn() + questHTML()
@@ -510,13 +471,12 @@
     app.querySelectorAll('[data-l]').forEach(function (b) { b.onclick = function () { ac(); play(def.id, +b.dataset.l); }; });
     app.querySelectorAll('[data-mode]').forEach(function (b) { b.onclick = function () { sfx('pop'); P.route = b.dataset.mode; P.pp = null; P.ch = null; paint(); window.scrollTo({ top: 0, behavior: 'instant' }); }; });
   }
-  function paint() { document.body.classList.add('view-play'); if (P.route === 'levels' && P.game) levels(); else if (P.route === 'play' && P.R) { /* a running round paints itself */ } else if (P.route === 'round') { /* a duel round paints itself */ } else if (P.route === 'pp') passPlay(); else if (P.route === 'ch') challenge(); else if (P.route === 'board') board(); else if (P.route === 'words') wordSet(); else { P.route = 'home'; home(); } }
+  function paint() { document.body.classList.add('view-play'); if (P.route === 'levels' && P.game) levels(); else if (P.route === 'play' && P.R) {   } else if (P.route === 'round') {   } else if (P.route === 'pp') passPlay(); else if (P.route === 'ch') challenge(); else if (P.route === 'board') board(); else if (P.route === 'words') wordSet(); else { P.route = 'home'; home(); } }
   window.renderPlay = function () { if (P.route === 'play' && !P.R) P.route = 'home'; paint(); };
   window.openPlay = function (route) { P.route = route || 'home'; setNav('play'); render(); };
   window.__GM = { mintCode: mintCode, readCode: readCode, duelQs: duelQs, gameXP: gameXP, play: play, P: P, law: law, NEED: NEED, GAMES: GAMES, sfxNames: Object.keys(SFX) };
   var prev = render, homeWas = renderHome;
   render = function () { openIncoming(); if (view !== 'play') { stopGame(); stopMusic(); document.body.classList.remove('view-play', 'gm-playing'); if (P.route === 'play' || P.route === 'round') P.route = 'home'; } prev(); };
-  /* today's quests, echoed on the app Home */
   renderHome = function () {
     homeWas(); var box = app.querySelector('.simple-home-content'); if (!box || document.getElementById('homeQuest') || !S || !S.profile) return;
     var s = questState(), b = document.createElement('button'); b.type = 'button'; b.id = 'homeQuest'; b.className = 'gm-homeq' + (s.n === 3 ? ' done' : '');

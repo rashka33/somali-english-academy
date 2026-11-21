@@ -1,4 +1,3 @@
-/* Minimal shell. Keep the existing curriculum, profiles and provider client authoritative. */
 (function () {
   'use strict';
   var legacyRender = render, legacyProfile = renderProfile, legacyLesson = renderLesson, legacyWatch = renderWatch;
@@ -25,6 +24,7 @@
     moon: '<path d="M21 13A9 9 0 0 1 11 3a9 9 0 1 0 10 10z"/>',
     settings: '<path d="m9 3 6 0 1 3 3 1 2 5-2 5-3 1-1 3H9l-1-3-3-1-2-5 2-5 3-1z"/><circle cx="12" cy="12" r="3"/>'
     ,ai: '<path d="M12 3v3m0 12v3M3 12h3m12 0h3M5.6 5.6l2.1 2.1m8.6 8.6 2.1 2.1m0-12.8-2.1 2.1M7.7 16.3l-2.1 2.1"/><circle cx="12" cy="12" r="4"/>'
+    ,grid: '<rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/>'
     ,repeat: '<path d="M4 11a8 8 0 0 1 14-5.3L20 8M20 3v5h-5M20 13a8 8 0 0 1-14 5.3L4 16M4 21v-5h5"/>'
     ,form: '<rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 3h6v3H9zM8.5 11h7M8.5 15h5"/>'
     ,cap: '<path d="m2 9 10-5 10 5-10 5z"/><path d="M6 11v5c3 2 9 2 12 0v-5M22 9v5"/>'
@@ -45,7 +45,7 @@
     if (featureLoads[src]) return featureLoads[src];
     featureLoads[src] = new Promise(function (resolve, reject) {
       var script = document.createElement('script'); script.src = src; script.defer = true;
-      script.onload = resolve; script.onerror = function () { reject(new Error('Could not load ' + src)); };
+      script.onload = resolve; script.onerror = function () { delete featureLoads[src]; script.remove(); reject(new Error('Could not load ' + src)); };
       document.head.appendChild(script);
     });
     return featureLoads[src];
@@ -61,8 +61,8 @@
     if (destination === 'profile') profilePage = panel || '';
     setNav(destination);
     if ((destination === 'cit' && typeof renderCitizenship !== 'function') || (destination === 'ai' && typeof renderBaroAI !== 'function') || (destination === 'play' && typeof renderPlay !== 'function')) {
-      app.innerHTML = '<p class="simple-intro" role="status">' + t('Qaybta waa la soo rarayaa…', 'Loading this section…') + '</p>'; shell();
-      ensureFeature(destination).then(function () { if (view === destination) render(); }).catch(function () { if (view === destination) app.innerHTML = '<p class="feedback bad">' + t('Qaybtan lama soo rari karin. Mar kale isku day.', 'This section could not load. Please try again.') + '</p>'; });
+      app.innerHTML = '<div class="skeleton" role="status" aria-busy="true"><span class="sr-only">' + t('Qaybta waa la soo rarayaa…', 'Loading this section…') + '</span><i class="sk sk-title"></i><i class="sk sk-line"></i><i class="sk sk-card"></i><i class="sk sk-card"></i><i class="sk sk-card"></i></div>'; shell();
+      ensureFeature(destination).then(function () { if (view === destination) render(); }).catch(function () { if (view !== destination) return; app.innerHTML = '<div class="card empty-state">' + icon('signal') + '<h2>' + t('Qaybtan lama soo rari karin.', 'This section did not load.') + '</h2><p>' + t('Mar kale isku day.', 'It needs an internet connection the first time. Check your connection, then try again.') + '</p><button type="button" class="btn" id="loadRetry">' + t('Mar kale isku day', 'Try again') + '</button></div>'; document.getElementById('loadRetry').onclick = function () { go(destination); }; });
       return;
     }
     render();
@@ -89,19 +89,19 @@
     }
     var language = document.getElementById('simpleLanguage');
     language.textContent = english() ? 'EN' : 'SO'; language.setAttribute('aria-label', t('Switch to English', 'U beddel Soomaali'));
-    var parent = view === 'review' ? 'review' : view === 'cit' ? 'cit' : view === 'profile' ? 'profile' : 'home';
+    var parent = view === 'review' ? 'review' : view === 'profile' ? 'profile' : ['more', 'cit', 'acad', 'play', 'watch', 'dict', 'practice', 'simpleLessons'].indexOf(view) >= 0 ? 'more' : 'home';
     var nav = document.getElementById('mainNav'); nav.setAttribute('aria-label', t('Bogagga waaweyn', 'Main navigation'));
-    nav.innerHTML = [['home', t('Hoyga', 'Home'), 'home'], ['review', t('Ku celceli', 'Review'), 'repeat'], ['cit', t('Jinsiyadda', 'Citizenship'), 'flag'], ['profile', t('Boggaaga', 'Profile'), 'user']].map(function (item) {
+    nav.innerHTML = [['home', t('Hoyga', 'Home'), 'home'], ['review', t('Ku celceli', 'Review'), 'repeat'], ['more', t('Wax kale', 'More'), 'grid'], ['profile', t('Boggaaga', 'Profile'), 'user']].map(function (item) {
       return '<button type="button" data-view="' + item[0] + '"' + (parent === item[0] ? ' class="active" aria-current="page"' : '') + '>' + icon(item[2]) + '<span>' + item[1] + '</span></button>';
     }).join('');
     nav.dataset.ready = 'true';
-    document.body.classList.toggle('simple-home', view === 'home');
+    document.body.classList.toggle('simple-home', view === 'home'); document.body.classList.toggle('view-more', view === 'more');
   }
   function nextLesson() { var n = 1; while (n < LESSONS.length && S.completed['L' + n]) n++; return LESSONS[n - 1]; }
   renderHome = function () {
     var lesson = nextLesson(), count = todayLessonsCount(), goal = Math.max(1, Number(S.profile.goal) || 2);
     var complete = Object.keys(S.completed).length >= LESSONS.length;
-    app.innerHTML = '<div class="simple-home-content"><h1>' + t('Diyaar ma u tahay casharka xiga?', 'Ready for your next lesson?') + '</h1><p class="simple-intro">' + t('Tababar yar, maalin kasta.', 'A little practice, every day.') + '</p>'
+    app.innerHTML = '<div class="simple-home-content"><h1>' + t('Diyaar ma u tahay casharka xiga?', 'Ready for your next lesson?') + '</h1><p class="simple-intro">' + t('Tababar yar, maalin kasta.', 'Short lessons, saved on this device.') + '</p>'
       + (function(){
           var si = stage12Of(lesson.n), st = STAGES12[si], total = st[3] - st[2] + 1, done = stageDone(si), all = Object.keys(S.completed).length;
           return '<section class="simple-next" ' + stageStyle(lesson.n) + '><div class="hero-top"><div class="hero-meta"><p class="hero-eyebrow"><i aria-hidden="true"></i>' + esc(english() ? st[0] : st[1]) + ' · ' + (si + 1) + '/12</p>'
@@ -159,9 +159,6 @@
       return '<div class="dictionary-course-row"><button type="button" class="dictionary-course-word" data-define="' + esc(e.en) + '"><strong lang="en">' + esc(e.en) + '</strong><span lang="so">' + esc(e.so) + '</span></button>' + listenButton(e.en) + saveButton(e.en) + '</div>';
     }).join('') + '</div>';
   }
-  /* Round 7 (2026-11-20): an empty Dictionary is a starting point, not a blank
-     page. It shows the next lesson's words as tap-to-look-up tiles (with
-     listening) and the learner's saved words; all labels are existing strings. */
   function discoverHTML() {
     if (!S || !Array.isArray(LESSONS)) return '';
     var lesson = nextLesson(), words = (lesson && lesson.vocab || []).filter(function (v) { return v && v.en; }).slice(0, 8);
@@ -235,13 +232,11 @@
       + '<header class="welcome-brand"><img src="icon-192.png" alt="" width="52" height="52"><div><strong>Somali English Academy</strong><span>Ingiriisi, Af-Soomaali ku baro</span></div></header>'
       + '<div class="welcome-lead"><section class="welcome-hero"><div class="welcome-title-row"><h1 id="welcomeTitle"><span>Baro Ingiriisi,</span><span>tallaabo tallaabo.</span></h1><button type="button" class="welcome-say" id="welcomeSay" aria-label="Dhegeyso: Baro Ingiriisi, tallaabo tallaabo.">' + icon('speaker') + '</button></div><p>Ku soo dhawoow iskuulkaaga. Fiiri waxa gudaha ku jira — ka dibna bilow markaad diyaar tahay.</p></section>'
       + '<div class="welcome-actions"><button type="button" class="welcome-primary" id="welcomeStart">Bilow barashada' + icon('arrow') + '</button><button type="button" class="welcome-placement" id="welcomePlacement">Hore u baratay Ingiriisi? <span>Ogaaw heerkaaga — imtixaan gaaban</span></button></div>'
-      + '<footer class="welcome-trust" aria-label="Macluumaad muhiim ah"><span class="welcome-trust-pill">' + icon('check') + 'Bilaash</span><span class="welcome-trust-pill">' + icon('check') + 'Akoon looma baahna</span><span class="welcome-trust-pill">' + icon('check') + 'Horumarku aaladdaada ayuu ku kaydsan yahay</span></footer></div>'
+      + '<footer class="welcome-trust" aria-label="Macluumaad muhiim ah"><span class="welcome-trust-pill">' + icon('check') + 'Bilaash · akoon looma baahna</span><span class="welcome-trust-pill">' + icon('check') + 'Horumarku aaladdaada ayuu ku kaydsan yahay</span></footer></div>'
       + '<section class="welcome-benefits" aria-labelledby="welcomeInside"><h2 id="welcomeInside" class="welcome-inside">Waxa aad baran karto</h2>' + benefits.map(function (item) { return '<button type="button" class="welcome-benefit" data-go="' + item[3] + '"><span class="welcome-icon">' + icon(item[0]) + '</span><span class="welcome-copy"><h2>' + item[1] + '</h2><p>' + item[2] + '</p></span>' + icon('chevron') + '</button>'; }).join('') + '</section></section>';
     document.getElementById('welcomeSay').onclick = function () { speak('Baro Ingiriisi, tallaabo tallaabo.', false, this); };
     document.getElementById('welcomeStart').onclick = function () {
       document.body.classList.remove('welcome-entry');
-      /* Round 4: Bilow saves from the first tap. The learner is registered and
-         Lesson 1 opens for real; placement stays available from Profile. */
       var first = window.__pendingLesson || 1; window.__pendingLesson = null;
       S.profile.onboarded = true; S.profile.placementSkipped = true;
       save().then(function () { openLesson(first); });
@@ -283,7 +278,7 @@
       }
       return;
     }
-    app.innerHTML = '<h1>' + t('Boggaaga', 'Profile') + '</h1><div class="simple-person"><span class="simple-avatar">' + esc(name.charAt(0).toUpperCase()) + '</span><div><h2>' + esc(name) + '</h2><p>' + t('Wax ku baro xawaarahaaga.', 'Your learning, your pace.') + '</p></div></div><div class="simple-profile-rows">'
+    app.innerHTML = '<h1>' + t('Boggaaga', 'Profile') + '</h1><div class="simple-person"><span class="simple-avatar">' + esc(name.charAt(0).toUpperCase()) + '</span><div><h2>' + esc(name) + '</h2><p>' + t('Wax ku baro xawaarahaaga.', 'Progress saves on this device.') + '</p></div></div><div class="simple-profile-rows">'
       + row('simpleEditName', t('Magacaaga', 'Your name'), 'user', S.profile.name || t('Weli lama qorin', 'Not set')) + row('simpleProgress', t('Horumarkaaga', 'Your progress'), 'progress') + row('simpleSaved', t('Erayada kaydsan', 'Saved words'), 'bookmark') + row('simpleTools', t('Tababar iyo muuqaal', 'Practice & videos'), 'play') + row('simpleLanguageRow', t('Luqadda', 'Language'), 'language', english() ? 'English' : 'Soomaali')
       + row('simpleAppearance', t('Muuqaalka', 'Appearance'), 'moon', { light: t('Iftiin', 'Light'), dark: t('Mugdi', 'Dark'), system: t('Aalad', 'Device') }[S.profile.theme || 'system']) + row('simpleMore', t('Dejimo kale', 'More settings'), 'settings') + '</div><p class="simple-device-note">' + t('Horumarku wuxuu ku kaydsan yahay aaladdan.', 'Progress is stored on this device.') + '</p>';
     [['simpleEditName', 'name'], ['simpleProgress', 'progress'], ['simpleSaved', 'saved'], ['simpleTools', 'tools'], ['simpleLanguageRow', 'language'], ['simpleAppearance', 'appearance'], ['simpleMore', 'advanced']].forEach(function (r) { document.getElementById(r[0]).onclick = function () { if (r[1] === 'advanced') fProfScreen = null; profilePage = r[1]; render(); }; });
@@ -292,8 +287,8 @@
   window.__seaFrom = function (from) { legacyFrom = from; };
   function legacyBack() {
     if (view === 'review' && legacyFrom !== 'tools') return;
-    var home = legacyFrom === 'home';
-    if (!document.getElementById('simpleLegacyBack')) { app.insertAdjacentHTML('afterbegin', '<button type="button" class="simple-back" id="simpleLegacyBack">' + icon('back') + (home ? t('Hoyga', 'Home') : t('Tababar iyo muuqaal', 'Practice & videos')) + '</button>'); document.getElementById('simpleLegacyBack').onclick = function () { if (home) go('home'); else go('profile', 'tools'); }; }
+    var home = legacyFrom === 'home', fromMore = legacyFrom === 'more';
+    if (!document.getElementById('simpleLegacyBack')) { app.insertAdjacentHTML('afterbegin', '<button type="button" class="simple-back" id="simpleLegacyBack">' + icon('back') + (home ? t('Hoyga', 'Home') : fromMore ? t('Wax kale', 'More') : t('Tababar iyo muuqaal', 'Practice & videos')) + '</button>'); document.getElementById('simpleLegacyBack').onclick = function () { if (home) go('home'); else if (fromMore) go('more'); else go('profile', 'tools'); }; }
   }
   renderWatch = function () { legacyWatch(); legacyBack(); };
   renderLesson = function () {
@@ -314,10 +309,10 @@
     if (ROOT && profileId !== ROOT.activeId) { profileId = ROOT.activeId; profilePage = ''; unit = null; }
     if (view === 'path') view = 'simpleLessons';
     var allowed = S && S.profile && (S.profile.onboarded || guestSection) && !pickerPending && !pinGate;
-    if (allowed && ['home', 'dict', 'profile', 'simpleLessons', 'cit', 'ai', 'play', 'about', 'acad'].includes(view)) {
+    if (allowed && ['home', 'dict', 'profile', 'simpleLessons', 'cit', 'ai', 'play', 'about', 'acad', 'more'].includes(view)) {
       applyPrefs(); document.body.classList.remove('inLesson', 'view-home', 'view-profile', 'view-practice');
       var lessonNav = document.getElementById('lesNav'); if (lessonNav) lessonNav.remove(); if (typeof hCloseSheet === 'function') hCloseSheet(); app.classList.remove('wide');
-      if (view === 'home') renderHome(); else if (view === 'cit' && typeof renderCitizenship === 'function') renderCitizenship(); else if (view === 'ai' && typeof renderBaroAI === 'function') renderBaroAI(); else if (view === 'play' && typeof renderPlay === 'function') renderPlay(); else if (view === 'about' && typeof renderAbout === 'function') renderAbout(); else if (view === 'dict') renderDict(); else if (view === 'simpleLessons') renderLessons(); else if (view === 'acad') renderAcad(); else renderProfile();
+      if (view === 'home') renderHome(); else if (view === 'cit' && typeof renderCitizenship === 'function') renderCitizenship(); else if (view === 'ai' && typeof renderBaroAI === 'function') renderBaroAI(); else if (view === 'play' && typeof renderPlay === 'function') renderPlay(); else if (view === 'about' && typeof renderAbout === 'function') renderAbout(); else if (view === 'dict') renderDict(); else if (view === 'simpleLessons') renderLessons(); else if (view === 'acad') renderAcad(); else if (view === 'more' && window.renderMore) window.renderMore(); else renderProfile();
     } else { legacyRender(); if (allowed && ['watch', 'review', 'practice', 'acad'].includes(view)) legacyBack(); }
     if (S) shell();
     if (render._lv !== view) { render._lv = view; window.scrollTo(0, 0); }
@@ -330,10 +325,7 @@
   }, true);
   if (S && S.profile) render();
 })();
-
-// Public backend URL only. Never put a Gemini key here.
 window.ACADEMY_TUTOR_URL = 'https://somali-academy-tutor.rashkaa33.workers.dev';
-
 (function () {
   var original = renderLesson;
   renderLesson = function () {
@@ -360,7 +352,6 @@ window.ACADEMY_TUTOR_URL = 'https://somali-academy-tutor.rashkaa33.workers.dev';
     panel.appendChild(form); panel.appendChild(output); app.appendChild(panel);
   };
 })();
-/* Discoverable learning tools without adding more navigation destinations. */
 (function () {
   var home = renderHome, profile = renderProfile;
   function en() { return S.profile.ui === 'en'; }
@@ -389,7 +380,6 @@ window.ACADEMY_TUTOR_URL = 'https://somali-academy-tutor.rashkaa33.workers.dev';
   if (S && S.profile && S.profile.onboarded) render();
 })();
 (function () {
-  // Authored practical conversation lessons supplement the 1,000-lesson course.
   var lessons = [
     ['Ask for clarification','Someone speaks too quickly. Ask them politely to repeat.','Could you say that again, please?','Could you ___ that again, please?','say'],
     ['Book a medical appointment','Call a clinic and ask for an appointment.','I would like to book an appointment.','I would like to ___ an appointment.','book'],
@@ -405,8 +395,8 @@ window.ACADEMY_TUTOR_URL = 'https://somali-academy-tutor.rashkaa33.workers.dev';
     ['Make a social invitation','Invite a neighbour for tea on Saturday.','Would you like to come over for tea on Saturday?','Would you ___ to come over for tea on Saturday?','like']
   ];
   function showList() {
-    app.innerHTML = '<button class="simple-back" id="commBack">← Home</button><h1>Real-life English</h1><p>100 cashar wada hadal ah oo leh tarjumaad Soomaali. Dhegeyso, ka jawaab, dabadeed labada door ku tababar. Natiijadu waxay ku kaydsan tahay aaladdan. / 100 practical conversations with Somali translations.</p>';
-    document.getElementById('commBack').onclick = function () { setNav('home'); render(); };
+    app.innerHTML = '<button class="simple-back" id="commBack">← '+lng('Wax kale','More')+'</button><h1>'+lng('100 cashar wada hadal ah','Real-life English')+'</h1><p>'+lng('100 cashar wada hadal ah oo leh tarjumaad Soomaali. Dhegeyso, ka jawaab, dabadeed labada door ku tababar. Natiijadu waxay ku kaydsan tahay aaladdan.','100 practical conversations with Somali translations. Listen, answer, then practise both roles. Your results are saved on this device.')+'</p>';
+    document.getElementById('commBack').onclick = function () { setNav('more'); render(); };
     lessons.forEach(function (l,i) {
       var b=document.createElement('button');b.className='simple-row';b.textContent=(i+1)+'. '+l[0]+' — '+conversationTitlesSo[i]+(S.communication&&S.communication[i]?' ✓':'');b.onclick=function(){showLesson(i)};app.appendChild(b);
     });
@@ -1841,14 +1831,14 @@ window.ACADEMY_TUTOR_URL = 'https://somali-academy-tutor.rashkaa33.workers.dev';
   function showLesson(i) {
     var l=lessons[i], answers=[], question=0;
     function frame(label) {
-      app.innerHTML='<button class="simple-back" id="commBack">← Casharrada / Real-life English</button><p>Casharka / Lesson '+(i+1)+' of '+lessons.length+' · '+label+'</p><h1>'+esc(l[0])+'</h1><p lang="so" class="conversation-translation">'+esc(conversationTitlesSo[i])+'</p>';
+      app.innerHTML='<button class="simple-back" id="commBack">← '+lng('Casharrada','Real-life English')+'</button><p>'+lng('Casharka ','Lesson ')+(i+1)+lng(' ka mid ah ',' of ')+lessons.length+' · '+label+'</p><h1>'+esc(l[0])+'</h1><p lang="so" class="conversation-translation">'+esc(conversationTitlesSo[i])+'</p>';
       document.getElementById('commBack').onclick=showList;
       window.scrollTo(0,0);
     }
     function button(id,label,fn){var b=document.createElement('button');b.id=id;b.className='simple-primary';b.textContent=label;b.onclick=fn;app.appendChild(b)}
     function study(){
       frame('Wadahadal / Conversation');
-      app.insertAdjacentHTML('beforeend','<p lang="so">Akhri oo dhegeyso wada hadalka. Faham macnaha Soomaaliga, dabadeed ku celi Ingiriisiga. Markaad diyaar tahay, bilow imtixaanka.</p><p>'+esc(l[1])+'</p><div id="commDialogue">'+conversations[i].map(function(line,lineIndex){return '<p lang="en">'+esc(line)+'</p><p lang="so" class="conversation-translation">'+esc(conversationsSo[i][lineIndex])+'</p><div class="conversation-audio"><button type="button" class="simple-text-button" data-speak="'+esc(line.slice(3))+'" aria-label="Listen to line '+(conversations[i].indexOf(line)+1)+'">🔊 Listen</button><button type="button" class="simple-text-button" data-speak="'+esc(line.slice(3))+'" data-slow="1" aria-label="Listen slowly to line '+(conversations[i].indexOf(line)+1)+'">Slow listen</button></div>'}).join('')+'</div>');
+      app.insertAdjacentHTML('beforeend','<p lang="so">Akhri oo dhegeyso wada hadalka. Faham macnaha Soomaaliga, dabadeed ku celi Ingiriisiga. Markaad diyaar tahay, bilow imtixaanka.</p><p>'+esc(l[1])+'</p><div id="commDialogue">'+conversations[i].map(function(line,lineIndex){return '<p lang="en">'+esc(line)+'</p><p lang="so" class="conversation-translation">'+esc(conversationsSo[i][lineIndex])+'</p><div class="conversation-audio"><button type="button" class="simple-text-button" data-speak="'+esc(line.slice(3))+'" aria-label="Listen to line '+(conversations[i].indexOf(line)+1)+'">'+uiIcon("wave")+' Listen</button><button type="button" class="simple-text-button" data-speak="'+esc(line.slice(3))+'" data-slow="1" aria-label="Listen slowly to line '+(conversations[i].indexOf(line)+1)+'">Slow listen</button></div>'}).join('')+'</div>');
       bindSpeak(document.getElementById('commDialogue'));
       button('commListen','Dhegeyso wada hadalka / Listen to conversation',function(){speak(conversations[i].map(function(line){return line.slice(3)}).join(' '))});
       button('commListenSlow','Si tartiib ah u dhegeyso / Listen slowly',function(){speak(conversations[i].map(function(line){return line.slice(3)}).join(' '),true)});
@@ -1877,11 +1867,10 @@ window.ACADEMY_TUTOR_URL = 'https://somali-academy-tutor.rashkaa33.workers.dev';
     study();
   }
   var home=renderHome,profile=renderProfile;
-  function add(){var rows=app.querySelector('.simple-home-content')||app.querySelector('.simple-profile-rows');if(!rows)return;var tutor=document.createElement('button');tutor.id='homeAiTutor';tutor.className='simple-row';tutor.textContent=S.profile.ui==='en'?'AI Tutor · Ask a question':'Macallinka AI · AI Tutor';tutor.onclick=function(){var n=1;while(n<LESSONS.length&&S.completed['L'+n])n++;openLesson(n);var panel=document.getElementById('academyTutor');if(panel){panel.open=true;panel.scrollIntoView({block:'center'});panel.querySelector('textarea').focus()}};rows.insertBefore(tutor,rows.querySelector('.simple-next')||rows.firstChild);var b=document.createElement('button');b.className='simple-row';b.id='communicationLessons';b.textContent='Real-life English · 100 conversation lessons';b.onclick=showList;rows.appendChild(b)}
+  function add(){var rows=app.querySelector('.simple-home-content')||app.querySelector('.simple-profile-rows');if(!rows)return;var tutor=document.createElement('button');tutor.id='homeAiTutor';tutor.className='simple-row';tutor.textContent=lng('Macallinka AI','AI Tutor · Ask a question');tutor.onclick=window.__seaTutor=function(){var n=1;while(n<LESSONS.length&&S.completed['L'+n])n++;openLesson(n);var panel=document.getElementById('academyTutor');if(panel){panel.open=true;panel.scrollIntoView({block:'center'});panel.querySelector('textarea').focus()}};rows.insertBefore(tutor,rows.querySelector('.simple-next')||rows.firstChild);var b=document.createElement('button');b.className='simple-row';b.id='communicationLessons';b.textContent=lng('100 cashar wada hadal ah','Real-life English · 100 conversation lessons');b.onclick=window.__seaComm=showList;rows.appendChild(b)}
   renderHome=function(){home();add()};renderProfile=function(){profile();add()};
   if(S&&S.profile&&S.profile.onboarded)render();
 })();
-/* Personal plan and deliberate speaking practice. Progress remains profile-local. */
 (function () {
   var oldHome=renderHome,oldProfile=renderProfile,oldLesson=renderLesson;
   var recorder=null,stream=null,recordingUrl=null,recordTimer=null;
@@ -1941,7 +1930,6 @@ window.ACADEMY_TUTOR_URL = 'https://somali-academy-tutor.rashkaa33.workers.dev';
     var stop=action(controls,'coachStop',tr('■ Jooji duubista','■ Stop recording'),function(){if(recorder&&recorder.state!=='inactive')recorder.stop()});stop.disabled=true;
     var audio=make('audio');audio.controls=true;audio.hidden=true;audio.setAttribute('aria-label',tr('Codkaaga duuban','Your recording'));controls.appendChild(audio);controls.appendChild(status);app.appendChild(controls);
   }
-  // Stop recording when leaving the studio, including primary navigation.
   new MutationObserver(function(){if(!document.getElementById('coachRecord'))cleanup()}).observe(app,{childList:true});
   window.addEventListener('pagehide',cleanup);
   function enhance(){
@@ -1953,7 +1941,7 @@ window.ACADEMY_TUTOR_URL = 'https://somali-academy-tutor.rashkaa33.workers.dev';
     action(section,'coachSpeaking',tr('Ku tababar hadalka','Practise speaking'),speaking);
     action(section,'coachPlan',tr('Hagaaji qorshahayga','Adjust my learning plan'),editPlan);
     action(section,'coachProgress',tr('Eeg horumarkayga','See my progress'),progress);
-    if(milestone>0)section.appendChild(make('p','coach-milestone',tr('Waad dadaashay! Waxaad dhammaysay '+d+' cashar.','Well done! You have completed '+d+' lessons.')));
+    if(milestone>0)section.appendChild(make('p','coach-milestone',tr('Waad dadaashay! Waxaad dhammaysay '+d+' cashar.','You have completed '+d+' lessons.')));
     var recommended=recommendation();if(recommended)action(section,'coachRecommended',tr('Hadafkaaga ku habboon: ','For your goal: ')+(S.profile.ui==='en'?recommended.titleEn:recommended.titleSo),function(){openLesson(recommended.n)});
     home.appendChild(section);
   }
@@ -1961,13 +1949,11 @@ window.ACADEMY_TUTOR_URL = 'https://somali-academy-tutor.rashkaa33.workers.dev';
   renderProfile=function(){oldProfile();var rows=app.querySelector('.simple-profile-rows');if(rows){action(rows,'profileCoachPlan',tr('Qorshahayga waxbarashada','My learning plan'),editPlan);action(rows,'profileCoachProgress',tr('Waxaan bartay','What I have practised'),progress);action(rows,'profileCoachSpeaking',tr('Tababarka hadalka','Speaking studio'),speaking)}};
   if(S&&S.profile&&S.profile.onboarded)render();
 })();
-/* Fifty-question placement: score bands choose a starting point, never a certificate. */
 (function(){
   function t(so,en){return S.profile.ui==='en'?en:so}
   var starts=[1,51,101,201,301,401,501,601,701,801];
   plBuildQuestions=function(){
     var qs=[],seen=new Set();
-    // Cover the whole course with five questions per difficulty tenth.
     for(var band=0;band<10;band++){
       for(var offset=0;offset<100&&qs.filter(function(q){return q.band===band}).length<5;offset++){
         var n=band*100+1+(offset*19)%100, q=plPickQ(n,Math.min(11,Math.floor(n/84)));
@@ -1978,8 +1964,6 @@ window.ACADEMY_TUTOR_URL = 'https://somali-academy-tutor.rashkaa33.workers.dev';
     return qs;
   };
   plComputeResult=function(answers){var correct=answers.filter(function(a){return a.ok}).length;var pct=Math.round(correct/50*100);var band=Math.min(9,Math.floor(pct/10));return{correct:correct,asked:50,pct:pct,band:band,startLesson:starts[band]}};
-  // S is restored by the existing async boot before placement can be opened.
-  // Journal the draft synchronously: a reload can abort an outstanding IDB write.
   function draftKey(){return 'sea-placement-draft:'+ROOT.activeId}
   function recover(){
     try{var draft=JSON.parse(localStorage.getItem(draftKey()));if(draft&&draft.version===50)S.placementDraft=draft}catch(e){}
@@ -2016,7 +2000,7 @@ window.ACADEMY_TUTOR_URL = 'https://somali-academy-tutor.rashkaa33.workers.dev';
       document.getElementById('plStartThere').onclick=async function(){this.disabled=true;plApplyPlacement(r);S.profile.placementVersion=50;delete S.placementDraft;try{localStorage.removeItem(draftKey())}catch(e){}await save();setNav('home');render()};return;
     }
     var q=plState.qs[plState.idx];
-    app.insertAdjacentHTML('beforeend','<p>'+t('Su’aasha ','Question ')+(plState.idx+1)+' / 50</p><progress max="50" value="'+plState.idx+'" style="width:100%"></progress><p>'+t('Dooro jawaabta saxda ah. Haddii aadan garanayn, dooro “Ma garanayo”. Jawaabaha lama muujinayo inta imtixaanku socdo.','Choose an answer, or select “I don’t know”. Answers are not revealed during the test.')+'</p><h2 lang="so">'+esc(q.qSo||q.q)+'</h2><div class="opts">'+q.opts.map(function(o){return '<button class="opt" data-plopt="'+esc(o)+'">'+esc(o)+'</button>'}).join('')+'</div><button class="simple-row" id="plUnknown">'+t('Ma garanayo →','I don’t know →')+'</button>');
+    app.insertAdjacentHTML('beforeend','<p>'+t('Su’aasha ','Question ')+(plState.idx+1)+' / 50</p><progress max="50" value="'+plState.idx+'" class="u-w-full"></progress><p>'+t('Dooro jawaabta saxda ah. Haddii aadan garanayn, dooro “Ma garanayo”. Jawaabaha lama muujinayo inta imtixaanku socdo.','Choose an answer, or select “I don’t know”. Answers are not revealed during the test.')+'</p><h2 lang="so">'+esc(q.qSo||q.q)+'</h2><div class="opts">'+q.opts.map(function(o){return '<button class="opt" data-plopt="'+esc(o)+'">'+esc(o)+'</button>'}).join('')+'</div><button class="simple-row" id="plUnknown">'+t('Ma garanayo →','I don’t know →')+'</button>');
     function answer(opt){app.querySelectorAll('[data-plopt],#plUnknown').forEach(function(b){b.disabled=true});plAnswer(opt)}
     app.querySelectorAll('[data-plopt]').forEach(function(b){b.onclick=function(){answer(b.dataset.plopt)}});document.getElementById('plUnknown').onclick=function(){answer(null)};
     if(plState.idx>0){var back=document.createElement('button');back.className='simple-back';back.id='plPrevious';back.textContent=t('← Su’aashii hore','← Previous question');back.onclick=function(){plState.idx--;plState.done=false;persist();plScreenRender()};app.appendChild(back)}
@@ -2030,8 +2014,6 @@ window.ACADEMY_TUTOR_URL = 'https://somali-academy-tutor.rashkaa33.workers.dev';
   openLesson=function(n){if(!guestMode&&!isUnlocked(n))return;open(n)};
   if(S&&S.profile&&S.profile.onboarded)render();
 })();
-
-/* Watch next: the Watch episode paired with the learner's next lesson, shown on Home. */
 (function(){
   var home=renderHome;
   renderHome=function(){
@@ -2048,7 +2030,6 @@ window.ACADEMY_TUTOR_URL = 'https://somali-academy-tutor.rashkaa33.workers.dev';
   };
   if(S&&S.profile&&S.profile.onboarded)render();
 })();
-/* Design-system polish after every render: icon pass + lesson-complete moment. */
 (function(){
   var r=render,l=renderLesson,p=renderProfile,h=renderHome;
   render=function(){r();if(typeof uiPolish==='function')uiPolish()};
@@ -2057,7 +2038,6 @@ window.ACADEMY_TUTOR_URL = 'https://somali-academy-tutor.rashkaa33.workers.dev';
   renderHome=function(){h();if(typeof uiPolish==='function')uiPolish()};
   if(S&&S.profile&&S.profile.onboarded)render();
 })();
-/* About lives inside the app (Profile → About). The copy is the same file search engines read: about.html. */
 (function(){
   var cache=null,profile=renderProfile;
   function en(){return S&&S.profile&&S.profile.ui==='en'}
@@ -2082,11 +2062,6 @@ window.ACADEMY_TUTOR_URL = 'https://somali-academy-tutor.rashkaa33.workers.dev';
   };
   if(S&&S.profile&&S.profile.onboarded)render();
 })();
-
-/* Stage 2B/2C (2026-11-17): living-progress strip on Home (streak, XP, level —
-   these already existed in the legacy dashboard but the simple shell never
-   showed them) + a quiet trust footer on Home and Profile. Display only:
-   no state, grading, streak or XP rules are touched. */
 (function () {
   function en() { return !!(S && S.profile && S.profile.ui === 'en'); }
   function escT(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
@@ -2098,8 +2073,7 @@ window.ACADEMY_TUTOR_URL = 'https://somali-academy-tutor.rashkaa33.workers.dev';
     try { if (typeof hLevel === 'function') lvl = hLevel(); } catch (e) { }
     var parts = [];
     if (streak > 0) parts.push('<span class="vital"><span class="vital-ic flame">' + FLAME + '</span><b>' + streak + '</b> ' + (en() ? 'day streak' : 'maalmood xiriir') + '</span>');
-    parts.push('<span class="vital"><span class="vital-ic star">' + STAR + '</span><b>' + xp + '</b> XP</span>');
-    if (lvl) parts.push('<span class="vital">' + escT(en() ? lvl[2] : lvl[1]) + '</span>');
+    if (!parts.length) return null;
     var d = document.createElement('div');
     d.className = 'simple-vitals'; d.id = 'simpleVitals';
     d.innerHTML = parts.join('<span class="vital-dot" aria-hidden="true">·</span>');
@@ -2126,10 +2100,6 @@ window.ACADEMY_TUTOR_URL = 'https://somali-academy-tutor.rashkaa33.workers.dev';
     if (host && !document.getElementById('simpleFoot')) host.appendChild(footer());
   };
 })();
-
-/* Round 3 (2026-11-20): Home shape. The lesson rows become one grouped
-   list, and the 12-stage journey folds to the current stage and the next one;
-   its heading opens the rest. The fold is a per-device convenience only. */
 (function () {
   var KEY = 'sea-journey-open';
   function isOpen() { try { return localStorage.getItem(KEY) === '1'; } catch (e) { return false; } }
@@ -2165,14 +2135,10 @@ window.ACADEMY_TUTOR_URL = 'https://somali-academy-tutor.rashkaa33.workers.dev';
   renderHome = function () {
     home();
     var box = app.querySelector('.simple-home-content'); if (!box) return;
-    group(box); fold(box);
+    group(box);
   };
   if (S && S.profile && S.profile.onboarded && view === 'home') render();
 })();
-
-/* Round 5 (2026-11-20): lesson progress you can see. An 11-segment track under
-   the lesson title shows where the learner is; the pass-rule paragraph on the
-   objective screen folds to two lines and opens on tap. */
 (function () {
   var lesson = renderLesson;
   function track() {
@@ -2197,36 +2163,6 @@ window.ACADEMY_TUTOR_URL = 'https://somali-academy-tutor.rashkaa33.workers.dev';
   }
   renderLesson = function () { lesson.apply(this, arguments); try { track(); foldRules(); } catch (e) {} };
 })();
-
-/* Round 8 (2026-11-20): a pass gets one authored moment. On the result screen
-   the lesson track sweeps gold, the woven band crowns the card and the words
-   learned rise in; it plays once per lesson per visit and respects reduced
-   motion (CSS). A short vibration marks it on phones that support it. */
-(function () {
-  var lesson = renderLesson, played = {};
-  renderLesson = function () {
-    lesson.apply(this, arguments);
-    try {
-      if (view !== 'lesson' || !cur || typeof STEPS === 'undefined' || step !== STEPS.length - 1) return;
-      var mark = app.querySelector('.lesson-done-mark'); if (!mark) return;
-      /* same pass rule the result screen uses (80%+ quiz, 70%+ exercises) */
-      var qT = typeof quizTotal === 'function' ? quizTotal(cur) : 5;
-      if (!(qT && qCorrect / qT >= 0.8 && exCorrect / 8 >= 0.7)) return;
-      var card = mark.closest('.card'), track = app.querySelector('.les-track');
-      if (card) card.classList.add('les-won'); if (track) track.classList.add('les-won');
-      if (played[cur.n]) return; played[cur.n] = true;
-      app.classList.add('les-celebrate');
-      setTimeout(function () { app.classList.remove('les-celebrate'); }, 2600);
-      if (navigator.vibrate && !matchMedia('(prefers-reduced-motion: reduce)').matches) navigator.vibrate([18, 60, 28]);
-    } catch (e) {}
-  };
-  var r = render;
-  render = function () { app.classList.remove('les-celebrate'); r.apply(this, arguments); };
-})();
-
-/* Round 10 (2026-11-20): placement in focus mode. While the test is on screen
-   the tab bar steps away (as in lessons), so answers are never under it; the
-   layout itself is CSS (section 20 of academy-theme.css). */
 (function () {
   if (typeof plScreenRender !== 'function') return;
   var screen = plScreenRender, r = render;
@@ -2238,12 +2174,6 @@ window.ACADEMY_TUTOR_URL = 'https://somali-academy-tutor.rashkaa33.workers.dev';
   };
   render = function () { if (view !== 'placement') document.body.classList.remove('inPlacement'); r.apply(this, arguments); };
 })();
-
-/* sea-f52 Lean & Clean (2026-11-20). Home ranks its doors: Lessons first (the
-   hero), then Review, Citizenship, Forms and GED. Play, Watch and the Dictionary
-   become small tools; the extra practice rows fold into one "More practice"
-   group. Watch opens on a short Start-here shelf with the full list behind an
-   expander, and a passed lesson ends with a clear next step. */
 (function () {
   function en() { return !!(S && S.profile && S.profile.ui === 'en'); }
   function T(so, e) { return en() ? e : so; }
@@ -2277,30 +2207,15 @@ window.ACADEMY_TUTOR_URL = 'https://somali-academy-tutor.rashkaa33.workers.dev';
   function layout(box) {
     var hero = box.querySelector('.simple-next'); if (!hero || box.querySelector('.home-doors')) return;
     doneToday(hero);
-    var doors = document.createElement('section'); doors.className = 'home-doors'; doors.setAttribute('aria-labelledby', 'homeDoorsTitle');
-    doors.innerHTML = '<h2 id="homeDoorsTitle">' + T('Ku celceli oo diyaargarow', 'Review and prepare') + '</h2><div class="home-door-list">'
-      + door('homeReview', 'repeat', T('Ku celceli erayada', 'Review your words'), T('Erayada aad baratay mar kale ku celceli', 'Go over the words you have learned'))
-      + door('homeCitDoor', 'flag', T('Jinsiyadda', 'Citizenship'), T('U diyaargarow imtixaanka jinsiyadda Maraykanka', 'Prepare for the U.S. citizenship test'))
-      + door('homeForms', 'form', T('Foomamka', 'Forms'), T('Tababar foomamka nolosha dhabta ah', 'Practise real-life forms'))
-      + door('homeGed', 'cap', 'GED', T('Xisaab — koorso buuxa · maadooyinka kale — hubin diyaargarow', 'GED Math — full course · other subjects — readiness check'))
-      + '</div>';
-    var tools = document.createElement('nav'); tools.className = 'home-tools'; tools.setAttribute('aria-label', T('Qalab kale', 'More tools'));
-    tools.innerHTML = tool('homePlay', 'game', T('Ku celceli & ciyaar', 'Review & Play')) + tool('homeWatch', 'play', T('Daawo', 'Watch')) + tool('homeDict', 'book', T('Qaamuus', 'Dictionary'));
-    var more = document.createElement('details'); more.className = 'home-more'; more.id = 'homeMore'; more.open = moreOpen;
-    more.addEventListener('toggle', function () { moreOpen = more.open; });
-    more.innerHTML = '<summary>' + T('Tababar dheeraad ah', 'More practice') + '</summary>';
-    ['homeWatchNext', 'homeAiTutor'].forEach(function (id) { var el = document.getElementById(id); if (el) more.appendChild(el); });
-    var coach = box.querySelector('.coach-today'); if (coach) more.appendChild(coach);
-    Array.prototype.forEach.call(box.querySelectorAll(':scope > details.simple-details'), function (d) { more.appendChild(d); });
-    var lessons = box.querySelector('.home-group'), journey = box.querySelector('.journey'), foot = document.getElementById('simpleFoot');
-    [lessons, doors, tools, journey, more.children.length > 1 ? more : null, foot].forEach(function (el) { if (el) box.appendChild(el); });
+    var doors = document.createElement('section'); doors.className = 'home-doors';
+    doors.innerHTML = '<div class="home-door-list">' + door('homeReview', 'repeat', T('Ku celceli erayada', 'Review your words'), T('Erayada aad baratay mar kale ku celceli', 'Go over the words you have learned')) + '</div>';
+    var journey = box.querySelector('.journey'), foot = document.getElementById('simpleFoot');
+    var more = document.createElement('p'); more.className = 'home-more-link';
+    more.innerHTML = '<button type="button" class="simple-text-button" id="homeMoreLink">' + T('Wax kale: jinsiyadda, foomamka, GED, muuqaallo, ciyaar', 'More: citizenship, forms, GED, videos, games') + ic('chevron') + '</button>';
+    Array.prototype.slice.call(box.children).forEach(function (el) { if (el !== hero && !/^H1$/.test(el.tagName) && !el.classList.contains('simple-intro') && el !== journey && el !== foot) el.remove(); });
+    [doors, journey, more, foot].forEach(function (el) { if (el) box.appendChild(el); });
     document.getElementById('homeReview').onclick = function () { goTo('review'); };
-    document.getElementById('homeCitDoor').onclick = function () { goTo('cit'); };
-    document.getElementById('homeForms').onclick = function () { openAcad('forms'); };
-    document.getElementById('homeGed').onclick = function () { openAcad('ged'); };
-    document.getElementById('homePlay').onclick = function () { goTo('play'); };
-    document.getElementById('homeWatch').onclick = function () { goTo('watch'); };
-    document.getElementById('homeDict').onclick = function () { goTo('dict'); };
+    document.getElementById('homeMoreLink').onclick = function () { goTo('more', 'nav'); };
   }
   var home = renderHome;
   renderHome = function () {
@@ -2312,8 +2227,6 @@ window.ACADEMY_TUTOR_URL = 'https://somali-academy-tutor.rashkaa33.workers.dev';
       else if (after.review) goTo('review');
     }, 0);
   };
-
-  /* Watch: Start here first, everything else one tap away. */
   var allOpen = false;
   var BEST = ['8nvUCBfv9YE', '1J49gFTBvsM', 'NG231VyGWG8'];
   function shelfItem(attrs, img, title, sub) {
@@ -2325,8 +2238,8 @@ window.ACADEMY_TUTOR_URL = 'https://somali-academy-tutor.rashkaa33.workers.dev';
     var picks = BEST.map(function (yt) { return EPISODES.filter(function (e) { return e.yt === yt; })[0]; }).filter(Boolean);
     var ged = typeof GED !== 'undefined' && GED.math ? GED.math.lessons.filter(function (l) { return l.yt; }) : [];
     var html = '<section class="watch-start" aria-labelledby="watchStartTitle"><h2 id="watchStartTitle">' + T('Ka bilow halkan', 'Start here') + '</h2>'
-      + '<h3>' + T('Ingiriisi', 'English') + '</h3><div class="watch-shelf">' + picks.map(function (e) { return shelfItem('data-pick-ep="' + e.yt + '"', e.yt, en() ? e.titleEn : e.titleSo, en() ? e.lessonsEn || e.titleSo : e.titleEn); }).join('') + '</div>'
-      + (ged.length ? '<h3>' + T('GED Xisaab', 'GED Math') + '</h3><div class="watch-shelf">' + ged.map(function (l) { return shelfItem('data-pick-ged="' + esc2(l.id) + '"', l.yt, en() ? l.tEn : l.tSo, 'GED · ' + (en() ? l.tSo : l.tEn)); }).join('') + '</div>' : '')
+      + '<h3>' + T('Ingiriisi', 'English') + '</h3><div class="watch-shelf">' + picks.map(function (e) { return shelfItem('data-pick-ep="' + e.yt + '"', e.yt, en() ? e.titleEn : e.titleSo, en() ? e.lessonsEn : e.lessonsSo); }).join('') + '</div>'
+      + (ged.length ? '<h3>' + T('GED Xisaab', 'GED Math') + '</h3><div class="watch-shelf">' + ged.map(function (l) { return shelfItem('data-pick-ged="' + esc2(l.id) + '"', l.yt, en() ? l.tEn : l.tSo, T('GED Xisaab · cashar muuqaal ah', 'GED Math · video lesson')); }).join('') + '</div>' : '')
       + '</section>';
     var rest = [], player = document.getElementById('watchPlayer');
     var channel = app.querySelector('.wchannel'), search = app.querySelector('.wsearch'), chips = app.querySelector('.wchips');
@@ -2344,30 +2257,128 @@ window.ACADEMY_TUTOR_URL = 'https://somali-academy-tutor.rashkaa33.workers.dev';
   }
   var watch = renderWatch;
   renderWatch = function () { watch.apply(this, arguments); try { shelf(); } catch (e) {} };
-
-  /* Lesson ending: what you finished, and where to go next. */
+  if (S && S.profile && S.profile.onboarded && view === 'home') render();
+})();
+(function () {
+  function en() { return !!(S && S.profile && S.profile.ui === 'en'); }
+  function nextN() { var n = 1; while (n < LESSONS.length && S.completed['L' + n]) n++; return n; }
+  function wireRoad(box) {
+    var road = box.querySelector('.road'); if (!road) return;
+    var t = road.querySelector('.road-toggle');
+    if (t) t.onclick = function () {
+      var open = !road.classList.contains('is-open'); road.classList.toggle('is-open', open); t.setAttribute('aria-expanded', String(open));
+      t.textContent = en() ? (open ? 'Show less' : 'Show all 12 stages') : (open ? 'Muuji wax yar' : 'Muuji dhammaan 12-ka marxaladood');
+      try { localStorage.setItem('sea-journey-open', open ? '1' : '0'); } catch (e) {}
+    };
+  }
+  function voicePreview(box) {
+    var hero = box.querySelector('.simple-next'); if (!hero || hero.querySelector('.voice-pill')) return;
+    var l = LESSONS[nextN() - 1], v = l && l.vocab && l.vocab[0]; if (!v) return;
+    var line = v.exEn || v.en, title = hero.querySelector('h2'); if (!title) return;
+    var b = document.createElement('button'); b.type = 'button'; b.className = 'voice-pill'; b.lang = 'en';
+    b.setAttribute('aria-label', (en() ? 'Listen: ' : 'Dhegeyso: ') + line);
+    b.innerHTML = waveHTML() + '<span class="voice-text">' + esc(line) + '</span>';
+    b.onclick = function () { speak(line, false, b); };
+    title.insertAdjacentElement('afterend', b);
+  }
+  var home = renderHome;
+  renderHome = function () {
+    home.apply(this, arguments);
+    try { var box = app.querySelector('.simple-home-content'); if (box) { wireRoad(box); voicePreview(box); } } catch (e) {}
+  };
+  if (S && S.profile && S.profile.onboarded && view === 'home') render();
+})();
+(function () {
+  function en() { return !!(S && S.profile && S.profile.ui === 'en'); }
+  function result() {
+    var fb = document.getElementById('finishBtn'), rt = document.getElementById('retryBtn'); if (!fb) return;
+    var row = fb.parentNode, card = row.previousElementSibling; if (!card || !card.classList.contains('card') || card.classList.contains('result-card')) return;
+    var qT = quizTotal(cur), pass = !!qT && qCorrect / qT >= 0.8 && exCorrect / 8 >= 0.7;
+    var grad = cur.n === LESSONS.length && pass ? card.querySelector('.feedback.good') : null;
+    var goal = Math.max(1, Number(S.profile.goal) || 2), count = todayLessonsCount(), next = LESSONS[cur.n] || null;
+    var hits = pass && !guestMode && count < goal && count + (S.completed[cur.id] ? 0 : 1) >= goal;
+    var words = pass ? (cur.vocab || []).slice(0, 8) : [];
+    card.classList.add('result-card');
+    card.innerHTML = '<div class="result ' + (pass ? 'is-pass' : 'is-retry') + '"><span class="result-mark lesson-done-mark" aria-hidden="true">' + uiIcon(pass ? 'check' : 'refresh') + '</span>'
+      + '<h2>' + (pass ? lng('Waad gudubtay!', 'You passed') : lng('Ku dhawaaday!', 'Almost there')) + '</h2>'
+      + '<p class="result-lesson">' + lng('Casharka ', 'Lesson ') + cur.n + ': ' + esc(en() ? cur.titleEn : cur.titleSo) + '</p>'
+      + '<div class="result-stats"><div><b>' + exCorrect + ' / 8</b><span>' + lng('Layliyo', 'Exercises') + '</span></div><div><b>' + qCorrect + ' / ' + qT + '</b><span>' + lng('Hubin', 'Quiz') + '</span></div>'
+      + (S.streak > 0 ? '<div><b>' + S.streak + '</b><span>' + lng('maalmood xiriir', 'day streak') + '</span></div>' : '') + '</div>'
+      + '<p class="result-note">' + (pass ? lng('Cashirkan waa la furay kan xiga. Erayadii aad khaladay waxay aadeen dib-u-eegistaada.', 'The next lesson is now open. Words you missed went to your review.')
+        : lng('Si aad u gudubto waxaad u baahantahay hubin 80%+ iyo layli 70%+. Eeg erayada mar kale oo isku day mar kale — wax ciqaab ah ma jirto.', 'To pass you need 80% or more on the quiz and 70% or more on the exercises. Look at the words again and try once more.')) + '</p>'
+      + (hits ? '<p class="result-goal">' + uiIcon('check') + '<span>' + lng('Casharkan wuxuu dhammaystirayaa hadafka maanta.', 'This lesson completes today’s goal.') + '</span></p>' : '')
+      + (words.length ? '<h3>' + lng('Ereyada aad hadda dhihi karto', 'Words you can now say') + '</h3><ul class="result-words">' + words.map(function (w) { return '<li><span class="en-term" lang="en">' + esc(w.en) + '</span><span lang="so">' + esc(w.so) + '</span></li>'; }).join('') + '</ul>' : '')
+      + '</div>';
+    if (grad) card.appendChild(grad);
+    row.className = 'result-actions';
+    if (!guestMode) fb.textContent = lng('Dhammee & tag Hoyga', 'Finish and go home');
+    if (rt) rt.textContent = lng('Mar kale isku day', 'Try again');
+    fb.className = 'btn secondary'; if (rt) rt.className = pass ? 'simple-text-button' : 'simple-primary';
+    if (pass && !guestMode) {
+      if (next) { var nb = document.createElement('button'); nb.type = 'button'; nb.className = 'simple-primary'; nb.id = 'finishNext'; nb.textContent = lng('Casharka xiga: ', 'Next lesson: ') + next.n; nb.onclick = function () { window.__seaAfterFinish = { lesson: next.n }; fb.click(); }; row.insertBefore(nb, row.firstChild); }
+      var rv = document.createElement('button'); rv.type = 'button'; rv.className = 'btn secondary'; rv.id = 'finishReview'; rv.textContent = lng('Ku celceli erayada', 'Review your words'); rv.onclick = function () { window.__seaAfterFinish = { review: true }; fb.click(); };
+      row.insertBefore(rv, fb);
+      if (rt) row.appendChild(rt);
+    } else if (rt) row.insertBefore(rt, row.firstChild);
+  }
   var lesson = renderLesson;
   renderLesson = function () {
     lesson.apply(this, arguments);
-    try {
-      if (view !== 'lesson' || !cur || guestMode || typeof STEPS === 'undefined' || step !== STEPS.length - 1) return;
-      var qT = quizTotal(cur), fb = document.getElementById('finishBtn');
-      if (!fb || !(qT && qCorrect / qT >= 0.8 && exCorrect / 8 >= 0.7) || app.querySelector('.les-finish')) return;
-      var goal = Math.max(1, Number(S.profile.goal) || 2), count = todayLessonsCount(), next = LESSONS[cur.n] || null;
-      var hitsGoal = count < goal && count + (S.completed[cur.id] ? 0 : 1) >= goal;
-      var box = document.createElement('section'); box.className = 'les-finish'; box.setAttribute('aria-labelledby', 'lesFinishTitle');
-      box.innerHTML = '<h2 id="lesFinishTitle">' + ic('check') + '<span>Waad dhammeysay! <small>You finished!</small></span></h2>'
-        + '<p class="les-finish-what">' + T('Casharka ', 'Lesson ') + cur.n + ': ' + esc2(en() ? cur.titleEn : cur.titleSo) + '</p>'
-        + '<p class="les-finish-score">' + T('Layliyo', 'Exercises') + ' <b>' + exCorrect + ' / 8</b> · ' + T('Hubin', 'Quiz') + ' <b>' + qCorrect + ' / ' + qT + '</b></p>'
-        + (hitsGoal ? '<p class="les-finish-goal">' + T('Casharkan wuxuu dhammaystirayaa hadafka maanta.', 'This lesson completes today’s goal.') + '</p>' : '')
-        + '<div class="les-finish-actions">' + (next ? '<button type="button" class="simple-primary" id="finishNext">' + T('Casharka xiga: ', 'Next lesson: ') + next.n + ' →</button>' : '')
-        + '<button type="button" class="btn secondary" id="finishReview">' + T('Ku celceli erayada', 'Review your words') + '</button></div>';
-      fb.parentNode.parentNode.insertBefore(box, fb.parentNode);
-      if (next) fb.classList.add('secondary');
-      var nb = document.getElementById('finishNext');
-      if (nb) nb.onclick = function () { window.__seaAfterFinish = { lesson: next.n }; fb.click(); };
-      document.getElementById('finishReview').onclick = function () { window.__seaAfterFinish = { review: true }; fb.click(); };
-    } catch (e) {}
+    var on = view === 'lesson' && !!cur && typeof STEPS !== 'undefined' && step === STEPS.length - 1;
+    document.body.classList.toggle('onResult', on);
+    try { if (on) result(); } catch (e) {}
   };
-  if (S && S.profile && S.profile.onboarded && view === 'home') render();
+  var r = render;
+  render = function () { document.body.classList.remove('onResult'); r.apply(this, arguments); };
+})();
+(function () {
+  function T(so, en) { return lng(so, en); }
+  function go(v, from) { if (window.__seaFrom) window.__seaFrom(from || 'more'); if (window.__seaGo) window.__seaGo(v); else { setNav(v); render(); } }
+  var STATUS = { full: ['Koorso buuxda', 'Full course'], practice: ['Tababar keliya', 'Practice only'], soon: ['Dhawaan', 'Coming soon'] };
+  function status(k, custom) { var x = custom || STATUS[k]; return '<span class="status status-' + (k || 'note') + '">' + T(x[0], x[1]) + '</span>'; }
+  function row(id, icon, title, sub, st) {
+    return '<button type="button" class="home-door" id="' + id + '"><span class="door-ic">' + uiIcon(icon) + '</span><span class="door-copy"><b>' + title + '</b><small>' + sub + '</small>' + (st || '') + '</span>' + uiIcon('chevron') + '</button>';
+  }
+  function group(title, rows) { return '<section class="more-group"><h2>' + title + '</h2><div class="home-door-list">' + rows.join('') + '</div></section>'; }
+  window.renderMore = function () {
+    document.body.classList.add('view-more');
+    var videos = typeof EPISODES !== 'undefined' ? EPISODES.length : 0;
+    app.innerHTML = '<h1>' + T('Wax kale', 'More') + '</h1><div class="more-grid">'
+      + group(T('Casharro', 'Lessons'), [
+        row('moreLessons', 'list', T('Eeg casharrada', 'Browse lessons'), T('1,000 cashir oo Soomaali lagu sharaxay, bilow ilaa heer sare', 'All 1,000 lessons, beginner to advanced'), status('full')),
+        row('moreComm', 'chat', T('100 cashar wada hadal ah', 'Real-life English'), T('Wada hadallo dhab ah oo leh tarjumaad Soomaali', 'Everyday conversations with Somali translations'), status('full')),
+        row('moreWatch', 'video', T('Daawo', 'Watch'), T('Casharro muuqaal ah', 'Video lessons'), status('note', [videos + ' muuqaal', videos + ' videos']))])
+      + group(T('Diyaargarow', 'Prepare'), [
+        row('moreCit', 'flag', T('Jinsiyadda', 'Citizenship'), T('U diyaargarow imtixaanka jinsiyadda Maraykanka', 'Prepare for the U.S. citizenship test'), status('full')),
+        row('moreForms', 'clipboard', T('Foomamka', 'Forms'), T('Tababar foomamka nolosha dhabta ah', 'Practise real-life forms'), status('practice')),
+        row('moreGed', 'cap', 'GED', T('Xisaab — koorso buuxa · maadooyinka kale — hubin diyaargarow', 'GED Math — full course · other subjects — readiness check'), '')])
+      + group(T('Tababar', 'Practice'), [
+        row('morePractice', 'mic', T('Tababar hadal iyo qoraal', 'Speaking and writing practice'), T('Doorka-ciyaar iyo tababarro gaagaaban', 'Role-plays and short drills'), status('practice')),
+        row('morePlay', 'puzzle', T('Ku celceli & ciyaar', 'Review & Play'), T('Erayada ku celceli adigoo ciyaaraya', 'Review words through games'), status('practice')),
+        row('moreDict', 'book', T('Qaamuus', 'Dictionary'), T('Ingiriisi iyo Soomaali, erayo cod leh', 'English and Somali, with audio'), '')])
+      + group(T('Caawimaad', 'Help'), [
+        row('moreTutor', 'sparkle', T('Macallinka AI', 'AI Tutor'), T('Caawinta AI way qaldami kartaa.', 'AI help can make mistakes.'), ''),
+        row('morePlacement', 'target', T('Imtixaanka meelaynta', 'Placement test'), T('Ogaaw heerkaaga — imtixaan gaaban', 'Find your level with a short test'), ''),
+        row('moreAbout', 'info', T('Ku saabsan', 'About'), T('Yaa sameeyay iyo sababta', 'Who made it and why'), '')]) + '</div>';
+    var on = function (id, fn) { var b = document.getElementById(id); if (b) b.onclick = fn; };
+    on('moreLessons', function () { go('simpleLessons'); });
+    on('moreComm', function () { if (window.__seaComm) window.__seaComm(); else go('profile'); });
+    on('moreWatch', function () { go('watch'); });
+    on('moreCit', function () { go('cit'); });
+    on('moreForms', function () { acadTab = 'forms'; go('acad'); });
+    on('moreGed', function () { acadTab = 'ged'; gedView = 'home'; gedSubj = null; go('acad'); });
+    on('morePractice', function () { go('practice'); });
+    on('morePlay', function () { go('play'); });
+    on('moreDict', function () { go('dict'); });
+    on('moreTutor', function () { if (window.__seaTutor) window.__seaTutor(); });
+    on('morePlacement', function () { plBegin('profile'); });
+    on('moreAbout', function () { location.href = 'about.html'; });
+  };
+})();
+(function () {
+  var r = render, last = null;
+  render = function () {
+    r.apply(this, arguments);
+    if (view !== last) { last = view; app.classList.remove('view-in'); void app.offsetWidth; app.classList.add('view-in'); }
+  };
 })();

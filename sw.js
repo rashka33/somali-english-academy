@@ -1,7 +1,5 @@
-// Somali English Academy service worker — network-first with offline fallback.
-// Bump CACHE on every publish so users never get stuck on an old build.
-const CACHE = "sea-f52-lean";
-const CORE = ["./", "./index.html", "./academy.html", "./about.html", "./academy-ui.css", "./welcome.css", "./academy-theme.css", "./dictionary-client.js", "./academy-ui.js", "./citizenship.js", "./baro-ai.js", "./baro-ai.html", "./games.js", "./world.js", "./data/civics-2025.json", "./data/civics-2008.json", "./tutor.js", "./tutor-config.js", "./manifest.json", "./icon-192.png", "./icon-512.png", "./icon-maskable-512.png", "./apple-touch-icon.png"];
+const CACHE = "sea-f53";
+const CORE = ["./", "./index.html", "./academy.html", "./about.html", "./academy.css", "./app/core.js", "./app/lessons.js", "./app/learn.js", "./app/speaking.js", "./app/academies.js", "./app/extras.js", "./app/init.js", "./app/home-legacy.js", "./app/placement.js", "./app/design.js", "./app/daily-life.js", "./app/icons.js", "./app/watch.js", "./app/tap-word.js", "./dictionary-client.js", "./academy-ui.js", "./citizenship.js", "./baro-ai.js", "./baro-ai.html", "./games.js", "./world.js", "./data/civics-2025.json", "./data/civics-2008.json", "./tutor.js", "./tutor-config.js", "./manifest.json", "./icon-192.png", "./icon-512.png", "./icon-maskable-512.png", "./apple-touch-icon.png"];
 self.addEventListener("install", (e) => {
   e.waitUntil(caches.open(CACHE).then((c) => c.addAll(CORE)).then(() => self.skipWaiting()));
 });
