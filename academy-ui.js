@@ -25,6 +25,9 @@
     moon: '<path d="M21 13A9 9 0 0 1 11 3a9 9 0 1 0 10 10z"/>',
     settings: '<path d="m9 3 6 0 1 3 3 1 2 5-2 5-3 1-1 3H9l-1-3-3-1-2-5 2-5 3-1z"/><circle cx="12" cy="12" r="3"/>'
     ,ai: '<path d="M12 3v3m0 12v3M3 12h3m12 0h3M5.6 5.6l2.1 2.1m8.6 8.6 2.1 2.1m0-12.8-2.1 2.1M7.7 16.3l-2.1 2.1"/><circle cx="12" cy="12" r="4"/>'
+    ,repeat: '<path d="M4 11a8 8 0 0 1 14-5.3L20 8M20 3v5h-5M20 13a8 8 0 0 1-14 5.3L4 16M4 21v-5h5"/>'
+    ,form: '<rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 3h6v3H9zM8.5 11h7M8.5 15h5"/>'
+    ,cap: '<path d="m2 9 10-5 10 5-10 5z"/><path d="M6 11v5c3 2 9 2 12 0v-5M22 9v5"/>'
   };
   function icon(name) { return '<svg class="simple-icon" viewBox="0 0 24 24" aria-hidden="true">' + paths[name] + '</svg>'; }
   function english() { return S && S.profile && S.profile.ui === 'en'; }
@@ -66,7 +69,7 @@
     var heading = app.querySelector('h1'); if (heading) { heading.tabIndex = -1; heading.focus({ preventScroll: true }); }
   }
   window.enterGuestSection = function (destination) {
-    var routes = { home: 'home', cit: 'cit', play: 'play', dict: 'dict', forms: 'acad', ged: 'acad', ai: 'ai' };
+    var routes = { home: 'home', cit: 'cit', play: 'play', dict: 'dict', forms: 'acad', ged: 'acad' };
     if (!routes[destination]) destination = 'home';
     document.body.classList.remove('welcome-entry');
     guestMode = true; guestSection = true; guestBackup = JSON.parse(JSON.stringify(S));
@@ -86,9 +89,9 @@
     }
     var language = document.getElementById('simpleLanguage');
     language.textContent = english() ? 'EN' : 'SO'; language.setAttribute('aria-label', t('Switch to English', 'U beddel Soomaali'));
-    var parent = view === 'dict' ? 'dict' : view === 'cit' ? 'cit' : view === 'play' ? 'play' : view === 'profile' ? 'profile' : 'home';
+    var parent = view === 'review' ? 'review' : view === 'cit' ? 'cit' : view === 'profile' ? 'profile' : 'home';
     var nav = document.getElementById('mainNav'); nav.setAttribute('aria-label', t('Bogagga waaweyn', 'Main navigation'));
-    nav.innerHTML = [['home', t('Hoyga', 'Home'), 'home'], ['cit', t('Jinsiyadda', 'Citizenship'), 'flag'], ['play', t('Ciyaar', 'Play'), 'game'], ['dict', t('Qaamuus', 'Dictionary'), 'book'], ['profile', t('Boggaaga', 'Profile'), 'user']].map(function (item) {
+    nav.innerHTML = [['home', t('Hoyga', 'Home'), 'home'], ['review', t('Ku celceli', 'Review'), 'repeat'], ['cit', t('Jinsiyadda', 'Citizenship'), 'flag'], ['profile', t('Boggaaga', 'Profile'), 'user']].map(function (item) {
       return '<button type="button" data-view="' + item[0] + '"' + (parent === item[0] ? ' class="active" aria-current="page"' : '') + '>' + icon(item[2]) + '<span>' + item[1] + '</span></button>';
     }).join('');
     nav.dataset.ready = 'true';
@@ -223,19 +226,18 @@
     document.body.classList.add('welcome-entry');
     var benefits = [
       ['book', 'Casharro', '1,000 cashir oo Soomaali lagu sharaxay, bilow ilaa heer sare', 'home'],
+      ['repeat', 'Ku celceli & ciyaar', 'Erayada ku celceli adigoo ciyaaraya', 'play'],
       ['flag', 'Jinsiyadda', 'U diyaargarow imtixaanka jinsiyadda Maraykanka', 'cit'],
-      ['game', 'Ciyaar', 'Ciyaaro waxbarasho iyo magaalada Word Town 3D', 'play'],
-      ['language', 'Qaamuus', 'Ingiriisi ↔ Soomaali, erayo cod leh', 'dict'],
-      ['settings', 'Foomamka', 'Tababar foomamka nolosha dhabta ah', 'forms'],
-      ['progress', 'GED', 'U diyaargarow imtixaanka GED, afar maado', 'ged'],
-      ['ai', 'Baro AI', 'AI ku baro Af-Soomaali — bilow ilaa dhisidda website-kaaga', 'ai']
+      ['form', 'Foomamka', 'Tababar foomamka nolosha dhabta ah', 'forms'],
+      ['cap', 'GED', 'Xisaab — koorso buuxa · maadooyinka kale — hubin diyaargarow', 'ged']
     ];
     app.innerHTML = '<section class="simple-welcome" aria-labelledby="welcomeTitle">'
       + '<header class="welcome-brand"><img src="icon-192.png" alt="" width="52" height="52"><div><strong>Somali English Academy</strong><span>Ingiriisi, Af-Soomaali ku baro</span></div></header>'
-      + '<div class="welcome-lead"><section class="welcome-hero"><h1 id="welcomeTitle"><span>Baro Ingiriisi,</span><span>tallaabo tallaabo.</span></h1><p>Ku soo dhawoow iskuulkaaga. Fiiri waxa gudaha ku jira — ka dibna bilow markaad diyaar tahay.</p></section>'
+      + '<div class="welcome-lead"><section class="welcome-hero"><div class="welcome-title-row"><h1 id="welcomeTitle"><span>Baro Ingiriisi,</span><span>tallaabo tallaabo.</span></h1><button type="button" class="welcome-say" id="welcomeSay" aria-label="Dhegeyso: Baro Ingiriisi, tallaabo tallaabo.">' + icon('speaker') + '</button></div><p>Ku soo dhawoow iskuulkaaga. Fiiri waxa gudaha ku jira — ka dibna bilow markaad diyaar tahay.</p></section>'
       + '<div class="welcome-actions"><button type="button" class="welcome-primary" id="welcomeStart">Bilow barashada' + icon('arrow') + '</button><button type="button" class="welcome-placement" id="welcomePlacement">Hore u baratay Ingiriisi? <span>Ogaaw heerkaaga — imtixaan gaaban</span></button></div>'
       + '<footer class="welcome-trust" aria-label="Macluumaad muhiim ah"><span class="welcome-trust-pill">' + icon('check') + 'Bilaash</span><span class="welcome-trust-pill">' + icon('check') + 'Akoon looma baahna</span><span class="welcome-trust-pill">' + icon('check') + 'Horumarku aaladdaada ayuu ku kaydsan yahay</span></footer></div>'
       + '<section class="welcome-benefits" aria-labelledby="welcomeInside"><h2 id="welcomeInside" class="welcome-inside">Waxa aad baran karto</h2>' + benefits.map(function (item) { return '<button type="button" class="welcome-benefit" data-go="' + item[3] + '"><span class="welcome-icon">' + icon(item[0]) + '</span><span class="welcome-copy"><h2>' + item[1] + '</h2><p>' + item[2] + '</p></span>' + icon('chevron') + '</button>'; }).join('') + '</section></section>';
+    document.getElementById('welcomeSay').onclick = function () { speak('Baro Ingiriisi, tallaabo tallaabo.', false, this); };
     document.getElementById('welcomeStart').onclick = function () {
       document.body.classList.remove('welcome-entry');
       /* Round 4: Bilow saves from the first tap. The learner is registered and
@@ -277,7 +279,7 @@
         app.insertAdjacentHTML('beforeend', '<h1>' + t('Horumarkaaga', 'Your progress') + '</h1><div class="simple-progress-stat"><strong>' + done + '</strong><span>' + t('cashar oo dhammaaday', 'lessons completed') + '</span></div><div class="simple-progress"><i style="width:' + Math.min(100, done / LESSONS.length * 100) + '%"></i></div><p class="simple-intro">' + done + ' / ' + LESSONS.length + '</p>' + row('simpleDetailedProgress', t('Faahfaahin', 'View details'), 'progress')); document.getElementById('simpleDetailedProgress').onclick = lOpenProgressSheet;
       } else if (profilePage === 'tools') {
         app.insertAdjacentHTML('beforeend', '<h1>' + t('Tababar iyo muuqaal', 'Practice & videos') + '</h1>' + row('simpleReview', t('Ku celceli erayada', 'Review your words'), 'book') + row('simplePractice', t('Hadal iyo qoraal', 'Speaking & writing'), 'play') + row('simpleVideos', t('Casharro muuqaal ah', 'Video lessons'), 'play'));
-        document.getElementById('simpleReview').onclick = function () { go('review'); }; document.getElementById('simplePractice').onclick = function () { go('practice'); }; document.getElementById('simpleVideos').onclick = function () { go('watch'); };
+        document.getElementById('simpleReview').onclick = function () { legacyFrom = 'tools'; go('review'); }; document.getElementById('simplePractice').onclick = function () { legacyFrom = 'tools'; go('practice'); }; document.getElementById('simpleVideos').onclick = function () { legacyFrom = 'tools'; go('watch'); };
       }
       return;
     }
@@ -286,8 +288,12 @@
       + row('simpleAppearance', t('Muuqaalka', 'Appearance'), 'moon', { light: t('Iftiin', 'Light'), dark: t('Mugdi', 'Dark'), system: t('Aalad', 'Device') }[S.profile.theme || 'system']) + row('simpleMore', t('Dejimo kale', 'More settings'), 'settings') + '</div><p class="simple-device-note">' + t('Horumarku wuxuu ku kaydsan yahay aaladdan.', 'Progress is stored on this device.') + '</p>';
     [['simpleEditName', 'name'], ['simpleProgress', 'progress'], ['simpleSaved', 'saved'], ['simpleTools', 'tools'], ['simpleLanguageRow', 'language'], ['simpleAppearance', 'appearance'], ['simpleMore', 'advanced']].forEach(function (r) { document.getElementById(r[0]).onclick = function () { if (r[1] === 'advanced') fProfScreen = null; profilePage = r[1]; render(); }; });
   };
+  var legacyFrom = 'tools';
+  window.__seaFrom = function (from) { legacyFrom = from; };
   function legacyBack() {
-    if (!document.getElementById('simpleLegacyBack')) { app.insertAdjacentHTML('afterbegin', '<button type="button" class="simple-back" id="simpleLegacyBack">' + icon('back') + t('Tababar iyo muuqaal', 'Practice & videos') + '</button>'); document.getElementById('simpleLegacyBack').onclick = function () { go('profile', 'tools'); }; }
+    if (view === 'review' && legacyFrom !== 'tools') return;
+    var home = legacyFrom === 'home';
+    if (!document.getElementById('simpleLegacyBack')) { app.insertAdjacentHTML('afterbegin', '<button type="button" class="simple-back" id="simpleLegacyBack">' + icon('back') + (home ? t('Hoyga', 'Home') : t('Tababar iyo muuqaal', 'Practice & videos')) + '</button>'); document.getElementById('simpleLegacyBack').onclick = function () { if (home) go('home'); else go('profile', 'tools'); }; }
   }
   renderWatch = function () { legacyWatch(); legacyBack(); };
   renderLesson = function () {
@@ -320,7 +326,7 @@
     var button = event.target.closest('[data-view]'); if (!button) return;
     event.preventDefault(); event.stopImmediatePropagation();
     if (S && !S.profile.onboarded) pendingView = button.dataset.view;
-    go(button.dataset.view);
+    legacyFrom = 'nav'; go(button.dataset.view);
   }, true);
   if (S && S.profile) render();
 })();
@@ -2121,7 +2127,7 @@ window.ACADEMY_TUTOR_URL = 'https://somali-academy-tutor.rashkaa33.workers.dev';
   };
 })();
 
-/* Round 3 (2026-11-20): Home shape. The three shortcut rows become one grouped
+/* Round 3 (2026-11-20): Home shape. The lesson rows become one grouped
    list, and the 12-stage journey folds to the current stage and the next one;
    its heading opens the rest. The fold is a per-device convenience only. */
 (function () {
@@ -2130,7 +2136,7 @@ window.ACADEMY_TUTOR_URL = 'https://somali-academy-tutor.rashkaa33.workers.dev';
   function remember(open) { try { localStorage.setItem(KEY, open ? '1' : '0'); } catch (e) {} }
   function group(box) {
     if (box.querySelector('.home-group')) return;
-    var ids = ['homeWatchNext', 'academyAllLessons', 'homeAiTutor'];
+    var ids = ['academyAllLessons', 'communicationLessons'];
     var rows = ids.map(function (id) { return document.getElementById(id); }).filter(Boolean);
     if (rows.length < 2) return;
     var wrap = document.createElement('div'); wrap.className = 'home-group';
@@ -2160,28 +2166,6 @@ window.ACADEMY_TUTOR_URL = 'https://somali-academy-tutor.rashkaa33.workers.dev';
     home();
     var box = app.querySelector('.simple-home-content'); if (!box) return;
     group(box); fold(box);
-    aiEntry(box);
-  };
-  /* Baro AI has no tab since round 2. Its Home card and Profile row are drawn
-     here with the same markup baro-ai.js uses, so the script still loads only
-     when the learner opens it (baro-ai.js skips ids that already exist). */
-  function aiState() { var b = S && S.baroAI; return b && typeof b === 'object' ? b : { completed: {}, stage1Complete: false }; }
-  function openAI() { if (typeof window.openBaroAI === 'function') window.openBaroAI(); else if (window.__seaGo) window.__seaGo('ai'); }
-  function aiEntry(box) {
-    if (document.getElementById('homeBaroAI')) return;
-    var anchor = document.getElementById('homeCit') || box.querySelector('.simple-next'); if (!anchor) return;
-    var b = document.createElement('button'); b.type = 'button'; b.id = 'homeBaroAI'; b.className = 'cz-home';
-    b.innerHTML = '<span class="cz-row-ic">✦</span><span class="cz-row-t"><b>Baro AI</b><small>' + (aiState().stage1Complete ? 'Marxaladda 1 waa dhammaatay · Stage 1 complete' : 'AI Zero to Hero — Af-Soomaali ku bilow') + '</small></span><span>›</span>';
-    b.onclick = openAI; anchor.insertAdjacentElement('afterend', b);
-  }
-  var profile = renderProfile;
-  renderProfile = function () {
-    profile();
-    var rows = app.querySelector('.simple-profile-rows'); if (!rows || document.getElementById('profileBaroAI')) return;
-    var st = aiState(), done = Math.min(6, Object.keys(st.completed || {}).length + (st.stage1Complete ? 1 : 0));
-    var b = document.createElement('button'); b.type = 'button'; b.id = 'profileBaroAI'; b.className = 'simple-row';
-    b.innerHTML = '<span class="simple-icon" aria-hidden="true">✦</span><span>Baro AI</span><small>' + done + ' / 6</small><span>›</span>';
-    b.onclick = openAI; rows.insertBefore(b, rows.children[1] || null);
   };
   if (S && S.profile && S.profile.onboarded && view === 'home') render();
 })();
@@ -2253,4 +2237,137 @@ window.ACADEMY_TUTOR_URL = 'https://somali-academy-tutor.rashkaa33.workers.dev';
     var info = count && count.nextElementSibling; if (info && info.tagName === 'P') info.classList.add('pl-info');
   };
   render = function () { if (view !== 'placement') document.body.classList.remove('inPlacement'); r.apply(this, arguments); };
+})();
+
+/* sea-f52 Lean & Clean (2026-11-20). Home ranks its doors: Lessons first (the
+   hero), then Review, Citizenship, Forms and GED. Play, Watch and the Dictionary
+   become small tools; the extra practice rows fold into one "More practice"
+   group. Watch opens on a short Start-here shelf with the full list behind an
+   expander, and a passed lesson ends with a clear next step. */
+(function () {
+  function en() { return !!(S && S.profile && S.profile.ui === 'en'); }
+  function T(so, e) { return en() ? e : so; }
+  function esc2(x) { return String(x == null ? '' : x).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  var P = {
+    repeat: '<path d="M4 11a8 8 0 0 1 14-5.3L20 8M20 3v5h-5M20 13a8 8 0 0 1-14 5.3L4 16M4 21v-5h5"/>',
+    flag: '<path d="M5 21V4m0 1h12l-2.5 4 2.5 4H5"/>',
+    form: '<rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 3h6v3H9zM8.5 11h7M8.5 15h5"/>',
+    cap: '<path d="m2 9 10-5 10 5-10 5z"/><path d="M6 11v5c3 2 9 2 12 0v-5M22 9v5"/>',
+    game: '<rect x="2" y="7" width="20" height="11" rx="5.5"/><path d="M7.5 11v3M6 12.5h3M15.5 11.5h.01M18 13.5h.01"/>',
+    play: '<circle cx="12" cy="12" r="9"/><path d="m10 8 6 4-6 4z"/>',
+    book: '<path d="M12 5C8 2 4 3 2 4v15c4-2 7-1 10 1 3-2 6-3 10-1V4c-2-1-6-2-10 1zm0 0v15"/>',
+    chevron: '<path d="m9 5 7 7-7 7"/>',
+    check: '<path d="m5 12 4 4L19 6"/>'
+  };
+  function ic(n) { return '<svg class="simple-icon" viewBox="0 0 24 24" aria-hidden="true">' + P[n] + '</svg>'; }
+  function goTo(dest, from) { if (window.__seaFrom) window.__seaFrom(from || 'home'); if (window.__seaGo) window.__seaGo(dest); else { setNav(dest); render(); } }
+  function openAcad(tab) { acadTab = tab; if (tab === 'ged') { gedView = 'home'; gedSubj = null; } goTo('acad'); }
+  function door(id, icon, title, sub) {
+    return '<button type="button" class="home-door" id="' + id + '"><span class="door-ic">' + ic(icon) + '</span><span class="door-copy"><b>' + title + '</b><small>' + sub + '</small></span>' + ic('chevron') + '</button>';
+  }
+  function tool(id, icon, label) { return '<button type="button" class="home-tool" id="' + id + '">' + ic(icon) + '<span>' + label + '</span></button>'; }
+  function doneToday(hero) {
+    var goal = Math.max(1, Number(S.profile.goal) || 2), count = typeof todayLessonsCount === 'function' ? todayLessonsCount() : 0;
+    if (count < goal || Object.keys(S.completed).length >= LESSONS.length) return;
+    hero.classList.add('is-done-today');
+    var cap = hero.querySelector('.simple-progress-caption');
+    if (cap) cap.innerHTML = ic('check') + '<span>' + T('Maanta waa dhammaatay — hadafkaagii waad gaadhay. Mid kale waad samayn kartaa haddii aad rabto.', 'Done for today — you reached your goal. You can still do another if you like.') + '</span>';
+  }
+  var moreOpen = false;
+  function layout(box) {
+    var hero = box.querySelector('.simple-next'); if (!hero || box.querySelector('.home-doors')) return;
+    doneToday(hero);
+    var doors = document.createElement('section'); doors.className = 'home-doors'; doors.setAttribute('aria-labelledby', 'homeDoorsTitle');
+    doors.innerHTML = '<h2 id="homeDoorsTitle">' + T('Ku celceli oo diyaargarow', 'Review and prepare') + '</h2><div class="home-door-list">'
+      + door('homeReview', 'repeat', T('Ku celceli erayada', 'Review your words'), T('Erayada aad baratay mar kale ku celceli', 'Go over the words you have learned'))
+      + door('homeCitDoor', 'flag', T('Jinsiyadda', 'Citizenship'), T('U diyaargarow imtixaanka jinsiyadda Maraykanka', 'Prepare for the U.S. citizenship test'))
+      + door('homeForms', 'form', T('Foomamka', 'Forms'), T('Tababar foomamka nolosha dhabta ah', 'Practise real-life forms'))
+      + door('homeGed', 'cap', 'GED', T('Xisaab — koorso buuxa · maadooyinka kale — hubin diyaargarow', 'GED Math — full course · other subjects — readiness check'))
+      + '</div>';
+    var tools = document.createElement('nav'); tools.className = 'home-tools'; tools.setAttribute('aria-label', T('Qalab kale', 'More tools'));
+    tools.innerHTML = tool('homePlay', 'game', T('Ku celceli & ciyaar', 'Review & Play')) + tool('homeWatch', 'play', T('Daawo', 'Watch')) + tool('homeDict', 'book', T('Qaamuus', 'Dictionary'));
+    var more = document.createElement('details'); more.className = 'home-more'; more.id = 'homeMore'; more.open = moreOpen;
+    more.addEventListener('toggle', function () { moreOpen = more.open; });
+    more.innerHTML = '<summary>' + T('Tababar dheeraad ah', 'More practice') + '</summary>';
+    ['homeWatchNext', 'homeAiTutor'].forEach(function (id) { var el = document.getElementById(id); if (el) more.appendChild(el); });
+    var coach = box.querySelector('.coach-today'); if (coach) more.appendChild(coach);
+    Array.prototype.forEach.call(box.querySelectorAll(':scope > details.simple-details'), function (d) { more.appendChild(d); });
+    var lessons = box.querySelector('.home-group'), journey = box.querySelector('.journey'), foot = document.getElementById('simpleFoot');
+    [lessons, doors, tools, journey, more.children.length > 1 ? more : null, foot].forEach(function (el) { if (el) box.appendChild(el); });
+    document.getElementById('homeReview').onclick = function () { goTo('review'); };
+    document.getElementById('homeCitDoor').onclick = function () { goTo('cit'); };
+    document.getElementById('homeForms').onclick = function () { openAcad('forms'); };
+    document.getElementById('homeGed').onclick = function () { openAcad('ged'); };
+    document.getElementById('homePlay').onclick = function () { goTo('play'); };
+    document.getElementById('homeWatch').onclick = function () { goTo('watch'); };
+    document.getElementById('homeDict').onclick = function () { goTo('dict'); };
+  }
+  var home = renderHome;
+  renderHome = function () {
+    home.apply(this, arguments);
+    try { var box = app.querySelector('.simple-home-content'); if (box) layout(box); } catch (e) {}
+    var after = window.__seaAfterFinish; window.__seaAfterFinish = null;
+    if (after) setTimeout(function () {
+      if (after.lesson && LESSONS[after.lesson - 1] && isUnlocked(after.lesson)) openLesson(after.lesson);
+      else if (after.review) goTo('review');
+    }, 0);
+  };
+
+  /* Watch: Start here first, everything else one tap away. */
+  var allOpen = false;
+  var BEST = ['8nvUCBfv9YE', '1J49gFTBvsM', 'NG231VyGWG8'];
+  function shelfItem(attrs, img, title, sub) {
+    return '<button type="button" class="watch-pick" ' + attrs + '><img src="https://i.ytimg.com/vi/' + img + '/hqdefault.jpg" alt="" loading="lazy"><span><b>' + esc2(title) + '</b><small>' + esc2(sub) + '</small></span></button>';
+  }
+  function shelf() {
+    if (view !== 'watch' || app.querySelector('.watch-start')) return;
+    var h1 = app.querySelector('h1'); if (!h1) return;
+    var picks = BEST.map(function (yt) { return EPISODES.filter(function (e) { return e.yt === yt; })[0]; }).filter(Boolean);
+    var ged = typeof GED !== 'undefined' && GED.math ? GED.math.lessons.filter(function (l) { return l.yt; }) : [];
+    var html = '<section class="watch-start" aria-labelledby="watchStartTitle"><h2 id="watchStartTitle">' + T('Ka bilow halkan', 'Start here') + '</h2>'
+      + '<h3>' + T('Ingiriisi', 'English') + '</h3><div class="watch-shelf">' + picks.map(function (e) { return shelfItem('data-pick-ep="' + e.yt + '"', e.yt, en() ? e.titleEn : e.titleSo, en() ? e.lessonsEn || e.titleSo : e.titleEn); }).join('') + '</div>'
+      + (ged.length ? '<h3>' + T('GED Xisaab', 'GED Math') + '</h3><div class="watch-shelf">' + ged.map(function (l) { return shelfItem('data-pick-ged="' + esc2(l.id) + '"', l.yt, en() ? l.tEn : l.tSo, 'GED · ' + (en() ? l.tSo : l.tEn)); }).join('') + '</div>' : '')
+      + '</section>';
+    var rest = [], player = document.getElementById('watchPlayer');
+    var channel = app.querySelector('.wchannel'), search = app.querySelector('.wsearch'), chips = app.querySelector('.wchips');
+    [channel, search, chips].concat(Array.prototype.slice.call(app.querySelectorAll('.wgroup, #app > .card.empty'))).forEach(function (el) { if (el) rest.push(el); });
+    var all = document.createElement('details'); all.className = 'watch-all'; all.id = 'watchAll';
+    all.innerHTML = '<summary>' + T('Dhammaan muuqaallada', 'All videos') + ' (' + EPISODES.length + ')</summary>';
+    rest.forEach(function (el) { all.appendChild(el); });
+    all.open = allOpen || !!watchQuery;
+    all.addEventListener('toggle', function () { allOpen = all.open; });
+    var anchor = player || h1.parentNode.querySelector('#app > p.small') || h1;
+    anchor.insertAdjacentHTML('afterend', html);
+    app.querySelector('.watch-start').insertAdjacentElement('afterend', all);
+    app.querySelectorAll('[data-pick-ep]').forEach(function (b) { b.onclick = function () { watchEp = b.dataset.pickEp; watchWord = null; renderWatch(); var p = document.getElementById('watchPlayer'); if (p) p.scrollIntoView({ block: 'start' }); }; });
+    app.querySelectorAll('[data-pick-ged]').forEach(function (b) { b.onclick = function () { acadTab = 'ged'; gedSubj = 'math'; gedLesson = b.dataset.pickGed; gedView = 'lesson'; goTo('acad', 'home'); }; });
+  }
+  var watch = renderWatch;
+  renderWatch = function () { watch.apply(this, arguments); try { shelf(); } catch (e) {} };
+
+  /* Lesson ending: what you finished, and where to go next. */
+  var lesson = renderLesson;
+  renderLesson = function () {
+    lesson.apply(this, arguments);
+    try {
+      if (view !== 'lesson' || !cur || guestMode || typeof STEPS === 'undefined' || step !== STEPS.length - 1) return;
+      var qT = quizTotal(cur), fb = document.getElementById('finishBtn');
+      if (!fb || !(qT && qCorrect / qT >= 0.8 && exCorrect / 8 >= 0.7) || app.querySelector('.les-finish')) return;
+      var goal = Math.max(1, Number(S.profile.goal) || 2), count = todayLessonsCount(), next = LESSONS[cur.n] || null;
+      var hitsGoal = count < goal && count + (S.completed[cur.id] ? 0 : 1) >= goal;
+      var box = document.createElement('section'); box.className = 'les-finish'; box.setAttribute('aria-labelledby', 'lesFinishTitle');
+      box.innerHTML = '<h2 id="lesFinishTitle">' + ic('check') + '<span>Waad dhammeysay! <small>You finished!</small></span></h2>'
+        + '<p class="les-finish-what">' + T('Casharka ', 'Lesson ') + cur.n + ': ' + esc2(en() ? cur.titleEn : cur.titleSo) + '</p>'
+        + '<p class="les-finish-score">' + T('Layliyo', 'Exercises') + ' <b>' + exCorrect + ' / 8</b> · ' + T('Hubin', 'Quiz') + ' <b>' + qCorrect + ' / ' + qT + '</b></p>'
+        + (hitsGoal ? '<p class="les-finish-goal">' + T('Casharkan wuxuu dhammaystirayaa hadafka maanta.', 'This lesson completes today’s goal.') + '</p>' : '')
+        + '<div class="les-finish-actions">' + (next ? '<button type="button" class="simple-primary" id="finishNext">' + T('Casharka xiga: ', 'Next lesson: ') + next.n + ' →</button>' : '')
+        + '<button type="button" class="btn secondary" id="finishReview">' + T('Ku celceli erayada', 'Review your words') + '</button></div>';
+      fb.parentNode.parentNode.insertBefore(box, fb.parentNode);
+      if (next) fb.classList.add('secondary');
+      var nb = document.getElementById('finishNext');
+      if (nb) nb.onclick = function () { window.__seaAfterFinish = { lesson: next.n }; fb.click(); };
+      document.getElementById('finishReview').onclick = function () { window.__seaAfterFinish = { review: true }; fb.click(); };
+    } catch (e) {}
+  };
+  if (S && S.profile && S.profile.onboarded && view === 'home') render();
 })();

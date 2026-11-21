@@ -937,7 +937,7 @@ var DIALOGUES=[
 [["Friend","Where is the market?","Suuqu xaggee buu ku yaallaa?"],["Ayaan","Go straight on. Turn left. The market is near.","Toos u soco. Bidix u leexo. Suuqu waa dhaw yahay."],["Friend","Thank you!","Mahadsanid!"]]
 ];
 
-/* Build 100 lessons */
+/* Build lessons */
 function lessonVocab(idx){var unit=Math.floor(idx/10);var bank=BANKS[unit];var out=[];for(var k=0;k<7;k++){out.push(bank[(idx*2+k)%bank.length])}return out}
 function dialogueForLesson(i){
  var v=lessonVocab(i);var lt=LT[i];
