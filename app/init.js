@@ -7,7 +7,8 @@ idbOpen().then(function(){return idbGet("state")}).then(function(st){
  applyDailyBonus();if(Object.keys(ROOT.profiles).length>1&&S.profile.onboarded)pickerPending=true;pinBootCheck();applyPrefs();
  var ready=pendingSave?save():Promise.resolve();ready.then(function(){
   if(entry==="placement"){plBegin("profile");return}
-  if(entry==="start"&&!S.profile.onboarded){if(entryGo&&typeof window.enterGuestSection==="function"){window.enterGuestSection(entryGo);return} S.profile.onboarded=true;S.profile.placementSkipped=true;save().then(function(){openLesson(1)});return}
+  if(entry==="start"&&entryGo&&typeof window.enterGuestSection==="function"){window.enterGuestSection(entryGo);return}
+  if(entry==="start"&&!S.profile.onboarded){S.profile.onboarded=true;S.profile.placementSkipped=true;save().then(function(){openLesson(1)});return}
   render()
  });
 }).catch(function(){ROOT=migrateRoot(null);S=ROOT.profiles[ROOT.activeId];applyPrefs();render()});
