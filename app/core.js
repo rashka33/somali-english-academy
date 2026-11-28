@@ -225,7 +225,7 @@ function playMediaClip(text,clip,slow,btn,seq){
  el.addEventListener("ended",onEnded);
  el.addEventListener("error",onError);
  el.addEventListener("loadedmetadata",onMeta);
- watchdog=setTimeout(function(){if(!started)failover("media did not start within 1200ms")},1200);
+ var wait=_strictSeq===seq?5000:1200;watchdog=setTimeout(function(){if(!started)failover("media did not start within "+wait+"ms")},wait);
  try{
   if(_mediaSrc!==url){_mediaSrc=url;el.src=url}
   try{el.playbackRate=rate}catch(e){}
@@ -250,9 +250,10 @@ function playWebAudioClip(text,clip,slow,btn,seq){
   if(finished||seq!==_spkSeq)return;finished=true;clearTimeout(watchdog);
   try{window.__audioRegistry.lastFallback=text}catch(e){}
   clearBtn();
+  if(_strictSeq===seq){try{window.__audioRegistry.lastRoute="none"}catch(e){}return}
   speakDevice(text,slow,btn);
  }
- var watchdog=setTimeout(function(){if(!started)fallback()},1200);
+ var watchdog=setTimeout(function(){if(!started)fallback()},_strictSeq===seq?8000:1200);
  var ctx=getAudioCtx();
  if(!ctx){try{window.__audioRegistry.lastError="webaudio route unavailable (no AudioContext)"}catch(e){}fallback();return}
  loadAudioBuffer(ctx,bundleIdx).then(function(buf){
@@ -269,8 +270,10 @@ function playWebAudioClip(text,clip,slow,btn,seq){
   }catch(e){try{window.__audioRegistry.lastError="webaudio start failed: "+(e&&e.message||e)}catch(_e){}fallback()}
  }).catch(function(err){try{window.__audioRegistry.lastError="webaudio buffer failed: "+(err&&err.message||err)}catch(e){}fallback()});
 }
-function playRecorded(text,clip,slow,btn){
- var seq=++_spkSeq;
+// strict (Phase 1 real-audio rule): wait longer for a cold bundle, never fall back to the device voice
+var _strictSeq=0;
+function playRecorded(text,clip,slow,btn,strict){
+ var seq=++_spkSeq;_strictSeq=strict?seq:0;
  stopRecorded();
  try{if("speechSynthesis" in window)window.speechSynthesis.cancel()}catch(e){}
  if(_spkBtn&&_spkBtn!==btn)_spkBtn.classList.remove("speaking");

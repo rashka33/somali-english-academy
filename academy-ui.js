@@ -1,3 +1,15 @@
+// Phase 1 image pack (phase1-images/, by Nuur): the Capitol photo for the citizenship cards, four illustrations for Home's tiles.
+// phase1-images/web/ holds the same files resized for phones (hero 960px, cards 480px); originals are untouched beside them.
+(function () {
+  var IMG = { capitol: 'hero-capitol.jpg', books: 'card-ingiriisi.webp', headset: 'card-hadal-dhegeysi.webp', form: 'card-foomamka.webp', ged: 'card-ged.webp' };
+  // Owner, Nov 28: the welcome page and the three Phase 1 screens always render in the light paper design, whatever the device theme.
+  window.__p1Light = function () {
+    var de = document.documentElement, root = document.getElementById('app');
+    if (root && root.querySelector('.simple-welcome, .p1-home, .p1-cz')) { de.dataset.theme = 'light'; de.style.colorScheme = 'light'; de.dataset.p1Light = '1'; }
+    else if (de.dataset.p1Light) { delete de.dataset.p1Light; if (typeof applyPrefs === 'function') applyPrefs(); }
+  };
+  window.__p1Art = function (name, cls) { return '<span class="p1-art ' + (cls || '') + '" aria-hidden="true"><img src="phase1-images/web/' + IMG[name] + '" alt="" decoding="async"' + (name === 'capitol' ? '' : ' loading="lazy"') + '></span>'; };
+})();
 (function () {
   'use strict';
   var legacyRender = render, legacyProfile = renderProfile, legacyLesson = renderLesson, legacyWatch = renderWatch;
@@ -80,52 +92,94 @@
   function row(id, label, glyph, value) {
     return '<button type="button" class="simple-row" id="' + id + '">' + (glyph ? icon(glyph) : '') + '<span>' + esc(label) + '</span>' + (value ? '<small>' + esc(value) + '</small>' : '') + icon('chevron') + '</button>';
   }
+  // Phase 1 (owner brief, Nov 28 2026): one header (SO|EN, text size, profile), six destinations, citizenship top-level.
+  paths.capitol = '<path d="M3 21h18M5 21v-6h14v6M4 15h16M8 15v6m4-6v6m4-6v6M7 12.5a5 5 0 0 1 10 0V15H7zM12 4v3.5M12 4l3 1-3 1"/>';
+  paths.target = '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.2"/>';
+  paths.az = '<rect x="3" y="4" width="18" height="16" rx="3"/><path d="m6.5 15 2.5-6 2.5 6m-4.1-2h3.2M13.5 9h4l-4 6h4"/>';
+  paths.dots = '<path d="M5 12h.01M12 12h.01M19 12h.01" stroke-width="3"/>';
+  paths.video = '<rect x="3" y="5" width="18" height="14" rx="3"/><path d="m10 9 5 3-5 3z"/>';
+  paths.sparkle = '<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8zM19 16l.7 1.8 1.8.7-1.8.7L19 21l-.7-1.8-1.8-.7 1.8-.7z"/>';
+  function initials(name) { var p = String(name || '').trim().split(/\s+/).filter(Boolean); return p.length ? (p[0][0] + (p[1] ? p[1][0] : '')).toUpperCase() : ''; }
+  function shortName(name) { var p = String(name || '').trim().split(/\s+/).filter(Boolean); return p.length ? p[0] + (p[1] ? ' ' + p[1][0] + '.' : '') : ''; }
+  function rerender() { if (view === 'lesson') renderLesson(); else render(); }
   function shell() {
     document.documentElement.dataset.uiLanguage = english() ? 'en' : 'so';
     var header = document.querySelector('.topbar');
-    if (!document.getElementById('simpleLanguage')) {
-      header.innerHTML = '<div class="brand">Somali English Academy</div><span id="xpPill" hidden></span><button type="button" class="simple-language" id="simpleLanguage"></button>';
-      document.getElementById('simpleLanguage').onclick = function () { if (!S) return; S.profile.ui = english() ? 'so' : 'en'; save(); if (view === 'lesson') renderLesson(); else render(); };
+    if (!document.getElementById('p1Lang')) {
+      header.innerHTML = '<div class="brand">Somali English Academy</div><span id="xpPill" hidden></span><div class="p1-tools">'
+        + '<div class="p1-lang" id="p1Lang" role="group"><button type="button" id="simpleLanguage" data-lang="so" lang="so">SO</button><button type="button" data-lang="en" lang="en">EN</button></div>'
+        + '<button type="button" class="p1-aa" id="p1Size"><span aria-hidden="true">A<span>A</span></span></button><button type="button" class="p1-me" id="p1Me" data-view="profile"></button></div>';
+      header.querySelectorAll('[data-lang]').forEach(function (b) { b.onclick = function () { if (!S) return; var next = b.dataset.lang; if (b.id === 'simpleLanguage' && S.profile.ui === 'so') next = 'en'; if (S.profile.ui === next) return; S.profile.ui = next; save(); rerender(); }; });
+      document.getElementById('p1Size').onclick = function () { if (!S) return; S.profile.largeText = !S.profile.largeText; save(); applyPrefs(); rerender(); };
+      document.getElementById('p1Me').onclick = function () { go('profile'); };
     }
-    var language = document.getElementById('simpleLanguage');
-    language.textContent = english() ? 'EN' : 'SO'; language.setAttribute('aria-label', t('Switch to English', 'U beddel Soomaali'));
-    var parent = view === 'review' ? 'review' : view === 'profile' ? 'profile' : ['more', 'cit', 'acad', 'play', 'watch', 'dict', 'practice', 'simpleLessons'].indexOf(view) >= 0 ? 'more' : 'home';
+    header.querySelectorAll('[data-lang]').forEach(function (b) { var on = (english() ? 'en' : 'so') === b.dataset.lang; b.setAttribute('aria-pressed', on); b.classList.toggle('is-on', on); });
+    document.getElementById('p1Lang').setAttribute('aria-label', t('Luqadda', 'Language'));
+    var size = document.getElementById('p1Size'); size.setAttribute('aria-pressed', !!S.profile.largeText); size.setAttribute('aria-label', t('Qoraal weyn', 'Large text'));
+    var me = document.getElementById('p1Me'), name = S.profile.name || ''; me.innerHTML = initials(name) || icon('user'); me.setAttribute('aria-label', t('Boggaaga', 'Profile'));
+    var parent = ['more', 'acad', 'play', 'watch', 'practice', 'about'].indexOf(view) >= 0 ? 'more' : view;
     var nav = document.getElementById('mainNav'); nav.setAttribute('aria-label', t('Bogagga waaweyn', 'Main navigation'));
-    nav.innerHTML = [['home', t('Hoyga', 'Home'), 'home'], ['review', t('Ku celceli', 'Review'), 'repeat'], ['more', t('Wax kale', 'More'), 'grid'], ['profile', t('Boggaaga', 'Profile'), 'user']].map(function (item) {
-      return '<button type="button" data-view="' + item[0] + '"' + (parent === item[0] ? ' class="active" aria-current="page"' : '') + '>' + icon(item[2]) + '<span>' + item[1] + '</span></button>';
-    }).join('');
+    var current = function (id) { return parent === id ? ' class="active" aria-current="page"' : ''; };
+    nav.innerHTML = [['home', t('Hoyga', 'Home'), 'home'], ['simpleLessons', t('Casharro', 'Lessons'), 'book'], ['cit', t('Jinsiyadda', 'Citizenship'), 'capitol'], ['review', t('Ku celceli', 'Review'), 'target'], ['dict', t('Qaamuus', 'Dictionary'), 'az'], ['more', t('Wax kale', 'More'), 'dots']].map(function (item) {
+      return '<button type="button" data-view="' + item[0] + '"' + current(item[0]) + '>' + icon(item[2]) + '<span>' + item[1] + '</span></button>';
+    }).join('') + '<button type="button" data-view="profile" class="nav-me' + (parent === 'profile' ? ' active" aria-current="page' : '') + '"><span class="p1-avatar" aria-hidden="true">' + (initials(name) || icon('user')) + '</span><span>' + esc(shortName(name) || t('Boggaaga', 'Profile')) + '</span>' + icon('chevron') + '</button>';
     nav.dataset.ready = 'true';
+    document.body.classList.toggle('p1-focus', view === 'cit' && !!app.querySelector('.p1-session'));
+    window.__p1Light();
     document.body.classList.toggle('simple-home', view === 'home'); document.body.classList.toggle('view-more', view === 'more');
   }
   function nextLesson() { var n = 1; while (n < LESSONS.length && S.completed['L' + n]) n++; return LESSONS[n - 1]; }
+  // Learner's stored citizenship progress; readable before citizenship.js loads (same store, same keys).
+  function citizenshipState() {
+    if (window.__czSummary) return window.__czSummary();
+    var c = S.citizenship || {}, ed = c.edition === '2008' ? '2008' : '2025', st = (c.civ || {})[ed] || {}, tot = c.senior ? 20 : ed === '2025' ? 128 : 100;
+    return { k: Math.min(tot, Object.keys(st.known || {}).length), tot: tot, mocks: st.mocks || [] };
+  }
+  function openCit(route) { if (typeof openCitizenship === 'function') openCitizenship(route); else { window.__czRoute = route; go('cit'); } }
   renderHome = function () {
-    var lesson = nextLesson(), count = todayLessonsCount(), goal = Math.max(1, Number(S.profile.goal) || 2);
-    var complete = Object.keys(S.completed).length >= LESSONS.length;
-    app.innerHTML = '<div class="simple-home-content"><h1>' + t('Diyaar ma u tahay casharka xiga?', 'Ready for your next lesson?') + '</h1><p class="simple-intro">' + t('Tababar yar, maalin kasta.', 'Short lessons, saved on this device.') + '</p>'
-      + (function(){
-          var si = stage12Of(lesson.n), st = STAGES12[si], total = st[3] - st[2] + 1, done = stageDone(si), all = Object.keys(S.completed).length;
-          return '<section class="simple-next" ' + stageStyle(lesson.n) + '><div class="hero-top"><div class="hero-meta"><p class="hero-eyebrow"><i aria-hidden="true"></i>' + esc(english() ? st[0] : st[1]) + ' · ' + (si + 1) + '/12</p>'
-            + '<p class="simple-lesson-number">' + (all ? t('Sii wad meeshii aad ka joogtay — Casharka ', 'Continue where you left off — Lesson ') : t('Casharka ', 'Lesson ')) + lesson.n + '</p><h2>' + esc(title(lesson)) + '</h2></div>'
-            + ringHTML(done / total, (english() ? 'Stage progress ' : 'Horumarka marxaladda ') + done + '/' + total) + '</div>'
-            + '<p class="hero-stats"><span><b>' + done + '</b> / ' + total + ' ' + t('marxaladdan', 'this stage') + '</span><span><b>' + all + '</b> / 1000 ' + t('guud', 'overall') + '</span></p>'
-            + '<button type="button" class="simple-primary" id="academyContinue">' + (complete ? t('Ku celceli cashirka', 'Review lesson') : t('Sii wad barashada', 'Continue learning')) + icon('arrow') + '</button>'
-            + '<div class="simple-progress" role="progressbar" aria-label="' + t('Hadafka maanta', 'Daily goal') + '" aria-valuemin="0" aria-valuemax="' + goal + '" aria-valuenow="' + Math.min(count, goal) + '"><i style="width:' + Math.min(100, count / goal * 100) + '%"></i></div><p class="simple-progress-caption">' + (english() ? count + ' of ' + goal + ' lessons today' : count + ' ka mid ah ' + goal + ' cashar maanta') + '</p></section>';
-        })()
-      + row('academyAllLessons', t('Eeg casharrada', 'Browse lessons'), 'list') + journeyHTML(lesson.n, english()) + '</div><p class="simple-device-note">' + t('Horumarkaagu wuxuu ku kaydsan yahay aaladdan.', 'Progress stays on this device.') + '</p>';
-    document.getElementById('academyContinue').onclick = function () { openLesson(lesson.n); };
-    document.getElementById('academyAllLessons').onclick = function () { unit = Math.floor((lesson.n - 1) / 10); go('simpleLessons'); };
-    app.querySelectorAll('[data-jstage]').forEach(function (b) { b.onclick = function () { unit = Math.floor((STAGES12[+b.dataset.jstage][2] - 1) / 10); go('simpleLessons'); }; });
+    var lesson = nextLesson(), first = String(S.profile.name || '').trim().split(/\s+/)[0], c = citizenshipState(), part = c.tot ? c.k / c.tot : 0;
+    var passed = c.mocks.some(function (m) { return m.ok; });
+    var steps = [['session', 'book', t('Baro', 'Learn'), part >= 0.5], ['cards', 'target', t('Ku celceli', 'Practise'), part >= 0.9], ['mock', 'flag', t('Is tijaabi', 'Test yourself'), passed]];
+    var now = steps.findIndex(function (s) { return !s[3]; });
+    var r = 46, len = 2 * Math.PI * r, art = window.__p1Art;
+    app.innerHTML = '<div class="p1-home">'
+      + '<header class="p1-greet"><h1>' + (first ? t('Salaan, ', 'Hello, ') + esc(first) + '.' : t('Salaan.', 'Hello.')) + '</h1><p>' + t('Tallaabo yar maanta. Kalsooni badan berri.', 'A small step today. More confidence tomorrow.') + '</p></header>'
+      + '<section class="p1-hero"><div class="p1-hero-text"><p class="p1-eyebrow">' + t('Qorshaha maanta', 'Today’s plan') + '</p><h2>' + t('U diyaargarow jinsiyadda.', 'Prepare for citizenship.') + '</h2><p>' + t('10 daqiiqo. Hal tallaabo oo kuu dhow.', '10 minutes. One step closer.') + '</p>'
+      + '<button type="button" class="p1-primary" id="p1Today">' + t('Sii wad barashada', 'Continue learning') + icon('arrow') + '</button></div>' + art('capitol', 'p1-hero-art') + '</section>'
+      + '<div class="p1-two"><section class="p1-card p1-journey"><h2>' + t('Safarkaaga', 'Your journey') + '</h2><ol class="p1-steps">' + steps.map(function (s, i) {
+          var state = s[3] ? 'is-done' : i === now ? 'is-now' : 'is-later';
+          return '<li class="' + state + '"><button type="button" data-czgo="' + s[0] + '"' + (i === now ? ' aria-current="step"' : '') + '><span class="p1-step-ic">' + icon(s[3] ? 'check' : s[1]) + '</span><span>' + s[2] + '</span></button></li>';
+        }).join('') + '</ol></section>'
+      + '<section class="p1-card p1-progress"><h2>' + t('Horumarkaaga', 'Your progress') + '</h2><div class="p1-ring-row"><div class="p1-ring" role="img" aria-label="' + c.k + ' / ' + c.tot + '"><svg viewBox="0 0 108 108" aria-hidden="true"><circle class="bg" cx="54" cy="54" r="' + r + '"/><circle class="fg" cx="54" cy="54" r="' + r + '" stroke-dasharray="' + len.toFixed(1) + '" stroke-dashoffset="' + (len * (1 - part)).toFixed(1) + '"/></svg><b>' + c.k + '</b></div><p>' + t('su’aalood oo aad baratay', 'questions learned') + '</p></div></section></div>'
+      + '<h2 class="p1-h">' + t('Wax aad maanta baran karto', 'What you can learn today') + '</h2><div class="p1-grid">' + [
+          ['academyContinue', 'books', t('Ingiriisi', 'English'), t('Casharro maalinle ah', 'Daily lessons')],
+          ['p1Talk', 'headset', t('Hadal & Dhegeysi', 'Speaking & listening'), t('Wada hadal ku tababar', 'Practise conversation')],
+          ['p1Forms', 'form', t('Foomamka', 'Forms'), t('Nolosha dhabta ah', 'Real life')],
+          ['p1Ged', 'ged', 'GED', t('Xisaab iyo diyaargarow', 'Math and test prep')]
+        ].map(function (x) { return '<button type="button" class="p1-tile" id="' + x[0] + '">' + art(x[1], 'p1-tile-art') + '<span class="p1-tile-t"><b>' + x[2] + '</b><small>' + x[3] + '</small></span>' + icon('chevron') + '</button>'; }).join('') + '</div>'
+      + '<nav class="p1-strip" aria-label="' + t('Xiriirro degdeg ah', 'Quick links') + '"><button type="button" id="p1Watch">' + icon('video') + t('Muuqaallo', 'Videos') + '</button><button type="button" id="p1Dict">' + icon('az') + t('Qaamuus', 'Dictionary') + '</button><button type="button" id="p1Tutor">' + icon('sparkle') + t('Macallinka AI', 'AI tutor') + '</button></nav></div>';
+    var on = function (id, fn) { document.getElementById(id).onclick = fn; };
+    on('p1Today', function () { openCit('session'); });
+    app.querySelectorAll('[data-czgo]').forEach(function (b) { b.onclick = function () { openCit(b.dataset.czgo); }; });
+    on('academyContinue', function () { openLesson(lesson.n); });
+    on('p1Talk', function () { go('practice'); });
+    on('p1Forms', function () { acadTab = 'forms'; go('acad'); });
+    on('p1Ged', function () { acadTab = 'ged'; gedView = 'home'; gedSubj = null; go('acad'); });
+    on('p1Watch', function () { go('watch'); });
+    on('p1Dict', function () { go('dict'); });
+    on('p1Tutor', function () { if (window.__seaTutor) window.__seaTutor(); });
   };
   function renderLessons() {
-    var lesson = nextLesson(), first = (unit === null ? Math.floor((lesson.n - 1) / 10) : unit) * 10;
+    var lesson = nextLesson(), mine = Math.floor((lesson.n - 1) / 10), first = (unit === null ? mine : unit) * 10, here = first / 10 === mine;
     var si = stage12Of(first + 1), st = STAGES12[si], stTotal = st[3] - st[2] + 1, stDone = stageDone(si);
     app.innerHTML = backButton(t('Hoyga', 'Home')) + '<h1>' + t('Casharrada', 'Lessons') + '</h1><p class="simple-intro">' + t('Eeg dhammaan qaybaha. Casharrada qufulan waxay furmaan markaad casharka ka horreeya gudubto.', 'Explore every unit. Locked lessons open when you pass the previous lesson.') + '</p>'
       + '<div class="stage-head" ' + stageStyle(first + 1) + '><div class="stage-head-row"><i aria-hidden="true"></i><b>' + (si + 1) + '. ' + esc(english() ? st[0] : st[1]) + '</b><span>' + stDone + ' / ' + stTotal + '</span></div><div class="progress" role="progressbar" aria-label="' + esc((english() ? st[0] : st[1]) + ' ' + stDone + '/' + stTotal) + '" aria-valuemin="0" aria-valuemax="' + stTotal + '" aria-valuenow="' + stDone + '"><i style="width:' + Math.round(stDone / stTotal * 100) + '%"></i></div></div>'
       + '<label for="academyUnit" class="simple-label">' + t('Dooro qayb', 'Choose a unit') + '</label><select id="academyUnit">' + LESSONS.filter(function (_, i) { return i % 10 === 0; }).map(function (l, i) {
-      return '<option value="' + i + '"' + (i * 10 === first ? ' selected' : '') + '>' + (i + 1) + '. ' + esc(title(l)) + ' (' + l.n + '–' + Math.min(l.n + 9, LESSONS.length) + ')</option>';
-    }).join('') + '</select><div class="simple-lesson-list">' + LESSONS.slice(first, first + 10).map(function (l) {
-      var done = !!S.completed[l.id], unlocked = isUnlocked(l.n);
-      return '<button type="button" class="simple-lesson' + (done ? ' is-done' : '') + '" data-academy-lesson="' + l.n + '"' + (unlocked ? '' : ' disabled') + ' ' + stageStyle(l.n) + '><span class="simple-lesson-index">' + (done ? icon('check') : l.n) + '</span><span>' + esc(title(l)) + '</span>' + icon(unlocked ? 'chevron' : 'lock') + '</button>';
+      return '<option value="' + i + '"' + (i * 10 === first ? ' selected' : '') + '>' + (i + 1) + '. ' + esc(title(l)) + ' (' + l.n + '–' + Math.min(l.n + 9, LESSONS.length) + ')' + (i === mine ? ' · ' + t('hadda', 'current') : '') + '</option>';
+    }).join('') + '</select>' + (here ? '<p class="unit-here">' + icon('check') + t('Qaybtaada hadda', 'Your current unit') + '</p>' : '')
+      + '<div class="simple-lesson-list' + (here ? ' is-current-unit' : '') + '">' + LESSONS.slice(first, first + 10).map(function (l) {
+      var done = !!S.completed[l.id], unlocked = isUnlocked(l.n), next = !done && l.n === lesson.n;
+      return '<button type="button" class="simple-lesson' + (done ? ' is-done' : '') + (next ? ' is-next' : '') + '" data-academy-lesson="' + l.n + '"' + (unlocked ? '' : ' disabled') + (next ? ' aria-current="step"' : '') + ' ' + stageStyle(l.n) + '><span class="simple-lesson-index">' + (done ? icon('check') : next ? icon('arrow') : l.n) + '</span><span class="simple-lesson-title">' + esc(title(l)) + (next ? '<small class="next-badge">' + t('Xiga', 'Next') + ' · ' + t('Casharka ', 'Lesson ') + l.n + '</small>' : '') + '</span>' + icon(unlocked ? 'chevron' : 'lock') + '</button>';
     }).join('') + '</div>';
     document.getElementById('simpleBack').onclick = function () { go('home'); };
     document.getElementById('academyUnit').onchange = function () { unit = Number(this.value); render(); document.getElementById('academyUnit').focus(); };
@@ -246,6 +300,7 @@
       document.body.classList.remove('welcome-entry'); S.profile.onboarded = true;
       save().then(function () { plBegin('profile'); });
     };
+    window.__p1Light();
   };
   renderProfile = function () {
     var name = S.profile.name || t('Qofka barta', 'Learner');
@@ -321,6 +376,7 @@
     var button = event.target.closest('[data-view]'); if (!button) return;
     event.preventDefault(); event.stopImmediatePropagation();
     if (S && !S.profile.onboarded) pendingView = button.dataset.view;
+    if (button.dataset.view === 'cit') window.__czRoute = 'hub';  // the nav always lands on the Jinsiyadda home; an unfinished session is kept
     legacyFrom = 'nav'; go(button.dataset.view);
   }, true);
   if (S && S.profile) render();
@@ -332,6 +388,13 @@ window.ACADEMY_TUTOR_URL = 'https://somali-academy-tutor.rashkaa33.workers.dev';
     original();
     if (document.getElementById('academyTutor')) return;
     var en = S.profile.ui === 'en';
+    var back = document.getElementById('backPath');
+    if (back && !document.getElementById('lesTutor') && !guestMode) {
+      var ask = document.createElement('button'); ask.type = 'button'; ask.id = 'lesTutor'; ask.className = 'btn ghost les-tutor';
+      ask.textContent = en ? 'Ask your tutor' : 'Weydii macallinka';
+      ask.onclick = function () { var p = document.getElementById('academyTutor'); if (!p) return; p.open = true; p.scrollIntoView({ behavior: 'smooth', block: 'center' }); var ta = p.querySelector('textarea'); if (ta) ta.focus({ preventScroll: true }); };
+      var row = document.createElement('div'); row.className = 'les-top'; back.parentNode.insertBefore(row, back); row.appendChild(back); row.appendChild(ask);
+    }
     var panel = document.createElement('details'); panel.id = 'academyTutor'; panel.className = 'simple-details';
     var summary = document.createElement('summary'); summary.textContent = en ? 'Help me understand' : 'Iga caawi fahamka'; panel.appendChild(summary);
     var note = document.createElement('p'); note.textContent = en ? 'AI help can make mistakes. Your question and lesson context are sent to Google. Do not include personal details.' : 'Caawinta AI way qaldami kartaa. Su’aasha iyo casharka waxaa loo diraa Google. Ha gelin xog gaar ah.'; panel.appendChild(note);
@@ -1867,7 +1930,9 @@ window.ACADEMY_TUTOR_URL = 'https://somali-academy-tutor.rashkaa33.workers.dev';
     study();
   }
   var home=renderHome,profile=renderProfile;
-  function add(){var rows=app.querySelector('.simple-home-content')||app.querySelector('.simple-profile-rows');if(!rows)return;var tutor=document.createElement('button');tutor.id='homeAiTutor';tutor.className='simple-row';tutor.textContent=lng('Macallinka AI','AI Tutor · Ask a question');tutor.onclick=window.__seaTutor=function(){var n=1;while(n<LESSONS.length&&S.completed['L'+n])n++;openLesson(n);var panel=document.getElementById('academyTutor');if(panel){panel.open=true;panel.scrollIntoView({block:'center'});panel.querySelector('textarea').focus()}};rows.insertBefore(tutor,rows.querySelector('.simple-next')||rows.firstChild);var b=document.createElement('button');b.className='simple-row';b.id='communicationLessons';b.textContent=lng('100 cashar wada hadal ah','Real-life English · 100 conversation lessons');b.onclick=window.__seaComm=showList;rows.appendChild(b)}
+  function add(){var rows=app.querySelector('.simple-home-content')||app.querySelector('.simple-profile-rows');if(!rows)return;var tutor=document.createElement('button');tutor.id='homeAiTutor';tutor.className='simple-row';tutor.textContent=lng('Macallinka AI','AI Tutor · Ask a question');tutor.onclick=window.__seaTutor;rows.insertBefore(tutor,rows.querySelector('.simple-next')||rows.firstChild);var b=document.createElement('button');b.className='simple-row';b.id='communicationLessons';b.textContent=lng('100 cashar wada hadal ah','Real-life English · 100 conversation lessons');b.onclick=window.__seaComm;rows.appendChild(b)}
+  // Phase 1: Home no longer carries these rows, so the shared entry points exist from load, not from the first row render.
+  window.__seaTutor=function(){var n=1;while(n<LESSONS.length&&S.completed['L'+n])n++;openLesson(n);var panel=document.getElementById('academyTutor');if(panel){panel.open=true;panel.scrollIntoView({block:'center'});panel.querySelector('textarea').focus()}};window.__seaComm=showList;
   renderHome=function(){home();add()};renderProfile=function(){profile();add()};
   if(S&&S.profile&&S.profile.onboarded)render();
 })();
@@ -2065,33 +2130,18 @@ window.ACADEMY_TUTOR_URL = 'https://somali-academy-tutor.rashkaa33.workers.dev';
 (function () {
   function en() { return !!(S && S.profile && S.profile.ui === 'en'); }
   function escT(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
-  var FLAME = '<svg class="simple-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.07-2.14-.22-4.05 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.15.43-2.29 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>';
-  var STAR = '<svg class="simple-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.95 5.98 6.6.96-4.78 4.66 1.13 6.58L12 17.57l-5.9 3.1 1.13-6.57L2.45 9.44l6.6-.96L12 2.5z"/></svg>';
-  function vitals() {
-    if (!S) return null;
-    var streak = Number(S.streak) || 0, xp = Number(S.xp) || 0, lvl = null;
-    try { if (typeof hLevel === 'function') lvl = hLevel(); } catch (e) { }
-    var parts = [];
-    if (streak > 0) parts.push('<span class="vital"><span class="vital-ic flame">' + FLAME + '</span><b>' + streak + '</b> ' + (en() ? 'day streak' : 'maalmood xiriir') + '</span>');
-    if (!parts.length) return null;
-    var d = document.createElement('div');
-    d.className = 'simple-vitals'; d.id = 'simpleVitals';
-    d.innerHTML = parts.join('<span class="vital-dot" aria-hidden="true">·</span>');
-    return d;
-  }
   function footer() {
     var f = document.createElement('footer');
     f.className = 'simple-foot'; f.id = 'simpleFoot';
     f.innerHTML = '<p class="foot-name">Somali English Academy</p>'
-      + '<p>' + (en() ? 'Free, with no ads. Made for Somali learners, everywhere.' : 'Bilaash, xayaysiis la\u2019aan. Waxaa loo sameeyay dadka Soomaalida ee Ingiriisiga baranaya, meel kasta.') + '</p>';
+      + '<p>' + (en() ? 'Free, with no ads. Made for Somali learners, everywhere.' : 'Bilaash, xayaysiis la\u2019aan. Waxaa loo sameeyay dadka Soomaalida ee Ingiriisiga baranaya, meel kasta.') + '</p>'
+      + '<p class="foot-credit" lang="en">Capitol photo: Rob Young \u2014 CC BY 2.0 (<a href="https://creativecommons.org/licenses/by/2.0/" target="_blank" rel="noopener noreferrer">creativecommons.org/licenses/by/2.0</a>)</p>';
     return f;
   }
   var home = renderHome, profile = renderProfile;
   renderHome = function () {
     home();
     var card = app.querySelector('.simple-next'), host = app.querySelector('.simple-home-content');
-    var v = vitals();
-    if (v && card && !document.getElementById('simpleVitals')) card.appendChild(v);
     if (host && !document.getElementById('simpleFoot')) host.appendChild(footer());
   };
   renderProfile = function () {
@@ -2187,7 +2237,8 @@ window.ACADEMY_TUTOR_URL = 'https://somali-academy-tutor.rashkaa33.workers.dev';
     play: '<circle cx="12" cy="12" r="9"/><path d="m10 8 6 4-6 4z"/>',
     book: '<path d="M12 5C8 2 4 3 2 4v15c4-2 7-1 10 1 3-2 6-3 10-1V4c-2-1-6-2-10 1zm0 0v15"/>',
     chevron: '<path d="m9 5 7 7-7 7"/>',
-    check: '<path d="m5 12 4 4L19 6"/>'
+    check: '<path d="m5 12 4 4L19 6"/>',
+    chat: '<path d="M4 5h16v11H9l-5 4z"/>'
   };
   function ic(n) { return '<svg class="simple-icon" viewBox="0 0 24 24" aria-hidden="true">' + P[n] + '</svg>'; }
   function goTo(dest, from) { if (window.__seaFrom) window.__seaFrom(from || 'home'); if (window.__seaGo) window.__seaGo(dest); else { setNav(dest); render(); } }
@@ -2196,25 +2247,19 @@ window.ACADEMY_TUTOR_URL = 'https://somali-academy-tutor.rashkaa33.workers.dev';
     return '<button type="button" class="home-door" id="' + id + '"><span class="door-ic">' + ic(icon) + '</span><span class="door-copy"><b>' + title + '</b><small>' + sub + '</small></span>' + ic('chevron') + '</button>';
   }
   function tool(id, icon, label) { return '<button type="button" class="home-tool" id="' + id + '">' + ic(icon) + '<span>' + label + '</span></button>'; }
-  function doneToday(hero) {
-    var goal = Math.max(1, Number(S.profile.goal) || 2), count = typeof todayLessonsCount === 'function' ? todayLessonsCount() : 0;
-    if (count < goal || Object.keys(S.completed).length >= LESSONS.length) return;
-    hero.classList.add('is-done-today');
-    var cap = hero.querySelector('.simple-progress-caption');
-    if (cap) cap.innerHTML = ic('check') + '<span>' + T('Maanta waa dhammaatay — hadafkaagii waad gaadhay. Mid kale waad samayn kartaa haddii aad rabto.', 'Done for today — you reached your goal. You can still do another if you like.') + '</span>';
-  }
   var moreOpen = false;
   function layout(box) {
     var hero = box.querySelector('.simple-next'); if (!hero || box.querySelector('.home-doors')) return;
-    doneToday(hero);
     var doors = document.createElement('section'); doors.className = 'home-doors';
-    doors.innerHTML = '<div class="home-door-list">' + door('homeReview', 'repeat', T('Ku celceli erayada', 'Review your words'), T('Erayada aad baratay mar kale ku celceli', 'Go over the words you have learned')) + '</div>';
+    doors.innerHTML = '<div class="home-door-list">' + door('homeReview', 'repeat', T('Ku celceli erayada', 'Review your words'), T('Erayada aad baratay mar kale ku celceli', 'Go over the words you have learned'))
+      + door('homeTutor', 'chat', T('Weydii macallinka', 'Ask your tutor'), T('Caawinta AI way qaldami kartaa.', 'AI help can make mistakes.')) + '</div>';
     var journey = box.querySelector('.journey'), foot = document.getElementById('simpleFoot');
     var more = document.createElement('p'); more.className = 'home-more-link';
     more.innerHTML = '<button type="button" class="simple-text-button" id="homeMoreLink">' + T('Wax kale: jinsiyadda, foomamka, GED, muuqaallo, ciyaar', 'More: citizenship, forms, GED, videos, games') + ic('chevron') + '</button>';
     Array.prototype.slice.call(box.children).forEach(function (el) { if (el !== hero && !/^H1$/.test(el.tagName) && !el.classList.contains('simple-intro') && el !== journey && el !== foot) el.remove(); });
     [doors, journey, more, foot].forEach(function (el) { if (el) box.appendChild(el); });
     document.getElementById('homeReview').onclick = function () { goTo('review'); };
+    document.getElementById('homeTutor').onclick = function () { if (window.__seaTutor) window.__seaTutor(); };
     document.getElementById('homeMoreLink').onclick = function () { goTo('more', 'nav'); };
   }
   var home = renderHome;

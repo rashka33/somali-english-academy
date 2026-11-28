@@ -7,6 +7,7 @@
     UI_ICONS.calendar = '<rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M8 3v4m8-4v4"/>';
     UI_ICONS.award = '<circle cx="12" cy="9" r="6"/><path d="m8.5 14-1.5 7 5-3 5 3-1.5-7"/>';
     UI_ICONS.chat = '<path d="M4 5h16v11H9l-5 4z"/>';
+    UI_ICONS.doc = '<path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 12h7M9 16h5"/>';
     UI_ICONS.cards = '<rect x="3" y="7" width="14" height="12" rx="2"/><path d="M7 7V5h14v12h-4"/>';
   }
   var DATA = {}, pending = {};
@@ -124,10 +125,13 @@
   function wireBack(fn) { var b = document.getElementById('czBack'); if (b) b.onclick = fn || function () { C.route = 'hub'; paint(); }; }
   function go(route) { C.route = route; C.show = false; paint(); window.scrollTo({ top: 0, behavior: 'instant' }); }
   function bar(done, total, label) { return '<div class="progress cz-bar" role="progressbar" aria-label="' + esc(label || '') + '" aria-valuemin="0" aria-valuemax="' + total + '" aria-valuenow="' + done + '"><i style="width:' + (total ? Math.round(done / total * 100) : 0) + '%"></i></div>'; }
+  function changesHTML(q, mv) {
+    return q.changes ? '<p class="cz-check">' + ic('refresh') + '<span>' + T('Jawaabtani way is beddeli kartaa. Hubi jawaabta hadda ka hor wareysigaaga: ', 'This answer can change. Check the current answer before your interview: ') + '<a href="' + UPDATES + '" target="_blank" rel="noopener noreferrer">uscis.gov/citizenship/testupdates</a></span></p>' + (mineDef(q) ? '<p><button type="button" class="simple-text-button" data-mine="1">' + ic('pen') + (mv ? T('Beddel jawaabtayda', 'Change my answer') : T('Halkan ku qor jawaabtaada si aad u xusuusato', 'Write your own answer here so you remember it')) + '</button></p>' : '') : '';
+  }
   function answersHTML(q) {
     var mv = mineVal(q);
     return (mv ? '<p class="cz-mine">' + ic('user') + '<span>' + T('Jawaabtaada', 'Your answer') + '</span><b lang="en">' + esc(mv) + '</b></p>' : '') + '<ul class="cz-ans">' + q.answers.map(function (a) { return '<li lang="en">' + esc(a) + '</li>'; }).join('') + '</ul>'
-      + (q.changes ? '<p class="cz-check">' + ic('refresh') + '<span>' + T('Jawaabtani way is beddeli kartaa. Hubi jawaabta hadda ka hor wareysigaaga: ', 'This answer can change. Check the current answer before your interview: ') + '<a href="' + UPDATES + '" target="_blank" rel="noopener noreferrer">uscis.gov/citizenship/testupdates</a></span></p>' + (mineDef(q) ? '<p><button type="button" class="simple-text-button" data-mine="1">' + ic('pen') + (mv ? T('Beddel jawaabtayda', 'Change my answer') : T('Halkan ku qor jawaabtaada si aad u xusuusato', 'Write your own answer here so you remember it')) + '</button></p>' : '') : '')
+      + changesHTML(q, mv)
       + '<p class="cz-so" lang="so">' + esc(q.explain_so) + '</p>';
   }
   function seal(right, total, pass, ok) {
@@ -141,48 +145,105 @@
     return { civ: civ, rd: rd, wr: wr, n4: n4, iv: iv, all: 0.6 * civ + 0.1 * rd + 0.1 * wr + 0.1 * n4 + 0.1 * iv, tot: tot };
   }
   function daysLeft() { var d = cz().testDate; if (!d) return null; var t = new Date(d + 'T00:00:00'), n = new Date(todayStr() + 'T00:00:00'); if (isNaN(t)) return null; return Math.round((t - n) / 86400000); }
+  // Phase 1 audio rule: every line plays a recorded clip from audio/index.json, never the device voice.
+  function clipFor(text) { try { return lookupAudioClip(text); } catch (e) { return null; } }
+  function audioPending() { return !_audioReg.loaded && !_audioReg.failed; }
+  var WAVE = [5, 9, 14, 8, 18, 11, 22, 13, 7, 16, 10, 19, 12, 6, 15, 9, 20, 11, 7, 13, 5].map(function (v) { return '<i style="height:' + v + 'px"></i>'; }).join('');
+  function listenBar(text, big) {
+    var off = !clipFor(text) && !audioPending();
+    return '<button type="button" class="p1-listen' + (big ? '' : ' is-small') + (off ? ' is-missing' : '') + '" data-clip="' + esc(text) + '"' + (off ? ' aria-disabled="true"' : '') + ' aria-label="' + T('Dhegeyso', 'Listen') + (big ? '' : ': ' + esc(text)) + '">'
+      + '<span class="p1-listen-ic">' + ic('speaker') + '</span>' + (big ? '<span class="p1-listen-t">' + T('Dhegeyso', 'Listen') + '</span><span class="p1-wave" aria-hidden="true">' + WAVE + '</span>' : '') + '</button>'
+      + (big && off ? '<p class="p1-listen-note" role="status">' + T('Codka su’aashan weli lama diyaarin.', 'The recording for this question is not ready yet.') + '</p>' : '');
+  }
+  function wireClips(root) {
+    root.querySelectorAll('[data-clip]').forEach(function (b) {
+      b.onclick = function () {
+        var text = b.dataset.clip, clip = clipFor(text);
+        if (clip) { playRecorded(text, clip, false, b, true); return; }
+        if (audioPending()) loadAudioRegistry().then(function () { var c2 = clipFor(text); if (c2) playRecorded(text, c2, false, b, true); else paint(); });
+      };
+    });
+    if (audioPending() && root.querySelector('[data-clip]')) loadAudioRegistry().then(function () { if (view === 'cit' && (C.route === 'session' || C.route === 'cards')) paint(); });
+  }
   function hub() {
-    var c = cz(), ed = c.edition, r = readiness(), known = knownCount(ed), dl = daysLeft(), name = (S.profile.name || '').split(' ')[0];
-    var lastMock = c.civ[ed].mocks[c.civ[ed].mocks.length - 1], rl = rules(ed);
-    var h = '<div class="cz"><p class="hero-eyebrow">' + ic('flag') + T('Jinsiyadda · Imtixaanka muwaadinimada', 'Citizenship · Naturalization test') + '</p><h1>' + (name ? esc(name) + ', ' : '') + T('maalintaada way soo socotaa.', 'your day is coming.') + '</h1><p class="simple-intro">' + T('Wax walba oo wareysiga lagu weydiiyo, hal meel, Af-Soomaali lagu sharxay. Tallaabo tallaabo — annaga ayaa kula soconna.', 'Everything asked at the interview, in one place, explained in Somali. One step at a time — we are with you.') + '</p>';
-    h += '<section class="cz-count">';
-    if (dl === null) h += '<div class="cz-count-body"><h2>' + ic('calendar') + T('Goorma ayuu wareysigaagu yahay?', 'When is your interview?') + '</h2><p>' + T('Taariikhda geli, annaguna waxaan kuu samaynaynaa qorshe maalinle ah. Haddii aadan weli ogayn, waa caadi — hadda bilow.', 'Add the date and we will pace your study. If you do not know it yet, that is fine — start today.') + '</p><div class="cz-date"><input type="date" id="czDate" min="' + todayStr() + '" aria-label="' + T('Taariikhda wareysiga', 'Interview date') + '"><button type="button" class="btn" id="czDateSave">' + T('Kaydi', 'Save') + '</button></div></div>';
+    var c = cz(), ed = c.edition, dl = daysLeft(), known = knownCount(ed), r = readiness(), lastMock = c.civ[ed].mocks[c.civ[ed].mocks.length - 1], rl = rules(ed), art = window.__p1Art || function () { return ''; };
+    var todo = pool(ed).filter(function (q) { return !c.civ[ed].known[q.n]; }).length, size = todo ? Math.min(5, todo) : 5;
+    var h = '<div class="cz p1-cz"><div class="p1-cz-top"><button type="button" class="p1-back" id="czHome" aria-label="' + T('Hoyga', 'Home') + '">' + ic('back') + '</button><h1 class="p1-cz-title">' + T('Jinsiyadda', 'Citizenship') + '</h1></div>'
+      + '<section class="p1-cz-head"><div><h2>' + T('Maalintaada way soo socotaa.', 'Your day is coming.') + '</h2><p>' + T('Aan maanta hal tallaabo qaadno.', 'Let’s take one step today.') + '</p></div>' + art('capitol', 'p1-cz-art') + '</section>'
+      + '<section class="p1-today"><span class="p1-today-ic">' + ic('book') + '</span><div><h3>' + T('Casharka maanta', 'Today’s lesson') + '</h3><p>' + T(size + ' su’aalood · 10 daqiiqo', size + ' questions · 10 minutes') + '</p></div><button type="button" class="p1-today-go" id="czToday">' + T('Bilow', 'Start') + ic('arrow') + '</button></section>';
+    // settings rows sit under the practice card; each opens the existing control in place
+    h += '<div class="p1-set"><details class="p1-set-row"><summary>' + ic('calendar') + '<span>' + T('Nooca imtixaanka', 'Test version') + '</span><b>' + ed + (c.senior ? ' · 65/20' : '') + '</b>' + ic('chevron') + '</summary><div class="p1-set-body cz-ed"><div class="cz-seg" role="group" aria-label="' + T('Nooca imtixaanka', 'Test edition') + '">'
+      + ['2025', '2008'].map(function (e) { return '<button type="button" data-ed="' + e + '" aria-pressed="' + (ed === e) + '"><b>' + e + '</b><span>' + (e === '2025' ? T('128 su’aalood', '128 questions') : T('100 su’aalood', '100 questions')) + '</span></button>'; }).join('') + '</div>'
+      + '<p class="small muted">' + T('Haddii aad foomka N-400 gudbisay <strong>October 20, 2025 ama ka dib</strong>, waxaad gelaysaa imtixaanka 2025. Haddii aad ka hor gudbisay, waa kan 2008. Taariikhdu waxay ku qoran tahay warqadda USCIS ee rasiidka (receipt notice).', 'If you filed Form N-400 <strong>on or after October 20, 2025</strong>, you take the 2025 test. If you filed before, it is the 2008 test. The date is on your USCIS receipt notice.') + '</p>'
+      + '<label class="cz-toggle"><input type="checkbox" id="czSenior"' + (c.senior ? ' checked' : '') + '><span><b>65/20</b> — ' + T('Waxaan ahay 65 jir ama ka weyn, green card-na waxaan haystay 20 sano ama ka badan: 20-ka su’aalood ee xiddigta leh oo keliya i tus.', 'I am 65 or older and have been a permanent resident for 20 years or more: show only the 20 starred questions.') + '</span></label></div></details>'
+      + '<details class="p1-set-row"><summary>' + ic('calendar') + '<span>' + T('Taariikhda wareysiga', 'Interview date') + '</span><b>' + (dl === null ? T('Ku dar', 'Add') + ' +' : dl > 0 ? dl + ' ' + T('maalmood', 'days') : esc(c.testDate)) + '</b>' + ic('chevron') + '</summary><div class="p1-set-body cz-count">';
+    if (dl === null) h += '<div class="cz-count-body"><p>' + T('Taariikhda geli, annaguna waxaan kuu samaynaynaa qorshe maalinle ah. Haddii aadan weli ogayn, waa caadi — hadda bilow.', 'Add the date and we will pace your study. If you do not know it yet, that is fine — start today.') + '</p><div class="cz-date"><input type="date" id="czDate" min="' + todayStr() + '" aria-label="' + T('Taariikhda wareysiga', 'Interview date') + '"><button type="button" class="btn" id="czDateSave">' + T('Kaydi', 'Save') + '</button></div></div>';
     else {
       var left = Math.max(0, r.tot - known), per = dl > 0 ? Math.max(1, Math.ceil(left / dl)) : left;
-      h += '<div class="cz-count-num"><b>' + (dl > 0 ? dl : dl === 0 ? T('Maanta', 'Today') : ic('check')) + '</b>' + (dl > 0 ? '<span>' + T('maalmood', 'days') + '</span>' : '') + '</div><div class="cz-count-body"><h2>' + (dl > 0 ? T('ayaa ka haray wareysigaaga', 'until your interview') : dl === 0 ? T('waa maalintaada. Neefso, dhoola cadee — waad diyaarsan tahay.', 'is your day. Breathe, smile — you are ready.') : T('Wareysigaagu wuu dhaafay. Sidee buu ahaa?', 'Your interview date has passed. How did it go?')) + '</h2>'
+      h += '<div class="cz-count-body"><h2>' + (dl > 0 ? dl + ' ' + T('maalmood ayaa ka haray wareysigaaga', 'days until your interview') : dl === 0 ? T('Maanta waa maalintaada. Neefso, dhoola cadee — waad diyaarsan tahay.', 'Today is your day. Breathe, smile — you are ready.') : T('Wareysigaagu wuu dhaafay. Sidee buu ahaa?', 'Your interview date has passed. How did it go?')) + '</h2>'
         + (dl > 0 ? '<p>' + (left ? T('Maalintii ' + per + ' su’aal baro, waad gaaraysaa.', 'Learn ' + per + ' question' + (per > 1 ? 's' : '') + ' a day and you will get there.') : T('Su’aalaha oo dhan waad taqaan. Hadda ku celceli wareysiga tijaabada ah.', 'You know every question. Now rehearse with the mock interview.')) + '</p>' : '')
         + '<button type="button" class="simple-text-button" id="czDateClear">' + T('Beddel taariikhda', 'Change the date') + '</button></div>';
     }
-    h += '</section>';
-    h += '<section class="cz-ready"><div class="cz-ready-top">' + ringHTML(r.all, T('Diyaargarow', 'Readiness')) + '<div><h2>' + T('Diyaargarowgaaga', 'Your readiness') + '</h2><p>' + (r.all < 0.05 ? T('Tallaabada koowaad ayaa ugu adag. Hal kaar fur.', 'The first step is the hardest. Open one card.') : r.all < 0.5 ? T('Si fiican ayaad u socotaa. Maalin kasta wax yar.', 'You know some answers. Study a few new cards each day.') : r.all < 0.9 ? T('Waad ku dhowdahay. Sii wad!', 'You know most answers. Review the cards you missed.') : T('Waad diyaarsan tahay. Ku faan naftaada.', 'You know 90% or more. Practise the interview next.')) + '</p></div></div>'
-      + '<dl class="cz-stats"><div><dt>' + T('Su’aalaha (civics)', 'Civics') + '</dt><dd>' + known + ' / ' + r.tot + '</dd></div><div><dt>' + T('Akhris', 'Reading') + '</dt><dd>' + Object.keys(c.read.ok).length + '</dd></div><div><dt>' + T('Qoraal', 'Writing') + '</dt><dd>' + Object.keys(c.write.ok).length + '</dd></div><div><dt>N-400</dt><dd>' + Object.keys(c.n400.seen).length + ' / ' + N4ALL.length + '</dd></div></dl></section>';
-    h += '<section class="cz-ed"><h2>' + T('Imtixaankee ayaa ku khuseeya?', 'Which test applies to you?') + '</h2><div class="cz-seg" role="group" aria-label="' + T('Nooca imtixaanka', 'Test edition') + '">'
-      + ['2025', '2008'].map(function (e) { return '<button type="button" data-ed="' + e + '" aria-pressed="' + (ed === e) + '"><b>' + e + '</b><span>' + (e === '2025' ? T('128 su’aalood', '128 questions') : T('100 su’aalood', '100 questions')) + '</span></button>'; }).join('') + '</div>'
-      + '<p class="small muted">' + T('Haddii aad foomka N-400 gudbisay <strong>October 20, 2025 ama ka dib</strong>, waxaad gelaysaa imtixaanka 2025. Haddii aad ka hor gudbisay, waa kan 2008. Taariikhdu waxay ku qoran tahay warqadda USCIS ee rasiidka (receipt notice).', 'If you filed Form N-400 <strong>on or after October 20, 2025</strong>, you take the 2025 test. If you filed before, it is the 2008 test. The date is on your USCIS receipt notice.') + '</p>'
-      + '<label class="cz-toggle"><input type="checkbox" id="czSenior"' + (c.senior ? ' checked' : '') + '><span><b>65/20</b> — ' + T('Waxaan ahay 65 jir ama ka weyn, green card-na waxaan haystay 20 sano ama ka badan: 20-ka su’aalood ee xiddigta leh oo keliya i tus.', 'I am 65 or older and have been a permanent resident for 20 years or more: show only the 20 starred questions.') + '</span></label></section>';
+    h += '</div></details></div>';
+    function part(id, icon, label, wide) { return '<button type="button" class="p1-part' + (wide ? ' p1-part-wide' : '') + '" data-go="' + id + '">' + ic(icon) + '<b>' + label + '</b>' + ic('chevron') + '</button>'; }
+    h += '<h2 class="cz-h">' + T('Qaybaha imtixaanka', 'The parts of the test') + '</h2><div class="p1-parts">'
+      + part('cards', 'list', T('Su’aalaha', 'Questions')) + part('read', 'book', T('Akhris', 'Reading')) + part('write', 'pen', T('Qoraal', 'Writing')) + part('n400', 'doc', 'N-400') + part('interview', 'mic', T('Wareysi tijaabo ah', 'Mock interview'), true) + '</div>';
+    // every other existing mode stays one tap away, folded below the brief's layout
     function row(id, icon, so, en, sub) { return '<button type="button" class="cz-row" data-go="' + id + '"><span class="cz-row-ic">' + ic(icon) + '</span><span class="cz-row-t"><b>' + T(so, en) + '</b><small>' + sub + '</small></span>' + ic('chevron') + '</button>'; }
-    h += '<h2 class="cz-h">' + T('Qaybaha imtixaanka', 'The parts of the test') + '</h2><div class="cz-rows">'
-      + row('cards', 'cards', 'Kaararka su’aalaha', 'Civics flashcards', known + ' / ' + r.tot + ' ' + T('waad taqaan', 'known'))
+    h += '<details class="p1-more"><summary>' + T('Siyaabo kale oo aad ku baran karto', 'More ways to learn') + ic('chevron') + '</summary><div class="cz-rows">'
       + row('topics', 'layers', 'Mawduuc mawduuc u baro', 'Learn by topic', T('Dowlad, taariikh, astaamo', 'Government, history, symbols'))
       + row('mock', 'check', 'Imtixaan tijaabo ah', 'Mock civics test', (lastMock ? T('Kii ugu dambeeyay: ', 'Last: ') + lastMock.right + '/' + lastMock.asked + ' · ' : '') + rl.asked + T(' su’aalood, gudub ', ' questions, pass ') + rl.pass)
-      + row('read', 'book', 'Akhriska', 'Reading', T('Jumlad si sax ah u akhri', 'Read one sentence correctly'))
-      + row('write', 'pen', 'Qoraalka', 'Writing', T('Jumlad si sax ah u qor', 'Write one sentence correctly'))
-      + row('n400', 'shield', 'Su’aalaha Yes / No ee N-400', 'N-400 yes / no questions', Object.keys(c.n400.seen).length + ' / ' + N4ALL.length + ' ' + T('waad fahantay', 'understood'))
-      + row('interview', 'chat', 'Wareysi tijaabo ah oo dhammaystiran', 'Full mock interview', c.interviews.length ? T('La qabtay: ', 'Taken: ') + c.interviews.length : T('Dhaar, su’aalo, civics, akhris, qoraal', 'Oath, questions, civics, reading, writing'))
       + row('report', 'award', 'Natiijooyinkayga iyo warbixinta', 'My results and report', c.interviews.length ? T('Warbixintaada waa diyaar', 'Your report is ready') : T('Halkan ayay kaaga muuqan doonaan', 'They will appear here'))
-      + '</div><h2 class="cz-h">' + T('Siyaabo kale oo aad ku baran karto', 'More ways to learn') + '</h2><div class="cz-rows">'
       + row('ear', 'speaker', 'Dhegeyso oo garo', 'Listen and recognise', T('Su’aasha maqal, ha akhrin — sida wareysiga', 'Hear the question, do not read it — like the interview'))
       + row('audio', 'play', 'Dhegeyso adigoo mashquul ah', 'Listen while you are busy', T('Gacmo la’aan: jikada, baska, shaqada', 'Hands-free: kitchen, bus, work break'))
       + row('family', 'user', 'Ilmahaagu ha noqdo sarkaalka', 'Let your child be the officer', T('Laba qof, hal taleefan', 'Two people, one phone'))
       + row('mine', 'pen', 'Jawaabahayga', 'My answers', c.mine && c.mine.state ? esc(c.mine.state) + (mineStale() ? ' · ' + T('dib u hubi', 'check again') : '') : T('Gobolkaaga, guddoomiyahaaga, senator-kaaga', 'Your state, governor, senator'))
       + row('wall', 'layers', 'Darbiga su’aalaha', 'The wall of questions', known + ' / ' + r.tot + ' ' + T('leben', 'bricks'))
-      + '</div><p class="cz-source">' + T('Su’aalaha iyo jawaabaha waxaa laga soo qaatay agabka rasmiga ah ee USCIS (uscis.gov). Sharraxaadda Soomaaliga waa caawimaad waxbarasho oo akadeemiyaddu qortay. Tani ma aha talo sharci.', 'Questions and answers come from official USCIS study materials (uscis.gov). The Somali explanations are study help written by the academy. This is not legal advice.') + '</p></div>';
+      + '</div></details><p class="cz-source">' + T('Su’aalaha iyo jawaabaha waxaa laga soo qaatay agabka rasmiga ah ee USCIS (uscis.gov). Sharraxaadda Soomaaliga waa caawimaad waxbarasho oo akadeemiyaddu qortay. Tani ma aha talo sharci.', 'Questions and answers come from official USCIS study materials (uscis.gov). The Somali explanations are study help written by the academy. This is not legal advice.') + '</p></div>';
     app.innerHTML = h;
+    document.getElementById('czHome').onclick = function () { window.__seaGo('home'); };
+    document.getElementById('czToday').onclick = function () { if (!C.sess || C.sess.ed !== ed || C.sess.i >= C.sess.qs.length) startSession(); go('session'); };
     var ds = document.getElementById('czDateSave'); if (ds) ds.onclick = function () { var v = document.getElementById('czDate').value; if (!v) return; c.testDate = v; save(); paint(); };
     var dc = document.getElementById('czDateClear'); if (dc) dc.onclick = function () { delete c.testDate; save(); paint(); };
-    app.querySelectorAll('[data-ed]').forEach(function (b) { b.onclick = function () { c.edition = b.dataset.ed; save(); C.idx = 0; C.topic = null; window.renderCitizenship(); }; });
-    document.getElementById('czSenior').onchange = function () { c.senior = this.checked; save(); C.idx = 0; paint(); };
+    app.querySelectorAll('[data-ed]').forEach(function (b) { b.onclick = function () { c.edition = b.dataset.ed; save(); C.idx = 0; C.topic = null; C.sess = null; window.renderCitizenship(); }; });
+    document.getElementById('czSenior').onchange = function () { c.senior = this.checked; save(); C.idx = 0; C.sess = null; paint(); };
     app.querySelectorAll('[data-go]').forEach(function (b) { b.onclick = function () { C.topic = null; C.idx = 0; C.run = null; C.rw = null; C.ear = null; if (b.dataset.go === 'interview') C.iv = null; go(b.dataset.go); }; });
+  }
+  // Phase 1 focused practice: the next five unlearned questions (bank order); "Waan aqaan" marks a question known.
+  function startSession() {
+    var c = cz(), ed = c.edition, st = c.civ[ed], todo = pool(ed).filter(function (q) { return !st.known[q.n]; });
+    C.sess = { ed: ed, qs: (todo.length ? todo : shuffled(pool(ed))).slice(0, 5), i: 0, show: false, rated: {} };
+  }
+  function answerCard(q) {
+    var mv = mineVal(q), main = mv || q.answers[0], rest = mv ? q.answers : q.answers.slice(1);
+    return '<div class="p1-answer"><p class="p1-eyebrow">' + T('Jawaabta', 'Answer') + '</p>'
+      + '<div class="p1-ans-row"><p class="p1-ans" lang="en">' + esc(main) + '</p>' + (mv ? '' : listenBar(main)) + '</div>'
+      + (rest.length ? '<ul class="p1-ans-more">' + rest.map(function (a) { return '<li><span lang="en">' + esc(a) + '</span>' + listenBar(a) + '</li>'; }).join('') + '</ul>' : '')
+      + '<div class="p1-ans-row"><p class="p1-ans-so" lang="so">' + esc(q.explain_so) + '</p>' + listenBar(q.explain_so) + '</div>'
+      + (q.changes ? '<div class="p1-note">' + changesHTML(q, mv) + '</div>' : '') + '</div>';
+  }
+  function session() {
+    var c = cz();
+    if (!C.sess || C.sess.ed !== c.edition) startSession();
+    var s = C.sess, st = c.civ[s.ed], q = s.qs[s.i];
+    var h = '<div class="cz p1-cz p1-session"><div class="p1-cz-top"><button type="button" class="p1-back" id="czBack">' + ic('back') + '<span>' + T('Jinsiyadda', 'Citizenship') + '</span></button>' + (q ? '<span class="p1-count">' + T('Su’aasha ', 'Question ') + (s.i + 1) + '</span>' : '') + '</div>'
+      + '<ol class="p1-seg" aria-label="' + Math.min(s.i, s.qs.length) + ' / ' + s.qs.length + '">' + s.qs.map(function (x, i) { return '<li class="' + (i < s.i ? 'is-done' : i === s.i ? 'is-now' : '') + '"></li>'; }).join('') + '</ol>';
+    if (!q) {
+      var k = s.qs.filter(function (x) { return s.rated[x.n] === 'k'; }).length;
+      app.innerHTML = h + '<section class="p1-done">' + ic('award') + '<h1>' + T('Waad dhammaysay casharka maanta.', 'You finished today’s lesson.') + '</h1><p class="p1-done-num"><b>' + k + '</b> / ' + s.qs.length + '</p><p>' + T('su’aalood ayaad u calaamadisay “Waan aqaan”.', 'questions marked “I know it”.') + '</p><button type="button" class="p1-primary" id="czDone">' + T('Ku noqo Jinsiyadda', 'Back to Citizenship') + ic('arrow') + '</button></section></div>';
+      wireBack(); document.getElementById('czDone').onclick = function () { C.sess = null; go('hub'); };
+      return;
+    }
+    h += '<article class="p1-q" data-n="' + q.n + '"><p class="p1-eyebrow p1-cat">' + esc(secName(q.section)) + '</p><h1 class="p1-qtext" lang="en">' + esc(q.q) + '</h1>' + listenBar(q.q, true) + '<p class="p1-hint">' + T('Marka hore cod dheer isku day.', 'Try saying it aloud first.') + '</p>'
+      + (s.show ? answerCard(q) + '<div class="p1-rate"><button type="button" class="p1-outline" id="czAgain">' + T('Weli waan baranayaa', 'Still learning') + '</button><button type="button" class="p1-primary" id="czKnow">' + T('Waan aqaan', 'I know it') + ic('check') + '</button></div>'
+        : '<button type="button" class="p1-reveal" id="czShow"><span class="p1-reveal-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></span><span>' + T('Muuji jawaabta', 'Show the answer') + '</span></button>')
+      + '</article><div class="p1-next"><button type="button" class="simple-text-button" id="czNext">' + T('Xiga', 'Next') + ic('arrow') + '</button></div></div>';
+    app.innerHTML = h; wireClips(app); wireBack();
+    var advance = function () { s.i++; s.show = false; paint(); window.scrollTo({ top: 0, behavior: 'instant' }); };
+    var sh = document.getElementById('czShow'); if (sh) sh.onclick = function () { s.show = true; st.seen[q.n] = 1; save(); paint(); var a = document.querySelector('.p1-answer'); if (a) a.scrollIntoView({ block: 'nearest' }); };
+    var kn = document.getElementById('czKnow'); if (kn) kn.onclick = function () { st.known[q.n] = 1; s.rated[q.n] = 'k'; save(); advance(); };
+    var ag = document.getElementById('czAgain'); if (ag) ag.onclick = function () { delete st.known[q.n]; toSRS(q); s.rated[q.n] = 'l'; save(); advance(); };
+    document.getElementById('czNext').onclick = advance;
   }
   function deck() {
     var c = cz(), ed = c.edition, k = c.civ[ed].known, l = pool(ed);
@@ -199,12 +260,12 @@
     if (!l.length) h += '<div class="card empty cz-done">' + ic('award') + '<h2>' + T('Dhammaantood waad taqaan!', 'You know them all') + '</h2><p>' + T('Shaqo qurux badan. Hadda isku day imtixaanka tijaabada ah, ama dib u eeg dhammaan kaararka.', 'Beautiful work. Try the mock test now, or review every card again.') + '</p><p><button type="button" class="btn" id="czToMock">' + T('Imtixaan tijaabo ah', 'Take the mock test') + '</button></p></div>';
     else {
       var q = l[C.idx];
-      h += '<article class="cz-card" data-n="' + q.n + '"><p class="hero-eyebrow">' + T('Su’aasha ', 'Question ') + q.n + (q.star65 ? ' · 65/20 '+uiIcon("star") : '') + ' · ' + esc(secName(q.section)) + '</p><div class="cz-qrow"><h2 class="cz-q" lang="en">' + esc(q.q) + '</h2>' + speakBtn(q.q) + '</div>';
+      h += '<article class="cz-card" data-n="' + q.n + '"><p class="hero-eyebrow">' + T('Su’aasha ', 'Question ') + q.n + (q.star65 ? ' · 65/20 '+uiIcon("star") : '') + ' · ' + esc(secName(q.section)) + '</p><div class="cz-qrow"><h2 class="cz-q" lang="en">' + esc(q.q) + '</h2></div>' + listenBar(q.q, true);
       if (!C.show) h += '<p class="muted">' + T('Marka hore cod dheer isku day, kadibna eeg jawaabta.', 'Try to answer aloud first, then look.') + '</p><button type="button" class="btn cz-wide" id="czShow">' + T('Muuji jawaabta', 'Show the answer') + '</button>';
       else h += '<div class="cz-reveal">' + answersHTML(q) + '<div class="cz-two"><button type="button" class="btn secondary" id="czAgain">' + T('Wali waan baranayaa', 'Still learning') + '</button><button type="button" class="btn" id="czKnow">' + ic('check') + T('Waan aqaan', 'I know it') + '</button></div></div>';
       h += '</article><div class="cz-pager"><button type="button" class="simple-text-button" id="czPrev"' + (C.idx ? '' : ' disabled') + '>' + ic('back') + T('Hore', 'Previous') + '</button><span>' + (C.idx + 1) + ' / ' + l.length + '</span><button type="button" class="simple-text-button" id="czNext">' + T('Xiga', 'Next') + ic('arrow') + '</button></div>';
     }
-    app.innerHTML = h + '</div>'; bindSpeak(app);
+    app.innerHTML = h + '</div>'; wireClips(app);
     wireBack(function () { if (C.topic) { C.topic = null; go('topics'); } else go('hub'); });
     app.querySelectorAll('[data-f]').forEach(function (b) { b.onclick = function () { C.filter = b.dataset.f; C.idx = 0; C.show = false; paint(); }; });
     var m = document.getElementById('czToMock'); if (m) m.onclick = function () { C.run = null; go('mock'); };
@@ -468,10 +529,13 @@
   function family() { if (!C.run || !C.run.family) startMock(null, true); mock(); }
   function paint() {
     document.body.classList.add('view-cit'); if (C.route !== 'audio') stopLoop();
-    ({ hub: hub, cards: cards, topics: topics, mock: mock, read: function () { rw('read'); }, write: function () { rw('write'); }, n400: n400, interview: interview, report: report, mine: mine, ear: ear, audio: audio, wall: wall, family: family }[C.route] || hub)();
+    ({ hub: hub, cards: cards, topics: topics, mock: mock, read: function () { rw('read'); }, write: function () { rw('write'); }, n400: n400, interview: interview, report: report, mine: mine, ear: ear, audio: audio, wall: wall, family: family, session: session }[C.route] || hub)();
     app.querySelectorAll('[data-mine]').forEach(function (b) { b.onclick = function () { go('mine'); }; });
+    document.body.classList.toggle('p1-focus', !!app.querySelector('.p1-session'));
+    if (window.__p1Light) window.__p1Light();
   }
   window.renderCitizenship = function () {
+    if (window.__czRoute) { route(window.__czRoute); window.__czRoute = null; }
     var ed = cz().edition;
     if (DATA[ed]) { paint(); return; }
     app.innerHTML = '<div class="cz"><p class="hero-eyebrow">' + ic('flag') + T('Jinsiyadda', 'Citizenship') + '</p><div class="cz-skel"></div><div class="cz-skel short"></div><div class="cz-skel"></div></div>';
@@ -481,8 +545,10 @@
       document.getElementById('czRetry').onclick = window.renderCitizenship;
     });
   };
-  window.openCitizenship = function (route) { C.route = route || 'hub'; C.run = null; C.rw = null; C.iv = null; setNav('cit'); render(); };
+  function route(r) { C.route = r || 'hub'; C.run = null; C.rw = null; C.iv = null; if (r === 'session' && C.sess && C.sess.i >= C.sess.qs.length) C.sess = null; }
+  window.openCitizenship = function (r) { route(r); setNav('cit'); render(); };
   function summary() { var c = cz(), ed = c.edition, tot = ed === '2025' ? 128 : 100; if (c.senior) tot = 20; var k = DATA[ed] ? knownCount(ed) : Object.keys(c.civ[ed].known).length; return { k: Math.min(k, tot), tot: tot, ed: ed, dl: daysLeft(), started: k > 0 || c.interviews.length > 0 || Object.keys(c.n400.seen).length > 0 }; }
+  window.__czSummary = function () { var s = summary(); s.mocks = cz().civ[s.ed].mocks; return s; };
   var home = renderHome, profile = renderProfile;
   renderHome = function () {
     home(); var box = app.querySelector('.simple-home-content'); if (!box || document.getElementById('homeCit') || !S || !S.profile) return;

@@ -1,0 +1,517 @@
+{
+ "390px home.greeting": {
+  "pass": true,
+  "detail": "Salaan, Abdirashid."
+ },
+ "390px home.ring": {
+  "pass": true,
+  "detail": "24 / 128"
+ },
+ "390px home.journey": {
+  "pass": true,
+  "detail": "Baro"
+ },
+ "390px nav.destinations": {
+  "pass": true,
+  "detail": [
+   "Hoyga",
+   "Casharro",
+   "Jinsiyadda",
+   "Ku celceli",
+   "Qaamuus",
+   "Wax kale"
+  ]
+ },
+ "390px polish.images.home": {
+  "pass": true,
+  "detail": {
+   "n": 5,
+   "svg": 0,
+   "srcs": [
+    "phase1-images/web/hero-capitol.jpg",
+    "phase1-images/web/card-ingiriisi.webp",
+    "phase1-images/web/card-hadal-dhegeysi.webp",
+    "phase1-images/web/card-foomamka.webp",
+    "phase1-images/web/card-ged.webp"
+   ],
+   "ok": true
+  }
+ },
+ "390px polish.header.aaVsProfileDistinct": {
+  "pass": true,
+  "detail": [
+   {
+    "radius": "12px",
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(27, 26, 23)",
+    "w": "48px"
+   },
+   {
+    "radius": "50%",
+    "bg": "rgb(14, 124, 102)",
+    "color": "rgb(255, 255, 255)",
+    "w": "44px"
+   }
+  ]
+ },
+ "390px nav.profile": {
+  "pass": true,
+  "detail": "header chip"
+ },
+ "390px home.targets>=44": {
+  "pass": true,
+  "detail": []
+ },
+ "390px aa.scales": {
+  "pass": true,
+  "detail": {
+   "h1": [
+    30,
+    33.75
+   ],
+   "p": [
+    16,
+    18
+   ],
+   "noHorizontalScroll": true
+  }
+ },
+ "390px lang.toggle": {
+  "pass": true,
+  "detail": "Hello, Abdirashid."
+ },
+ "390px home.route.academyContinue": {
+  "pass": true,
+  "detail": "lesson"
+ },
+ "390px home.route.p1Talk": {
+  "pass": true,
+  "detail": "practice"
+ },
+ "390px home.route.p1Forms": {
+  "pass": true,
+  "detail": "acad"
+ },
+ "390px home.route.p1Ged": {
+  "pass": true,
+  "detail": "acad"
+ },
+ "390px home.route.p1Watch": {
+  "pass": true,
+  "detail": "watch"
+ },
+ "390px home.route.p1Dict": {
+  "pass": true,
+  "detail": "dict"
+ },
+ "390px home.route.p1Tutor": {
+  "pass": true,
+  "detail": "lesson"
+ },
+ "390px home.cta.resumes": {
+  "pass": true,
+  "detail": "25"
+ },
+ "390px practice.segments": {
+  "pass": true,
+  "detail": "Su’aasha 1"
+ },
+ "390px practice.question": {
+  "pass": true,
+  "detail": "NIDAAMKA DOWLADDA"
+ },
+ "390px practice.answer.hidden": {
+  "pass": true
+ },
+ "390px practice.targets>=44": {
+  "pass": true,
+  "detail": []
+ },
+ "390px polish.focus.noGlobalChrome": {
+  "pass": true
+ },
+ "390px polish.reveal.solidCard": {
+  "pass": true,
+  "detail": {
+   "border": "none",
+   "bg": "rgb(225, 241, 236)"
+  }
+ },
+ "audio.allLinesRegistered": {
+  "pass": true,
+  "detail": {
+   "lines": 1143,
+   "missing": 0,
+   "sample": []
+  }
+ },
+ "390px audio.question.noMissingState": {
+  "pass": true
+ },
+ "390px audio.questionClipPlays.ms": {
+  "pass": true,
+  "detail": 589
+ },
+ "390px audio.questionClipPlays": {
+  "pass": true,
+  "detail": {
+   "route": "media",
+   "tts": 0
+  }
+ },
+ "390px audio.answer.noMissingState": {
+  "pass": true
+ },
+ "390px audio.answerClipsPlay": {
+  "pass": true,
+  "detail": [
+   true,
+   true
+  ]
+ },
+ "390px polish.know.unobscured": {
+  "pass": true,
+  "detail": {
+   "bottom": 670,
+   "vh": 844,
+   "hitsButton": true
+  }
+ },
+ "390px practice.answer.verbatim": {
+  "pass": true,
+  "detail": "Two (2) years"
+ },
+ "390px practice.know.saves": {
+  "pass": true,
+  "detail": "Su’aasha 2"
+ },
+ "390px practice.stilllearning.keeps": {
+  "pass": true
+ },
+ "390px practice.next.advances": {
+  "pass": true
+ },
+ "390px practice.completion": {
+  "pass": true,
+  "detail": "3 / 5"
+ },
+ "390px practice.back.toHub": {
+  "pass": true
+ },
+ "390px polish.focus.chromeRestored": {
+  "pass": true
+ },
+ "390px cit.order.practiceBeforeSettings": {
+  "pass": true
+ },
+ "390px cit.headline": {
+  "pass": true
+ },
+ "390px cit.targets>=44": {
+  "pass": true,
+  "detail": []
+ },
+ "390px cit.edition.keepsBehaviour": {
+  "pass": true
+ },
+ "390px cit.date.keepsBehaviour": {
+  "pass": true,
+  "detail": "Taariikhda wareysiga\n93 maalmood"
+ },
+ "390px cit.part.cards": {
+  "pass": true
+ },
+ "390px cit.part.read": {
+  "pass": true
+ },
+ "390px cit.part.write": {
+  "pass": true
+ },
+ "390px cit.part.n400": {
+  "pass": true
+ },
+ "390px cit.part.interview": {
+  "pass": true
+ },
+ "390px persist.ring.afterRefresh": {
+  "pass": true,
+  "detail": "27"
+ },
+ "390px no.pageErrors": {
+  "pass": true,
+  "detail": []
+ },
+ "1280px home.greeting": {
+  "pass": true,
+  "detail": "Salaan, Abdirashid."
+ },
+ "1280px home.ring": {
+  "pass": true,
+  "detail": "24 / 128"
+ },
+ "1280px home.journey": {
+  "pass": true,
+  "detail": "Baro"
+ },
+ "1280px nav.destinations": {
+  "pass": true,
+  "detail": [
+   "Hoyga",
+   "Casharro",
+   "Jinsiyadda",
+   "Ku celceli",
+   "Qaamuus",
+   "Wax kale",
+   "AA\nAbdirashid A."
+  ]
+ },
+ "1280px nav.profile": {
+  "pass": true,
+  "detail": "rail chip"
+ },
+ "1280px home.targets>=44": {
+  "pass": true,
+  "detail": []
+ },
+ "1280px aa.scales": {
+  "pass": true,
+  "detail": {
+   "h1": [
+    36,
+    40.5
+   ],
+   "p": [
+    16,
+    18
+   ],
+   "noHorizontalScroll": true
+  }
+ },
+ "1280px lang.toggle": {
+  "pass": true,
+  "detail": "Hello, Abdirashid."
+ },
+ "1280px home.route.academyContinue": {
+  "pass": true,
+  "detail": "lesson"
+ },
+ "1280px home.route.p1Talk": {
+  "pass": true,
+  "detail": "practice"
+ },
+ "1280px home.route.p1Forms": {
+  "pass": true,
+  "detail": "acad"
+ },
+ "1280px home.route.p1Ged": {
+  "pass": true,
+  "detail": "acad"
+ },
+ "1280px home.route.p1Watch": {
+  "pass": true,
+  "detail": "watch"
+ },
+ "1280px home.route.p1Dict": {
+  "pass": true,
+  "detail": "dict"
+ },
+ "1280px home.route.p1Tutor": {
+  "pass": true,
+  "detail": "lesson"
+ },
+ "1280px home.cta.resumes": {
+  "pass": true,
+  "detail": "25"
+ },
+ "1280px practice.segments": {
+  "pass": true,
+  "detail": "Su’aasha 1"
+ },
+ "1280px practice.question": {
+  "pass": true,
+  "detail": "NIDAAMKA DOWLADDA"
+ },
+ "1280px practice.answer.hidden": {
+  "pass": true
+ },
+ "1280px practice.targets>=44": {
+  "pass": true,
+  "detail": []
+ },
+ "1280px polish.focus.noGlobalChrome": {
+  "pass": true
+ },
+ "1280px polish.reveal.solidCard": {
+  "pass": true,
+  "detail": {
+   "border": "none",
+   "bg": "color(srgb 0.816157 0.908392 0.883451)"
+  }
+ },
+ "1280px audio.question.noMissingState": {
+  "pass": true
+ },
+ "1280px audio.questionClipPlays.ms": {
+  "pass": true,
+  "detail": 38
+ },
+ "1280px audio.questionClipPlays": {
+  "pass": true,
+  "detail": {
+   "route": "media",
+   "tts": 0
+  }
+ },
+ "1280px audio.answer.noMissingState": {
+  "pass": true
+ },
+ "1280px audio.answerClipsPlay": {
+  "pass": true,
+  "detail": [
+   true,
+   true
+  ]
+ },
+ "1280px polish.know.unobscured": {
+  "pass": true,
+  "detail": {
+   "bottom": 565,
+   "vh": 800,
+   "hitsButton": true
+  }
+ },
+ "1280px practice.answer.verbatim": {
+  "pass": true,
+  "detail": "Two (2) years"
+ },
+ "1280px practice.know.saves": {
+  "pass": true,
+  "detail": "Su’aasha 2"
+ },
+ "1280px practice.stilllearning.keeps": {
+  "pass": true
+ },
+ "1280px practice.next.advances": {
+  "pass": true
+ },
+ "1280px practice.completion": {
+  "pass": true,
+  "detail": "3 / 5"
+ },
+ "1280px practice.back.toHub": {
+  "pass": true
+ },
+ "1280px polish.focus.chromeRestored": {
+  "pass": true
+ },
+ "1280px cit.order.practiceBeforeSettings": {
+  "pass": true
+ },
+ "1280px cit.headline": {
+  "pass": true
+ },
+ "1280px cit.targets>=44": {
+  "pass": true,
+  "detail": []
+ },
+ "1280px cit.edition.keepsBehaviour": {
+  "pass": true
+ },
+ "1280px cit.date.keepsBehaviour": {
+  "pass": true,
+  "detail": "Taariikhda wareysiga\n93 maalmood"
+ },
+ "1280px cit.part.cards": {
+  "pass": true
+ },
+ "1280px cit.part.read": {
+  "pass": true
+ },
+ "1280px cit.part.write": {
+  "pass": true
+ },
+ "1280px cit.part.n400": {
+  "pass": true
+ },
+ "1280px cit.part.interview": {
+  "pass": true
+ },
+ "1280px persist.ring.afterRefresh": {
+  "pass": true,
+  "detail": "27"
+ },
+ "1280px no.pageErrors": {
+  "pass": true,
+  "detail": []
+ },
+ "fresh home.greeting.noName": {
+  "pass": true,
+  "detail": "Salaan."
+ },
+ "fresh home.ring.zero": {
+  "pass": true
+ },
+ "fresh home.cta.firstQuestion": {
+  "pass": true
+ },
+ "fresh no.pageErrors": {
+  "pass": true,
+  "detail": []
+ },
+ "dark welcome.light": {
+  "pass": true,
+  "detail": {
+   "theme": "light",
+   "bg": "rgb(250, 245, 236)"
+  }
+ },
+ "welcome.p1Skin": {
+  "pass": true,
+  "detail": {
+   "radius": "20px",
+   "bg": "rgb(255, 255, 255)"
+  }
+ },
+ "dark home.light": {
+  "pass": true,
+  "detail": {
+   "theme": "light",
+   "bg": "rgb(250, 245, 236)"
+  }
+ },
+ "dark aa.scalesAndStaysLight": {
+  "pass": true,
+  "detail": {
+   "h1": [
+    30,
+    33.75
+   ],
+   "theme": "light"
+  }
+ },
+ "dark cit.light": {
+  "pass": true,
+  "detail": {
+   "theme": "light",
+   "bg": "rgb(250, 245, 236)"
+  }
+ },
+ "dark practice.light": {
+  "pass": true,
+  "detail": {
+   "theme": "light",
+   "bg": "rgb(250, 245, 236)"
+  }
+ },
+ "dark otherScreens.followDevice": {
+  "pass": true,
+  "detail": {
+   "theme": "dark",
+   "bg": "rgb(22, 21, 17)"
+  }
+ },
+ "dark no.pageErrors": {
+  "pass": true,
+  "detail": []
+ }
+}

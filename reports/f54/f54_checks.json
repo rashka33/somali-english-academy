@@ -1,0 +1,66 @@
+{
+ "a": {
+  "step": 0,
+  "lesson": 1,
+  "letter": "A a",
+  "listen_label": "Dhegeyso",
+  "activity_options": 3,
+  "intro_after_letter_and_collapsed": true,
+  "objective_card_shown_first": false,
+  "first_activity_completable": true,
+  "pass": true,
+  "errors": []
+ },
+ "b": {
+  "landed_on": "home",
+  "taps": 1,
+  "opened": {
+   "view": "lesson",
+   "lesson": 2
+  },
+  "pass": true,
+  "errors": []
+ },
+ "c": {
+  "home_entry_visible": true,
+  "from_home": {
+   "view": "lesson",
+   "open": true,
+   "focus": "TEXTAREA"
+  },
+  "lesson_button": {
+   "y": 84,
+   "bottom": 136,
+   "bottom_bar_top": 762
+  },
+  "from_lesson": {
+   "open": true,
+   "focus": "TEXTAREA"
+  },
+  "pass": true,
+  "errors": []
+ },
+ "d": {
+  "saved_confirmation_shown": false,
+  "name_after_refresh": "Ayaan F54",
+  "survives_refresh": true,
+  "pass": false,
+  "note": "Profile is a hard fence in F54 (untouched); this check is measured only.",
+  "errors": []
+ },
+ "e": {
+  "checks": 20,
+  "with_keyboard": 2,
+  "failures": [],
+  "pass": true
+ },
+ "purity": {
+  "so": {
+   "other_language_f54_labels_found": []
+  },
+  "en": {
+   "other_language_f54_labels_found": []
+  },
+  "pass": true
+ }
+}
